@@ -1,5 +1,5 @@
 const { REST, Routes, EmbedBuilder, ActivityType } = require('discord.js');
-const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID } = require("./config.json")
+const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID, GM_Handbook_Files } = require("./config.json")
 
 const commands = [
     {
@@ -79,16 +79,10 @@ const commands = [
         description: 'Get ID from GM Handbook',
         options: [
             {
-                name: 'text',
-                description: 'The text to search',
+                name: 'search',
+                description: 'Search for a specific ID',
                 type: 3,
                 required: true,
-            },
-            {
-                name: 'result',
-                description: 'The result to get',
-                type: 3,
-                required: false,
             },
         ],
     }
@@ -312,38 +306,49 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (interaction.commandName === "gm") {
-        const text = interaction.options.getString('text');
-        const result = interaction.options.getString('result');
-        const fs = require('fs');
-        const path = require('path');
-        const filePath = path.join(__dirname, 'gm.txt');
-        const data = fs.readFileSync(filePath, 'utf8');
-        const lines = data.split('\n');
-        const gm = lines.filter(line => line.includes(text));
-        const resultCount = gm.length
-        console.log(result)
-
-        try {
-            if (result == null) {
-                await interaction.reply({
-                    content: `**${text}'s ID**\n${gm[0]}\n\nThere are ${resultCount} results found!`,
-                    ephemeral: true
-                });
-            } else if (result == resultCount) {
-                await interaction.reply({
-                    content: `All **${text}**'s ID**\n${gm}`,
-                    ephemeral: true
-                })
-            } else {
-                await interaction.reply({
-                    content: `**${text}**'s ID\n` + gm.slice(0, result).join('\n') + `\n\nThere are ${resultCount - result} results left ID found for ${text}`,
-                    ephemeral: true
-                });
+        searchGM = async (search) => {
+            const fs = require('fs');
+            const readline = require('readline');
+            const fileStream = fs.createReadStream('gm.txt');
+            const rl = readline.createInterface({
+                input: fileStream,
+                crlfDelay: Infinity
+            });
+            let category = "";
+            for await (const line of rl) {
+                if (line.startsWith("//")) {
+                    category = line.replace("//", "").trim();
+                }
+                if (line.includes(search)) {
+                    const id = line.split(":")[0].trim();
+                    const name = line.split(":")[1].trim();
+                    return {
+                        id: id,
+                        name: name,
+                        category: category
+                    }
+                }
             }
-        } catch (error) {
-            console.log(error);
-            await interaction.reply({ content: "An error occured!", ephemeral: true });
+
+            return {
+                id: "Not Found",
+                name: "Not Found",
+                category: "Not Found"
+            }
         }
+        const search = interaction.options.getString('search');
+        const searchResult = await searchGM(search);
+        const embed = new EmbedBuilder()
+            .setTitle('Search Result')
+            .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`)
+            .setColor('Green')
+            .setTimestamp(new Date())
+            .setFooter({
+                text: `Requested by ${interaction.user.username}`,
+                iconURL: interaction.user.displayAvatarURL(),
+            });
+        await interaction.reply({ embeds: [embed] });
+        logSend(`Search Result:\nID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`, interaction.user.username, interaction.commandName)
     }
 });
 
