@@ -1,6 +1,6 @@
-const { REST, Routes, EmbedBuilder, ActivityType } = require('discord.js');
+const { REST, Routes, EmbedBuilder, ActivityType, MessageButtonBuilder } = require('discord.js');
 const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID, GM_Handbook_Files } = require("./config.json")
-
+const { exec } = require('child_process');
 const commands = [
     {
         name: 'ping',
@@ -82,6 +82,42 @@ const commands = [
                 name: 'search',
                 description: 'Search for a specific ID',
                 type: 3,
+                required: true
+            },
+        ],
+    },
+    {
+        name: 'eval',
+        description: 'Evaluates a code',
+        options: [
+            {
+                name: 'code',
+                description: 'The code to evaluate',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'shell',
+        description: 'Executes a shell command',
+        options: [
+            {
+                name: 'command',
+                description: 'The command to execute',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'purge',
+        description: 'Purges messages',
+        options: [
+            {
+                name: 'amount',
+                description: 'The amount of messages to purge',
+                type: 4,
                 required: true,
             },
         ],
@@ -143,7 +179,7 @@ const client = new Client({
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    client.user.setActivity('Run with Discord.js', { type: ActivityType.PLAYING });
+    client.user.setActivity('Fix my Skill Issue Pwease', { type: ActivityType.PLAYING });
 });
 
 client.on('interactionCreate', async interaction => {
@@ -305,19 +341,89 @@ client.on('interactionCreate', async interaction => {
         process.exit(0);
     }
 
+    if (interaction.commandName === 'eval') {
+        if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "You are not the bot owner!", ephemeral: true });
+        const code = interaction.options.getString('code');
+        try {
+            const evaled = await eval(code);
+            const embed = new EmbedBuilder()
+                .setTitle('Eval')
+                .setDescription(`\`\`\`js\n${evaled}\n\`\`\``)
+                .setColor('Green')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+            await interaction.reply({ embeds: [embed] });
+            logSend(`Eval:\n${evaled}`, interaction.user.username, interaction.commandName)
+        } catch (error) {
+            const embed = new EmbedBuilder()
+                .setTitle('Eval')
+                .setDescription(`\`\`\`js\n${error}\n\`\`\``)
+                .setColor('Red')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+            await interaction.reply({ embeds: [embed] });
+            logSend(`Eval:\n${error}`, interaction.user.username, interaction.commandName)
+        }
+    }
+
+    if (interaction.commandName === 'shell') {
+        if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "You are not the bot owner!", ephemeral: true });
+        const code = interaction.options.getString('code');
+        try {
+            const { stderr, stdout } = await exec(code);
+            // TypeError [ERR_INVALID_ARG_TYPE]: The "file" argument must be of type string. Received null
+            // how to fix this? 
+
+            const embed = new EmbedBuilder()
+                .setTitle('Shell')
+                .setDescription(`\`\`\`js\n${stdout}\n\`\`\``)
+                .setColor('Green')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+            await interaction.reply({ embeds: [embed] });
+            logSend(`Shell:\n${evaled}`, interaction.user.username, interaction.commandName)
+        } catch (error) {
+            const embed = new EmbedBuilder()
+                .setTitle('Shell')
+                .setDescription(`\`\`\`js\n${error}\n\`\`\``)
+                .setColor('Red')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+            await interaction.reply({ embeds: [embed] });
+            logSend(`Shell:\n${error}`, interaction.user.username, interaction.commandName)
+        }
+    }
+
+
     if (interaction.commandName === "gm") {
+        const search = interaction.options.getString('search');
+
         searchGM = async (search) => {
             const fs = require('fs');
             const readline = require('readline');
-            const fileStream = fs.createReadStream('gm.txt');
+            const fileStream = fs.createReadStream(GM_Handbook_Files);
             const rl = readline.createInterface({
                 input: fileStream,
                 crlfDelay: Infinity
             });
-            let category = "";
+
+            const results = [];
+
             for await (const line of rl) {
                 if (line.startsWith("//")) {
-                    category = line.replace("//", "").trim();
+                    category = line.replace("//", "");
                 }
                 if (line.includes(search)) {
                     const id = line.split(":")[0].trim();
@@ -326,7 +432,7 @@ client.on('interactionCreate', async interaction => {
                         id: id,
                         name: name,
                         category: category
-                    }
+                    };
                 }
             }
 
@@ -336,7 +442,7 @@ client.on('interactionCreate', async interaction => {
                 category: "Not Found"
             }
         }
-        const search = interaction.options.getString('search');
+        
         const searchResult = await searchGM(search);
         const embed = new EmbedBuilder()
             .setTitle('Search Result')
@@ -347,8 +453,19 @@ client.on('interactionCreate', async interaction => {
                 text: `Requested by ${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
             });
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed]});
         logSend(`Search Result:\nID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`, interaction.user.username, interaction.commandName)
+    }
+
+    if (interaction.commandName === "purge") {
+        // if not owner of bot, then return
+        if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "You are not the bot owner!", ephemeral: true });
+        const amount = interaction.options.getInteger('amount');
+        if (amount > 100) return interaction.reply({ content: "You can only delete up to 100 messages at a time!", ephemeral: true });
+        if (amount < 1) return interaction.reply({ content: "You must delete at least 1 message!", ephemeral: true });
+        await interaction.channel.bulkDelete(amount + 1);
+        interaction.reply({ content: `Deleted ${amount} messages!`, ephemeral: true });
+        logSend(`Deleted ${amount} messages!`, interaction.user.username, interaction.commandName)
     }
 });
 
