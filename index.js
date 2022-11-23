@@ -410,6 +410,8 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === "gm") {
         const search = interaction.options.getString('search');
 
+        const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1);
+
         searchGM = async (search) => {
             const fs = require('fs');
             const readline = require('readline');
@@ -443,7 +445,7 @@ client.on('interactionCreate', async interaction => {
             }
         }
         
-        const searchResult = await searchGM(search);
+        const searchResult = await searchGM(searchUpperCase);
         const embed = new EmbedBuilder()
             .setTitle('Search Result')
             .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`)
@@ -458,7 +460,6 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (interaction.commandName === "purge") {
-        // if not owner of bot, then return
         if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "You are not the bot owner!", ephemeral: true });
         const amount = interaction.options.getInteger('amount');
         if (amount > 100) return interaction.reply({ content: "You can only delete up to 100 messages at a time!", ephemeral: true });
