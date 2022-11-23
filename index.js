@@ -88,7 +88,7 @@ const commands = [
                 name: 'category',
                 description: 'Search for a specific category',
                 type: 3,
-                required: true,
+                required: false,
                 choices: [
                     {
                         name: 'Avatars',
@@ -138,6 +138,18 @@ const commands = [
             },
         ],
     },
+    {
+        name: 'purge',
+        description: 'Purges messages',
+        options: [
+            {
+                name: 'amount',
+                description: 'The amount of messages to purge',
+                type: 4,
+                required: true,
+            },
+        ],
+    }
 ];
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
@@ -441,7 +453,9 @@ client.on('interactionCreate', async interaction => {
                 fileStream = fs.createReadStream('./gm/monsters.txt');
             } else if (categoryId === "scenes") {
                 fileStream = fs.createReadStream('./gm/scenes.txt');
-            } 
+            } else {
+                fileStream = fs.createReadStream('./gm/gm.txt');
+            }
             const rl = readline.createInterface({
                 input: fileStream,
                 crlfDelay: Infinity
