@@ -1,5 +1,5 @@
 const { REST, Routes, EmbedBuilder, ActivityType, MessageButtonBuilder } = require('discord.js');
-const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID, GM_Handbook_Files } = require("./config.json")
+const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID, GM_Handbook_Files_Avatars } = require("./config.json")
 const { exec } = require('child_process');
 const commands = [
     {
@@ -84,6 +84,34 @@ const commands = [
                 type: 3,
                 required: true
             },
+            {
+                name: 'category',
+                description: 'Search for a specific category',
+                type: 3,
+                required: true,
+                choices: [
+                    {
+                        name: 'Avatars',
+                        value: 'avatars'
+                    },
+                    {
+                        name: 'Items',
+                        value: 'items'
+                    },
+                    {
+                        name: 'Monsters',
+                        value: 'monsters'
+                    },
+                    {
+                        name: 'Quest',
+                        value: 'quest'
+                    },
+                    {
+                        name: 'Scenes',
+                        value: 'scenes'
+                    }
+                ]
+            }
         ],
     },
     {
@@ -110,18 +138,6 @@ const commands = [
             },
         ],
     },
-    {
-        name: 'purge',
-        description: 'Purges messages',
-        options: [
-            {
-                name: 'amount',
-                description: 'The amount of messages to purge',
-                type: 4,
-                required: true,
-            },
-        ],
-    }
 ];
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
@@ -409,13 +425,23 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === "gm") {
         const search = interaction.options.getString('search');
-
+        const categories = interaction.options.getString('category');
         const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1);
 
-        searchGM = async (search) => {
+        searchGM = async (search, categoryId) => {
             const fs = require('fs');
             const readline = require('readline');
-            const fileStream = fs.createReadStream(GM_Handbook_Files);
+            if (categoryId === "avatars") {
+                fileStream = fs.createReadStream('./gm/avatars.txt');
+            } else if (categoryId === "quest") {
+                fileStream = fs.createReadStream('./gm/quests.txt');
+            } else if (categoryId === "items") {
+                fileStream = fs.createReadStream('./gm/items.txt');
+            } else if (categoryId === "monsters") {
+                fileStream = fs.createReadStream('./gm/monsters.txt');
+            } else if (categoryId === "scenes") {
+                fileStream = fs.createReadStream('./gm/scenes.txt');
+            } 
             const rl = readline.createInterface({
                 input: fileStream,
                 crlfDelay: Infinity
@@ -445,7 +471,7 @@ client.on('interactionCreate', async interaction => {
             }
         }
         
-        const searchResult = await searchGM(searchUpperCase);
+        const searchResult = await searchGM(searchUpperCase, categories);
         const embed = new EmbedBuilder()
             .setTitle('Search Result')
             .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`)
