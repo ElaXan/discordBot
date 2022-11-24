@@ -1,5 +1,5 @@
-const { REST, Routes, EmbedBuilder, ActivityType, MessageButtonBuilder } = require('discord.js');
-const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID, GM_Handbook_Files_Avatars } = require("./config.json")
+const { REST, Routes, EmbedBuilder, ActivityType } = require('discord.js');
+const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID } = require("./config.json")
 const { exec } = require('child_process');
 const commands = [
     {
@@ -145,7 +145,31 @@ const commands = [
             {
                 name: 'amount',
                 description: 'The amount of messages to purge',
-                type: 4,
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'blacklist',
+        description: 'Blacklists a word',
+        options: [
+            {
+                name: 'word',
+                description: 'The word to blacklist',
+                type: 3,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'unblacklist',
+        description: 'Unblacklists a word',
+        options: [
+            {
+                name: 'word',
+                description: 'The word to unblacklist',
+                type: 3,
                 required: true,
             },
         ],
@@ -405,9 +429,6 @@ client.on('interactionCreate', async interaction => {
         const code = interaction.options.getString('code');
         try {
             const { stderr, stdout } = await exec(code);
-            // TypeError [ERR_INVALID_ARG_TYPE]: The "file" argument must be of type string. Received null
-            // how to fix this? 
-
             const embed = new EmbedBuilder()
                 .setTitle('Shell')
                 .setDescription(`\`\`\`js\n${stdout}\n\`\`\``)
@@ -461,8 +482,6 @@ client.on('interactionCreate', async interaction => {
                 crlfDelay: Infinity
             });
 
-            const results = [];
-
             for await (const line of rl) {
                 if (line.startsWith("//")) {
                     category = line.replace("//", "");
@@ -484,30 +503,121 @@ client.on('interactionCreate', async interaction => {
                 category: "Not Found"
             }
         }
-        
+
         const searchResult = await searchGM(searchUpperCase, categories);
+        if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
+            const embed = new EmbedBuilder()
+                .setTitle('Search Result')
+                .setDescription('Not Found for ' + searchUpperCase)
+                .setColor('Red')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+            await interaction.reply({ embeds: [embed] });
+        } else {
+            const embed = new EmbedBuilder()
+                .setTitle('Search Result')
+                .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`)
+                .setColor('Green')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL(),
+                });
+            await interaction.reply({ embeds: [embed] });
+            logSend(`Search Result:\nID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`, interaction.user.username, interaction.commandName)
+        }
+    }
+
+    if (interaction.commandName === "blacklist") {
+        const word = interaction.options.getString('word');
+        const fs = require('fs');
+        const readline = require('readline');
+        fileStream = fs.createReadStream('./blacklist.txt');
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
+
+        for await (const line of rl) {
+            if (line.includes(word)) {
+                const embed = new EmbedBuilder()
+                    .setTitle('Blacklist')
+                    .setDescription('Word is already blacklisted')
+                    .setColor('Red')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                await interaction.reply({ embeds: [embed] });
+                return;
+            }
+        }
+
+        fs.appendFile('./blacklist.txt', word + "\n", function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+        }
+        );
         const embed = new EmbedBuilder()
-            .setTitle('Search Result')
-            .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`)
+            .setTitle('Blacklist')
+            .setDescription('Word has been blacklisted')
             .setColor('Green')
             .setTimestamp(new Date())
             .setFooter({
                 text: `Requested by ${interaction.user.username}`,
-                iconURL: interaction.user.displayAvatarURL(),
+                iconURL: interaction.user.displayAvatarURL()
             });
-        await interaction.reply({ embeds: [embed]});
-        logSend(`Search Result:\nID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`, interaction.user.username, interaction.commandName)
+        await interaction.reply({ embeds: [embed] });
+        logSend(`Blacklist:\nWord has been blacklisted`, interaction.user.username, interaction.commandName)
     }
 
-    if (interaction.commandName === "purge") {
-        if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "You are not the bot owner!", ephemeral: true });
-        const amount = interaction.options.getInteger('amount');
-        if (amount > 100) return interaction.reply({ content: "You can only delete up to 100 messages at a time!", ephemeral: true });
-        if (amount < 1) return interaction.reply({ content: "You must delete at least 1 message!", ephemeral: true });
-        await interaction.channel.bulkDelete(amount + 1);
-        interaction.reply({ content: `Deleted ${amount} messages!`, ephemeral: true });
-        logSend(`Deleted ${amount} messages!`, interaction.user.username, interaction.commandName)
+    if (interaction.commandName === "unblacklist") {
+        const word = interaction.options.getString('word');
+        const fs = require('fs');
+        const readline = require('readline');
+        fileStream = fs.createReadStream('./blacklist.txt');
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
+
+        for await (const line of rl) {
+            if (line.includes(word)) {
+                const data = fs.readFileSync('./blacklist.txt', 'utf8');
+                const newValue = data.replace(word + "\n", '');
+                fs.writeFileSync('./blacklist.txt', newValue, 'utf8');
+                const embed = new EmbedBuilder()
+                    .setTitle('Unblacklist')
+                    .setDescription('Word has been unblacklisted')
+                    .setColor('Green')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                await interaction.reply({ embeds: [embed] });
+                logSend(`Unblacklist:\nWord has been unblacklisted`, interaction.user.username, interaction.commandName)
+            } else {
+                const embed = new EmbedBuilder()
+                    .setTitle('Unblacklist')
+                    .setDescription('Word is not blacklisted')
+                    .setColor('Red')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                await interaction.reply({ embeds: [embed] });
+            }
+        }
+
     }
+
+
 });
 
 function logSend(message, request_by, command_used) {
@@ -523,17 +633,41 @@ function logSend(message, request_by, command_used) {
 client.on("messageCreate", async message => {
     if (message.author.bot) return;
     if (message.channel.type === 'DM') return;
-    console.log(message.content)
     const prefix = "!";
     if (message.content.startsWith(prefix)) {
         const args = message.content.slice(prefix.length).trim().split(/ +/);
         const command = args.shift().toLowerCase();
         if (command === "melon") {
+            // if bot doesn't have permission to react message user
+            // TypeError: Cannot read properties of undefined (reading 'permissions')
+            if (!message.member.permissions.has("MANAGE_MESSAGES")) {
+                return message.reply({ content: "You do not have permission to delete messages", ephemeral: true });
+            }
+            if (!message.guild.me.permissions.has("ADD_REACTIONS")) {
+                return message.reply("I don't have permission to react message");
+            }
             message.react('🍈');
         }
         if (command === "4214") {
             message.reply('4214 is the best number!');
         }
     }
+
+    const fs = require('fs');
+    const readline = require('readline');
+    fileStream = fs.createReadStream('./blacklist.txt');
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
+
+    for await (const line of rl) {
+        if (message.content.includes(line)) {
+            message.delete();
+            return;
+        }
+    }
+
+
 });
 client.login(TOKEN);
