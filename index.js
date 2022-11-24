@@ -178,7 +178,11 @@ const commands = [
     {
         name: 'button',
         description: 'Sends a button',
-    }
+    },
+    {
+        name: 'speedtest',
+        description: 'Sends a speedtest',
+    },
 ];
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
