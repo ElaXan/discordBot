@@ -1,6 +1,7 @@
-const { REST, Routes, EmbedBuilder, ActivityType } = require('discord.js');
+const { REST, Routes, EmbedBuilder, ActivityType, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events2 } = require('discord.js');
 const { TOKEN, CLIENT_ID, GUILD_ID, OWNER_ID } = require("./config.json")
 const { exec } = require('child_process');
+const wait = require("node:timers/promises")
 const commands = [
     {
         name: 'ping',
@@ -173,6 +174,10 @@ const commands = [
                 required: true,
             },
         ],
+    },
+    {
+        name: 'button',
+        description: 'Sends a button',
     }
 ];
 
@@ -400,7 +405,7 @@ client.on('interactionCreate', async interaction => {
             const evaled = await eval(code);
             const embed = new EmbedBuilder()
                 .setTitle('Eval')
-                .setDescription(`\`\`\`js\n${evaled}\n\`\`\``)
+                .setDescription(`\`\`\`js\n${exec(code)}\n\`\`\``)
                 .setColor('Green')
                 .setTimestamp(new Date())
                 .setFooter({
@@ -428,31 +433,59 @@ client.on('interactionCreate', async interaction => {
         if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "You are not the bot owner!", ephemeral: true });
         const code = interaction.options.getString('code');
         try {
-            const { stderr, stdout } = await exec(code);
-            const embed = new EmbedBuilder()
-                .setTitle('Shell')
-                .setDescription(`\`\`\`js\n${stdout}\n\`\`\``)
-                .setColor('Green')
-                .setTimestamp(new Date())
-                .setFooter({
-                    text: `Requested by ${interaction.user.username}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                });
-            await interaction.reply({ embeds: [embed] });
-            logSend(`Shell:\n${evaled}`, interaction.user.username, interaction.commandName)
+            exec(code, (error, stdout, stderr) => {
+                if (error) {
+                    const embed = new EmbedBuilder()
+                        .setTitle('Shell')
+                        .setDescription(`\`\`\`js\n${error}\n\`\`\``)
+                        .setColor('Red')
+                        .setTimestamp(new Date())
+                        .setFooter({
+                            text: `Requested by ${interaction.user.username}`,
+                            iconURL: interaction.user.displayAvatarURL()
+                        });
+                    interaction.reply({ embeds: [embed] });
+                    logSend(`Shell:\n${error}`, interaction.user.username, interaction.commandName)
+                }
+                if (stderr) {
+                    const embed = new EmbedBuilder()
+                        .setTitle('Shell')
+                        .setDescription(`\`\`\`js\n${stderr}\n\`\`\``)
+                        .setColor('Red')
+                        .setTimestamp(new Date())
+                        .setFooter({
+                            text: `Requested by ${interaction.user.username}`,
+                            iconURL: interaction.user.displayAvatarURL()
+                        });
+                    interaction.reply({ embeds: [embed] });
+                    logSend(`Shell:\n${stderr}`, interaction.user.username, interaction.commandName)
+                }
+                const embed = new EmbedBuilder()
+                    .setTitle('Shell')
+                    .setDescription(`\`\`\`js\n${stdout}\n\`\`\``)
+                    .setColor('Green')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                interaction.reply({ embeds: [embed] });
+                logSend(`Shell:\n${stdout}`, interaction.user.username, interaction.commandName)
+            });
         } catch (error) {
             const embed = new EmbedBuilder()
-                .setTitle('Shell')
-                .setDescription(`\`\`\`js\n${error}\n\`\`\``)
-                .setColor('Red')
-                .setTimestamp(new Date())
-                .setFooter({
-                    text: `Requested by ${interaction.user.username}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                });
-            await interaction.reply({ embeds: [embed] });
+            .setTitle('Shell')
+            .setDescription(`\`\`\`js\n${error}\n\`\`\``)
+            .setColor('Red')
+            .setTimestamp(new Date())
+            .setFooter({
+                text: `Requested by ${interaction.user.username}`,
+                iconURL: interaction.user.displayAvatarURL()
+            });
+            interaction.reply({ embeds: [embed] });
             logSend(`Shell:\n${error}`, interaction.user.username, interaction.commandName)
         }
+
     }
 
 
@@ -528,6 +561,15 @@ client.on('interactionCreate', async interaction => {
                 });
             await interaction.reply({ embeds: [embed] });
             logSend(`Search Result:\nID: ${searchResult.id}\nName: ${searchResult.name}\nCategory: ${searchResult.category}`, interaction.user.username, interaction.commandName)
+
+
+            const button = new MessageButton()
+                .setStyle('PRIMARY')
+                .setLabel('Copy ID')
+                .setCustomId('copyId')
+                .setEmoji('📋');
+            await interaction.editReply({ components: [button] });
+
         }
     }
 
@@ -614,10 +656,78 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [embed] });
             }
         }
-
     }
 
+    if (interaction.commandName === "button") {
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Primary)
+                    .setLabel('Click me!')
+                    .setCustomId('clickButton')
+                    // copy to clipboard
+                    .setEmoji('📋')
+            )
+            .addComponents(
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Secondary)
+                    .setLabel('Close')
+                    .setCustomId('closeButton')
+                    .setEmoji('❌')
+            );
+        await interaction.reply({ content: 'Click the button!', components: [row] });
+        // if button with customId: clickButton is clicked, them do this
+        // update the message
+        // please dont use interaction.on('clickButton') in this code. it will not work
+        const filter = (i) => i.customId === 'clickButton' && i.user.id === interaction.user.id;
+        const collector = interaction.channel.createMessageComponentCollector(interaction.client, interaction, filter, { time: 15000 });
 
+        collector.on('collect', async (i) => {
+            if (i.customId === 'clickButton') {
+                await i.update({ content: 'Clicked!', components: [] });
+            }
+            // if i.customId === 'closeButton' then do delete the message button
+            if (i.customId === 'closeButton') {
+                await interaction.deleteReply();
+            }
+        });
+
+        collector.on('end', async (collected, reason) => {
+            if (reason === 'time') {
+                const embed = new EmbedBuilder()
+                    .setTitle('Button')
+                    .setDescription('Button has not been clicked')
+                    .setColor('Red')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                await interaction.editReply({ embeds: [embed] });
+                logSend(`Button:\nButton has not been clicked`, interaction.user.username, interaction.commandName)
+            }
+        });
+    }
+    if (interaction.commandName === "speedtest") {
+        const speedTest = require('speedtest-net');
+        const test = speedTest({ maxTime: 5000 });
+        test.on('data', data => {
+            const embed = new EmbedBuilder()
+                .setTitle('Speedtest')
+                .setDescription('Speedtest has been completed')
+                .setColor('Green')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                })
+                .addField('Download', data.speeds.download + ' Mbps')
+                .addField('Upload', data.speeds.upload + ' Mbps')
+                .addField('Ping', data.server.ping + ' ms');
+            interaction.reply({ embeds: [embed] });
+            logSend(`Speedtest:\nDownload: ${data.speeds.download} Mbps\nUpload: ${data.speeds.upload} Mbps\nPing: ${data.server.ping} ms`, interaction.user.username, interaction.commandName)
+        });
+    }
 });
 
 function logSend(message, request_by, command_used) {
@@ -653,19 +763,23 @@ client.on("messageCreate", async message => {
         }
     }
 
-    const fs = require('fs');
-    const readline = require('readline');
-    fileStream = fs.createReadStream('./blacklist.txt');
-    const rl = readline.createInterface({
-        input: fileStream,
-        crlfDelay: Infinity
-    });
+    try {
+        const fs = require('fs');
+        const readline = require('readline');
+        fileStream = fs.createReadStream('./blacklist.txt');
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
 
-    for await (const line of rl) {
-        if (message.content.includes(line)) {
-            message.delete();
-            return;
+        for await (const line of rl) {
+            if (message.content.includes(line)) {
+                message.delete();
+                return;
+            }
         }
+    } catch (err) {
+        console.error(err);
     }
 
 
