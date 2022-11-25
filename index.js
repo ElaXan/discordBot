@@ -38,7 +38,6 @@ const client = new Client({
     ],
 });
 
-// Load other .js files in directory Code/Commands
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./Code/Commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {

@@ -16,7 +16,6 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
-// Remove all commands
 (async () => {
     try {
         console.log('Started refreshing application (/) commands.');
