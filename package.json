@@ -10,7 +10,8 @@
     "ytdl": "^1.4.1"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node .",
+    "reg": "node ./slashCommand.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

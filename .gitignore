@@ -2,3 +2,4 @@ node_modules
 config.json
 gm.txt
 blacklist.txt
+package-lock.json
