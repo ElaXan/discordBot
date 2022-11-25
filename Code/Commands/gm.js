@@ -7,9 +7,9 @@ searchGM = async (search, categoryId) => {
     const fs = require('fs');
     const readline = require('readline');
     if (categoryId === "avatars") {
-        fileStream = fs.createReadStream();
-    } else if (categoryId === "quest") {
         fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Avatars}`);
+    } else if (categoryId === "quest") {
+        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Quest}`);
     } else if (categoryId === "items") {
         fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
     } else if (categoryId === "monsters") {

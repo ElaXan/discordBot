@@ -45,6 +45,7 @@ for (const file of commandFiles) {
     const command = require(`./Code/Commands/${file}`);
     client.commands.set(command.data.name, command);
 }
+
 // when ready
 client.on("ready" , () => {
     console.log(`Logged in as ${client.user.tag}!`);
