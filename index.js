@@ -7,8 +7,7 @@ process.on('unhandledRejection', error => {
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection , Events, ActivityType } = require('discord.js');
-const { argv } = require('node:process');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -47,7 +46,7 @@ for (const file of commandFiles) {
 }
 
 // when ready
-client.on("ready" , () => {
+client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Watching });
 })
@@ -79,23 +78,43 @@ client.on("messageCreate", async message => {
             message.reply("Please enter the command you want to run");
             const filter = m => m.author.id === message.author.id;
             message.channel.awaitMessages({ filter, max: 1, time: 60000, errors: ['time'] })
-                .then(collected => {
-                    exec(collected.first().content, (err, stdout, stderr) => {
-                        if (err) {
-                            return message.reply({ content: `error: ${err.message}`, ephemeral: true });
-                        }
-                        if (stderr) {
-                            return message.reply({ content: `stderr: ${stderr}`, ephemeral: true });
-                        }
-                        message.reply({ content: `\`\`\`sh\n${stdout}\n\`\`\``, ephemeral: true });
-                    });
-                }
-                )
-                .catch(collected => {
-                    message.reply('You didn\'t provide a command in time!');
-                }
-                );
-
+            .then(collected => {
+                exec(collected.first().content, (err, stdout, stderr) => {
+                    if (err) {
+                        return message.reply({ content: `error: ${err.message}`, ephemeral: true });
+                    }
+                    if (stderr) {
+                        return message.reply({ content: `stderr: ${stderr}`, ephemeral: true });
+                    }
+                    if (stdout.length > 500) {
+                        const fs = require('node:fs');
+                        fs.writeFile('output.txt', stdout, (err) => {
+                            if (err) {
+                                return message.reply({ content: `error: ${err.message}`, ephemeral: true });
+                            }
+                            message.reply(
+                                {
+                                    content: 'Output is too long, sending as a file',
+                                    files: ['output.txt']
+                                }
+                            );
+                            message.channel.messages.fetch().then(() => {
+                                fs.unlink('output.txt', (err) => {
+                                    if (err) {
+                                        console.error(err)
+                                        return
+                                    }
+                                });
+                            });
+                        });
+                    } else {
+                        message.reply({ content: `\`\`\`js\n${stdout}\n\`\`\``, ephemeral: true });
+                    }
+                });
+            })
+            .catch(collected => {
+                message.reply('You didn\'t provide a command in time!');
+            });
         }
     }
 });
