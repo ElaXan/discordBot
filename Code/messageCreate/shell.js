@@ -5,16 +5,16 @@ module.exports = {
         const { Blocked_Command_Shell, OWNER_ID } = require("../../config.json")
         const prefix = 'z!';
         if (!message.content.startsWith(prefix)) return;
-        if (!message.author.id === OWNER_ID) return;
+        if (message.author.id !== OWNER_ID) return;
         if (!message.content.startsWith(`${prefix}${this.name}`)) return;
         const { exec } = require('child_process');
         exec(message.content.slice(7), (error, stdout, stderr) => {
             if (error) {
-                console.log(`error: ${error.message}`);
+                message.reply({ content: `\`\`\`bash\nerror:\n${error.message}\`\`\``, ephemeral: true });
                 return;
             }
             if (stderr) {
-                console.log(`stderr: ${stderr}`);
+                message.reply({ content: `\`\`\`bash\nstderr:\n${stderr}\`\`\``, ephemeral: true });
                 return;
             }
             if (Blocked_Command_Shell.includes(message.content.slice(7))) {

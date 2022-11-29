@@ -55,6 +55,7 @@ client.on("ready", () => {
 // client events
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
+    if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
     const code = client.commands.get(interaction.commandName);
     if (!code) return;
     try {
@@ -68,7 +69,6 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on(Events.MessageCreate, async message => {
     const prefix = 'z!';
     if (!message.content.startsWith(prefix)) return;
-    //if bot doesnt have    permission to send message, return
     if (!message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
     const messageCreateFiles = fs.readdirSync('./Code/messageCreate').filter(file => file.endsWith('.js'));
     for (const file of messageCreateFiles) {
