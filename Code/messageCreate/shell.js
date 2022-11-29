@@ -6,7 +6,6 @@ module.exports = {
         if (!message.content.startsWith(Prefix)) return;
         if (message.author.id !== OWNER_ID) return;
         if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
-        // block commands from being used like rm -rf /
         if (Blocked_Command_Shell.some(word => message.content.toLowerCase().includes(word))) return message.reply({ content: "You can't use that command!", ephemeral: true });
         const { exec } = require('child_process');
         exec(message.content.slice(7), (error, stdout, stderr) => {
