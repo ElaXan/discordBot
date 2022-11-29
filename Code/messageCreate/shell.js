@@ -2,8 +2,7 @@
 module.exports = {
     name: 'bash',
     async execute(message) {
-        const { OWNER_ID } = require("../../config.json")
-        // if message author is not me, return
+        const { Blocked_Command_Shell, OWNER_ID } = require("../../config.json")
         const prefix = 'z!';
         if (!message.content.startsWith(prefix)) return;
         if (!message.author.id === OWNER_ID) return;
@@ -18,8 +17,9 @@ module.exports = {
                 console.log(`stderr: ${stderr}`);
                 return;
             }
-            if (message.content === `z!${this.name} clear`) return message.reply({ content: 'Blocked Command', ephemeral: true });
-            // if message too long 500 characters, send message in a file
+            if (Blocked_Command_Shell.includes(message.content.slice(7))) {
+                return message.channel.send(`\`\`\`diff\n- ${message.content.slice(7)} is blocked from running in shell\`\`\``)
+            }
             if (stdout.length > 500) {
                 message.channel.send(
                     {
