@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 
-const { TOKEN, RPC, OWNER_ID } = require('./config.json');
+const { TOKEN, RPC } = require('./config.json');
 
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);

@@ -2,11 +2,13 @@
 module.exports = {
     name: 'bash',
     async execute(message) {
-        const { Blocked_Command_Shell, OWNER_ID } = require("../../config.json")
-        const prefix = 'z!';
-        if (!message.content.startsWith(prefix)) return;
+        const { Blocked_Command_Shell, OWNER_ID, Prefix } = require("../../config.json")
+        if (!message.content.startsWith(Prefix)) return;
         if (message.author.id !== OWNER_ID) return;
-        if (!message.content.startsWith(`${prefix}${this.name}`)) return;
+        if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
+        if (Blocked_Command_Shell.includes(message.content.slice(Prefix.length + this.name.length + 1))){
+            return message.reply({ content: `\`\`\`\n${message.content.slice(Prefix.length + this.name.length + 1)} command is blocked\`\`\``, ephemeral: true });
+        }
         const { exec } = require('child_process');
         exec(message.content.slice(7), (error, stdout, stderr) => {
             if (error) {
@@ -16,9 +18,6 @@ module.exports = {
             if (stderr) {
                 message.reply({ content: `\`\`\`bash\nstderr:\n${stderr}\`\`\``, ephemeral: true });
                 return;
-            }
-            if (Blocked_Command_Shell.includes(message.content.slice(7).split(' ')[0])) {
-                return message.channel.send(`\`\`\`diff\n- ${message.content.slice(7)} is blocked from running in shell\`\`\``)
             }
             if (stdout.length > 500) {
                 message.channel.send(
