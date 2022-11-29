@@ -28,8 +28,6 @@ module.exports = {
         if (!fs.existsSync(file)) {
             return interaction.reply({ content: 'File not found.' });
         }
-        // if getPath is "." then processPath is the current directory
-        // Example: /home/username/Code
         if (getPath === ".") {
             const getPath = process.cwd();
             await interaction.reply(
