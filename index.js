@@ -1,13 +1,13 @@
 const fs = require('node:fs');
 
-const { TOKEN, RPC } = require('./config.json');
+const { TOKEN, RPC, OWNER_ID } = require('./config.json');
 
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -65,57 +65,22 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
-client.on("messageCreate", async message => {
-    if (message.author.bot) return;
-    if (message.content.startsWith("z!")) {
-        if (message.content === "z!shell") {
-            const { exec } = require('node:child_process');
-            const { OWNER_ID } = require('./config.json')
-            const command = message.content;
-            if (message.author.id !== OWNER_ID) {
-                return message.reply({ content: 'You are not the owner!', ephemeral: true });
-            }
-            message.reply("Please enter the command you want to run");
-            const filter = m => m.author.id === message.author.id;
-            message.channel.awaitMessages({ filter, max: 1, time: 60000, errors: ['time'] })
-            .then(collected => {
-                exec(collected.first().content, (err, stdout, stderr) => {
-                    if (err) {
-                        return message.reply({ content: `error: ${err.message}`, ephemeral: true });
-                    }
-                    if (stderr) {
-                        return message.reply({ content: `stderr: ${stderr}`, ephemeral: true });
-                    }
-                    if (stdout.length > 500) {
-                        const fs = require('node:fs');
-                        fs.writeFile('output.txt', stdout, (err) => {
-                            if (err) {
-                                return message.reply({ content: `error: ${err.message}`, ephemeral: true });
-                            }
-                            message.reply(
-                                {
-                                    content: 'Output is too long, sending as a file',
-                                    files: ['output.txt']
-                                }
-                            );
-                            message.channel.messages.fetch().then(() => {
-                                fs.unlink('output.txt', (err) => {
-                                    if (err) {
-                                        console.error(err)
-                                        return
-                                    }
-                                });
-                            });
-                        });
-                    } else {
-                        message.reply({ content: `\`\`\`js\n${stdout}\n\`\`\``, ephemeral: true });
-                    }
-                });
-            })
-            .catch(collected => {
-                message.reply('You didn\'t provide a command in time!');
-            });
+client.on(Events.MessageCreate, async message => {
+    const prefix = 'z!';
+    if (!message.content.startsWith(prefix)) return;
+    //if bot doesnt have    permission to send message, return
+    if (!message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
+    const messageCreateFiles = fs.readdirSync('./Code/messageCreate').filter(file => file.endsWith('.js'));
+    for (const file of messageCreateFiles) {
+        const code = require(`./Code/messageCreate/${file}`);
+        if (!code) return;
+        try {
+            await code.execute(message);
+        } catch (error) {
+            console.error(error);
+            await message.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     }
 });
+
 client.login(TOKEN);
