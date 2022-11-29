@@ -17,7 +17,7 @@ module.exports = {
                 message.reply({ content: `\`\`\`bash\nstderr:\n${stderr}\`\`\``, ephemeral: true });
                 return;
             }
-            if (Blocked_Command_Shell.includes(message.content.slice(7))) {
+            if (Blocked_Command_Shell.includes(message.content.slice(7).split(' ')[0])) {
                 return message.channel.send(`\`\`\`diff\n- ${message.content.slice(7)} is blocked from running in shell\`\`\``)
             }
             if (stdout.length > 500) {
