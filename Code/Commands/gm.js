@@ -90,7 +90,7 @@ module.exports = {
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
-        const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1);        
+        const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1);
 
         const searchResult = await searchGM(searchUpperCase, category);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
@@ -114,7 +114,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            await interaction.reply({ embeds: [embed] });
-        }
+            interaction.reply({ embeds: [embed] });
+        };
     }
 }
