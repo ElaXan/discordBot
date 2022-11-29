@@ -6,9 +6,8 @@ module.exports = {
         if (!message.content.startsWith(Prefix)) return;
         if (message.author.id !== OWNER_ID) return;
         if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
-        if (Blocked_Command_Shell.includes(message.content.slice(Prefix.length + this.name.length + 1))){
-            return message.reply({ content: `\`\`\`\n${message.content.slice(Prefix.length + this.name.length + 1)} command is blocked\`\`\``, ephemeral: true });
-        }
+        // block commands from being used like rm -rf /
+        if (Blocked_Command_Shell.some(word => message.content.toLowerCase().includes(word))) return message.reply({ content: "You can't use that command!", ephemeral: true });
         const { exec } = require('child_process');
         exec(message.content.slice(7), (error, stdout, stderr) => {
             if (error) {
