@@ -114,7 +114,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            interaction.reply({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed] });
         };
     }
 }
