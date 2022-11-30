@@ -1,13 +1,16 @@
 {
   "dependencies": {
+    "@discordjs/voice": "^0.14.0",
     "@mapbox/node-pre-gyp": "^1.0.10",
     "axios": "^1.2.0",
     "detritus-client": "^0.16.3",
     "discord-buttons": "^4.0.0-deprecated",
-    "discord.js": "^14.6.0",
+    "discord.js": "^14.7.0",
+    "libsodium-wrappers": "^0.7.10",
     "mapbox": "^1.0.0-beta10",
     "rest": "^2.0.0",
-    "ytdl": "^1.4.1"
+    "ytdl": "^1.4.1",
+    "ytdl-core": "^4.11.2"
   },
   "scripts": {
     "start": "node .",
