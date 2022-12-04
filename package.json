@@ -1,14 +1,18 @@
 {
   "dependencies": {
+    "@discordjs/opus": "^0.8.0",
     "@discordjs/voice": "^0.14.0",
-    "@mapbox/node-pre-gyp": "^1.0.10",
     "axios": "^1.2.0",
-    "detritus-client": "^0.16.3",
-    "discord-buttons": "^4.0.0-deprecated",
+    "detritus-client": "^0.12.1",
+    "discord-api-types": "^0.37.20",
+    "discord-player": "^5.3.2",
     "discord.js": "^14.7.0",
+    "download": "^8.0.0",
     "libsodium-wrappers": "^0.7.10",
-    "mapbox": "^1.0.0-beta10",
+    "opusscript": "^0.0.8",
     "rest": "^2.0.0",
+    "youtube-search": "^1.1.6",
+    "yt-search": "^2.10.3",
     "ytdl": "^1.4.1",
     "ytdl-core": "^4.11.2"
   },

@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-const { Path_GM_Handhook } = require('../../config.json');
+const { Path_GM_Handhook } = require('../../../config.json');
 
 // No leak gobloggers tolol
 
@@ -49,23 +49,27 @@ searchGM = async (search, categoryId) => {
 module.exports = {
     data: {
         name: 'gm',
-        description: 'Search ID from GM_Handbook',
+        description: 'Search for a ID in the GM Handhook',
         options: [
             {
                 name: 'search',
-                description: 'Search ID from GM_Handbook',
+                description: 'Search for a ID in the GM Handhook',
                 type: 3,
                 required: true,
             },
             {
                 name: 'category',
-                description: 'Category for ID',
+                description: 'The category of the ID',
                 type: 3,
                 required: false,
                 choices: [
                     {
                         name: 'Avatars',
                         value: 'avatars',
+                    },
+                    {
+                        name: 'Quest',
+                        value: 'quest',
                     },
                     {
                         name: 'Items',
@@ -76,22 +80,17 @@ module.exports = {
                         value: 'monsters',
                     },
                     {
-                        name: 'Quests',
-                        value: 'quest',
-                    },
-                    {
                         name: 'Scenes',
                         value: 'scenes',
-                    }
-                ]
-            }
-        ]
+                    },
+                ],
+            },
+        ],
     },
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
         const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1);
-
         const searchResult = await searchGM(searchUpperCase, category);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
             const embed = new EmbedBuilder()

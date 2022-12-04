@@ -39,10 +39,13 @@ const client = new Client({
 });
 
 client.commands = new Collection();
-const commandFiles = fs.readdirSync('./Code/Commands').filter(file => file.endsWith('.js'));
-for (const file of commandFiles) {
-    const command = require(`./Code/Commands/${file}`);
-    client.commands.set(command.data.name, command);
+const commandFolders = fs.readdirSync('./src/Commands');
+for (const folder of commandFolders) {
+    const commandFiles = fs.readdirSync(`./src/Commands/${folder}`).filter(file => file.endsWith('.js'));
+    for (const file of commandFiles) {
+        const command = require(`./src/Commands/${folder}/${file}`);
+        client.commands.set(command.data.name, command);
+    }
 }
 
 // when ready
@@ -70,9 +73,9 @@ client.on(Events.MessageCreate, async message => {
     const prefix = 'z!';
     if (!message.content.startsWith(prefix)) return;
     if (!message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
-    const messageCreateFiles = fs.readdirSync('./Code/messageCreate').filter(file => file.endsWith('.js'));
+    const messageCreateFiles = fs.readdirSync('./src/messageCreate').filter(file => file.endsWith('.js'));
     for (const file of messageCreateFiles) {
-        const code = require(`./Code/messageCreate/${file}`);
+        const code = require(`./src/messageCreate/${file}`);
         if (!code) return;
         try {
             await code.execute(message);

@@ -5,13 +5,17 @@ const { CLIENT_ID, GUILD_ID, TOKEN } = require('./config.json');
 const path = require('node:path');
 
 const commands = [];
-const commandPath = path.join(__dirname, 'Code/Commands');
+const commandPath = path.join(__dirname, 'src/Commands');
 const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-    const paths = path.join(__dirname, 'Code/Commands', file);
-    const command = require(paths);
-    commands.push(command.data);
+// get all files in src/Commands and subfolders
+const commandFolders = fs.readdirSync('./src/Commands');
+for (const folder of commandFolders) {
+    const commandFiles = fs.readdirSync(`./src/Commands/${folder}`).filter(file => file.endsWith('.js'));
+    for (const file of commandFiles) {
+        const command = require(`./src/Commands/${folder}/${file}`);
+        commands.push(command.data);
+    }
 }
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
