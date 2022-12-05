@@ -57,15 +57,26 @@ client.on("ready", () => {
 
 // client events
 client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-    if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
-    const code = client.commands.get(interaction.commandName);
-    if (!code) return;
-    try {
-        await code.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    if (interaction.isAutocomplete()) {
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+        try {
+            await command.autocomplete(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    } else {
+        if (!interaction.isChatInputCommand()) return;
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
+        const code = client.commands.get(interaction.commandName);
+        if (!code) return;
+        try {
+            await code.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
     }
 });
 

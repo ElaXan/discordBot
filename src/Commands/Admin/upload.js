@@ -12,7 +12,7 @@ module.exports = {
         ]
     },
     async execute(interaction) {
-        const { OWNER_ID } = require('../../config.json')
+        const { OWNER_ID } = require('../../../config.json')
         const fs = require('fs');
         const file = interaction.options.getString('file');
         const path = require('path');
@@ -26,7 +26,7 @@ module.exports = {
         }
         
         if (!fs.existsSync(file)) {
-            return interaction.reply({ content: 'File not found.' });
+            return interaction.reply({ content: 'File not found.', ephemeral: true });
         }
         if (getPath === ".") {
             const getPath = process.cwd();
