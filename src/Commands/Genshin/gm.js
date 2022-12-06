@@ -47,102 +47,124 @@ searchGM = async (search, categoryId) => {
     }
 },
 
-module.exports = {
-    data: {
-        name: 'gm',
-        description: 'Search for a ID in the GM Handhook',
-        options: [
-            {
-                name: 'search',
-                description: 'Search for a ID in the GM Handhook',
-                type: 3,
-                required: true,
-                autocomplete: true
-            },
-            {
-                name: 'category',
-                description: 'The category of the ID',
-                type: 3,
-                required: false,
-                choices: [
-                    {
-                        name: 'Avatars',
-                        value: 'avatars',
-                    },
-                    {
-                        name: 'Quest',
-                        value: 'quest',
-                    },
-                    {
-                        name: 'Items',
-                        value: 'items',
-                    },
-                    {
-                        name: 'Monsters',
-                        value: 'monsters',
-                    },
-                    {
-                        name: 'Scenes',
-                        value: 'scenes',
-                    },
-                ],
-            },
-        ],
-    },
-    async autocomplete(interaction) {
-        const focusedValue = interaction.options.getFocused();
-		const choices = [];
-        const fs = require('fs');
-        const readline = require('readline');
-        const fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
-        const rl = readline.createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-        });
-        for await (const line of rl) {
-            if (line.startsWith("//")) {
-                category = line.replace("//", "");
-            }
-            if (line.includes(focusedValue)) {
-                const name = line.trim();
+    module.exports = {
+        data: {
+            name: 'gm',
+            description: 'Search for a ID in the GM Handhook',
+            options: [
+                {
+                    name: 'search',
+                    description: 'Search for a ID in the GM Handhook',
+                    type: 3,
+                    required: true,
+                    autocomplete: true
+                },
+                {
+                    name: 'category',
+                    description: 'The category of the ID',
+                    type: 3,
+                    required: false,
+                    choices: [
+                        {
+                            name: 'Avatars',
+                            value: 'avatars',
+                        },
+                        {
+                            name: 'Quest',
+                            value: 'quest',
+                        },
+                        {
+                            name: 'Items',
+                            value: 'items',
+                        },
+                        {
+                            name: 'Monsters',
+                            value: 'monsters',
+                        },
+                        {
+                            name: 'Scenes',
+                            value: 'scenes',
+                        },
+                    ],
+                },
+            ],
+        },
+        async autocomplete(interaction) {
+            const focusedValue = interaction.options.getFocused();
+            const choices = [];
+            const fs = require('fs');
+            const readline = require('readline');
+            const fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
+            const rl = readline.createInterface({
+                input: fileStream,
+                crlfDelay: Infinity
+            });
+
+            if (focusedValue.length === 0) {
                 choices.push({
-                    name: name,
-                    value: name,
+                    name: "Please type something",
+                    value: "Please type something",
                 });
+            } else {
+                for await (const line of rl) {
+                    if (line.startsWith("//")) {
+                        category = line.replace("//", "");
+                    }
+                    if (line.includes(focusedValue)) {
+                        choices.push({
+                            name: `${line.split(':')[1].trim()} | (${category} )`,
+                            value: line.split(':')[0].trim(),
+                        });
+                    }
+                }
             }
+            interaction.respond(choices.slice(0, 25));
+        },
+        async execute(interaction) {
+            const { CHANNEL_ID_LOG } = require("../../../config.json");
+            const search = interaction.options.getString('search');
+            const category = interaction.options.getString('category');
+            //const searchUpperCase = search.replace(/\b\w/g, l => l.toUpperCase());
+            const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1).toLowerCase();
+            const searchResult = await searchGM(searchUpperCase, category);
+            if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
+                const embed = new EmbedBuilder()
+                    .setTitle('Search Result')
+                    .setDescription('Not Found for ' + searchUpperCase)
+                    .setColor('Red')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                log.log('info', `Search Result: Not Found for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+                await interaction.reply({ embeds: [embed], ephemeral: true });
+            } else {
+                const embed = new EmbedBuilder()
+                    .setTitle('Search Result')
+                    .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory:${searchResult.category}`)
+                    .setColor('Green')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
+                // send message to log channel
+                const channel = await interaction.client.channels.fetch(CHANNEL_ID_LOG);
+                const embedLog = new EmbedBuilder()
+                    .setTitle('Search Result')
+                    .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory:${searchResult.category}`)
+                    .setColor('Green')
+                    .setTimestamp(new Date())
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                await channel.send({ embeds: [embedLog] });
+                log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
+
+                await interaction.reply({ embeds: [embed], ephemeral: true });
+            };
         }
-        interaction.respond(choices.slice(0, 25));
-    },
-    async execute(interaction) {
-        const search = interaction.options.getString('search');
-        const category = interaction.options.getString('category');
-        const searchUpperCase = search.replace(/\b\w/g, l => l.toUpperCase());
-        //const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1).toLowerCase();
-        const searchResult = await searchGM(searchUpperCase, category);
-        if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
-            const embed = new EmbedBuilder()
-                .setTitle('Search Result')
-                .setDescription('Not Found for ' + searchUpperCase)
-                .setColor('Red')
-                .setTimestamp(new Date())
-                .setFooter({
-                    text: `Requested by ${interaction.user.username}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                });
-            log.log('info', `Search Result: Not Found for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
-            await interaction.reply({ embeds: [embed], ephemeral: true });
-        } else {
-            const embed = new EmbedBuilder()
-                .setTitle('Search Result')
-                .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory:${searchResult.category}`)
-                .setColor('Green')
-                .setTimestamp(new Date())
-                .setFooter({
-                    text: `Requested by ${interaction.user.username}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                });
-            log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
-            await interaction.reply({ embeds: [embed], ephemeral: true });
-        };
     }
-}

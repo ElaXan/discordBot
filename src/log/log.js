@@ -1,9 +1,18 @@
-// create log after user send command to bot, and log it to file
+
 module.exports = {
+    now: new Date().toLocaleString().replace(/\//g, '-').replace(/:/g, '-'),
     time: {
-        date: new Date(),
-        date2: new Date().toLocaleDateString().replace(/\//g, '-'),
-        date3: new Date().toLocaleString().replace(/\//g, '-').replace(/:/g, '-'),
+        date3: function() {
+            const dateNow = new Date().toLocaleString().replace(/\//g, '-').replace(/:/g, '-')
+            const fs = require('fs');
+            if (!fs.existsSync('./logs')) {
+                fs.mkdirSync('./logs');
+            }
+            fs.writeFile(`./logs/log-main.json`, `{ "date": "${dateNow}" }`, function (err) {
+                if (err) throw err;
+                console.log('Saved log file name!');
+            });
+        }
     },
     /**
      * @param {String} interaction - The interaction or message Example: "Info", "Error", "Warn"
@@ -17,10 +26,11 @@ module.exports = {
     log: function (interaction, message, member, user, channel, guild ) {
         const fs = require('fs');
         const time = require("./log")
+        const { date } = require("../../logs/log-main.json")
         if (interaction) {
-            console.log(`${this.time.date3} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}`);
+            console.log(`${this.now} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}`);
             console.log("----------------------------------------");
-            fs.appendFileSync(String(`./logs/log-${time.time.date3}.txt`), `\n\n------------------------------------\n${this.time.date3} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}\n------------------------------------`, function (err) {
+            fs.appendFileSync(String(`./logs/log-${date}.txt`), `\n\n------------------------------------\n${date} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}\n------------------------------------`, function (err) {
                 if (err) throw err;
                 console.log('Saved!');
             });
