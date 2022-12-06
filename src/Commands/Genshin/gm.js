@@ -150,19 +150,6 @@ searchGM = async (search, categoryId) => {
                         iconURL: interaction.user.displayAvatarURL()
                     });
                 log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
-                // send message to log channel
-                const channel = await interaction.client.channels.fetch(CHANNEL_ID_LOG);
-                const embedLog = new EmbedBuilder()
-                    .setTitle('Search Result')
-                    .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory:${searchResult.category}`)
-                    .setColor('Green')
-                    .setTimestamp(new Date())
-                    .setFooter({
-                        text: `Requested by ${interaction.user.username}`,
-                        iconURL: interaction.user.displayAvatarURL()
-                    });
-                await channel.send({ embeds: [embedLog] });
-                log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
 
                 await interaction.reply({ embeds: [embed], ephemeral: true });
             };
