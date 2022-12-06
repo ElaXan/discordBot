@@ -91,7 +91,8 @@ module.exports = {
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
-        const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1);
+        const searchUpperCase = search.replace(/\b\w/g, l => l.toUpperCase());
+        //const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1).toLowerCase();
         const searchResult = await searchGM(searchUpperCase, category);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
             const embed = new EmbedBuilder()
@@ -103,7 +104,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            log.log('info', `Search Result: Not Found for ${searchUpperCase}`);
+            log.log('info', `Search Result: Not Found for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
             await interaction.reply({ embeds: [embed], ephemeral: true });
         } else {
             const embed = new EmbedBuilder()
@@ -115,8 +116,8 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.username}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
-            await interaction.reply({ embeds: [embed], ephermeral: true });
+            log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
+            await interaction.reply({ embeds: [embed], ephemeral: true });
         };
     }
 }
