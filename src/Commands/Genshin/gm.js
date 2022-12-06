@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { Path_GM_Handhook } = require('../../../config.json');
 const log = require('../../log/log');
 
@@ -91,6 +91,8 @@ searchGM = async (search, categoryId) => {
         },
         async autocomplete(interaction) {
             const focusedValue = interaction.options.getFocused();
+            const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+            //const search = focusedValue.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
             const choices = [];
             const fs = require('fs');
             const readline = require('readline');
@@ -99,8 +101,8 @@ searchGM = async (search, categoryId) => {
                 input: fileStream,
                 crlfDelay: Infinity
             });
-
-            if (focusedValue.length === 0) {
+            console.log(search)
+            if (search.length === 0) {
                 choices.push({
                     name: "Please type something",
                     value: "Please type something",
@@ -110,7 +112,8 @@ searchGM = async (search, categoryId) => {
                     if (line.startsWith("//")) {
                         category = line.replace("//", "").replace(" ", "");
                     }
-                    if (line.includes(focusedValue)) {
+                    if (line.includes(search)) {
+                        console.log(line);
                         if (line.length < 1) {
                             choices.push({
                                 name: "Not Found",
@@ -118,8 +121,6 @@ searchGM = async (search, categoryId) => {
                             })
                         } else {
                             choices.push({
-                                // Must be between 1 and 100 in length.
-
                                 name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
                                 value: line.split(':')[0].trim(),
                             });
@@ -127,13 +128,12 @@ searchGM = async (search, categoryId) => {
                     }
                 }
             }
-            interaction.respond(choices.slice(1, 25));
+            interaction.respond(choices.slice(0, 25));
         },
         async execute(interaction) {
             const search = interaction.options.getString('search');
             const category = interaction.options.getString('category');
-            //const searchUpperCase = search.replace(/\b\w/g, l => l.toUpperCase());
-            const searchUpperCase = search.charAt(0).toUpperCase() + search.slice(1).toLowerCase();
+            const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
             const searchResult = await searchGM(searchUpperCase, category);
             if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
                 const embed = new EmbedBuilder()
@@ -157,9 +157,34 @@ searchGM = async (search, categoryId) => {
                         text: `Requested by ${interaction.user.username}`,
                         iconURL: interaction.user.displayAvatarURL()
                     });
+                const button = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setLabel('Show ID Only')
+                            .setStyle(ButtonStyle.Primary)
+                            .setCustomId('show_id')
+                    );
                 log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
 
-                await interaction.reply({ embeds: [embed], ephemeral: true });
+                await interaction.reply({ embeds: [embed], ephemeral: true, components: [button] });
+
+                const filter = (i) => i.customId === 'show_id' && i.user.id === interaction.user.id;
+                const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
+
+                collector.on('collect', async (i) => {
+                    if (i.customId === 'show_id') {
+                        await i.deferUpdate();
+                        await interaction.editReply({
+                            content: `${searchResult.id}`,
+                            ephemeral: true,
+                            embeds: [],
+                            components: []
+                        });
+                    }
+                });
+                collector.on("end", async () => {
+                    await interaction.editReply({ components: [] });
+                });
             };
         }
     }
