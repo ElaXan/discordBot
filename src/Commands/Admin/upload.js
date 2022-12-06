@@ -20,6 +20,7 @@ module.exports = {
         const getPath = path.dirname(file);
         const process = require('process');
         const getSizeOfFile = fs.statSync(file).size;
+        const log = require("../../log/log")
 
         if (interaction.user.id !== OWNER_ID) {
             return interaction.reply({ content: 'You are not the owner of this bot.', ephemeral: true });
@@ -35,7 +36,7 @@ module.exports = {
                     content: `Uploading ${basename}`
                 }
             );
-            return await interaction.editReply(
+            await interaction.editReply(
                 {
                     content: `\`\`\`\nName : ${basename}\nDirectory : ${getPath}\nSize : ${getSizeOfFile} bytes\`\`\``,
                     files: [
@@ -43,6 +44,7 @@ module.exports = {
                     ]
                 }
             );
+            return log.log(`Uploaded ${basename} Directory ${getPath}`, "Upload", interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
         }
         await interaction.reply(
             {
@@ -57,5 +59,6 @@ module.exports = {
                 ]
             }
         );
+        return log.log(`Uploaded ${basename} Directory ${getPath}`, "Upload", interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
     }
 }

@@ -104,7 +104,7 @@ module.exports = {
                     iconURL: interaction.user.displayAvatarURL()
                 });
             log.log('info', `Search Result: Not Found for ${searchUpperCase}`);
-            await interaction.reply({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed], ephemeral: true });
         } else {
             const embed = new EmbedBuilder()
                 .setTitle('Search Result')
@@ -116,7 +116,7 @@ module.exports = {
                     iconURL: interaction.user.displayAvatarURL()
                 });
             log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.username}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
-            await interaction.reply({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed], ephermeral: true });
         };
     }
 }

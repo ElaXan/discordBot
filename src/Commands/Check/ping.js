@@ -7,11 +7,13 @@ module.exports = {
         description: 'Replies with Pong!',
     },
     async execute(interaction) {
+        const log = require("../../log/log")
         const embed = new EmbedBuilder()
             .setTitle('Pong!')
             .setDescription(`Ping: ${new Date().getTime() - interaction.createdTimestamp}ms`)
             .setColor('Green')
             .setTimestamp(new Date())
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed] })
+        log.log('info', `Ping: ${new Date().getTime() - interaction.createdTimestamp}ms`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
     }
 };

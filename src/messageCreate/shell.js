@@ -7,6 +7,7 @@ module.exports = {
         if (message.author.id !== OWNER_ID) return;
         if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
         if (Blocked_Command_Shell.some(word => message.content.toLowerCase().includes(word))) return message.reply({ content: "You can't use that command!", ephemeral: true });
+        const log = require("../log/log").log
         const { exec } = require('child_process');
         exec(message.content.slice(7), (error, stdout, stderr) => {
             if (error) {
@@ -29,8 +30,10 @@ module.exports = {
                         ]
                     }
                 );
+                log("info", `Run: ${message.content.slice(7)}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
             } else {
                 message.reply({ content: `\`\`\`${stdout}\`\`\``, ephemeral: true }).catch(console.error);
+                log("info", `Run: ${message.content.slice(7)}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
             }
         });
     },

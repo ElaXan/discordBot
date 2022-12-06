@@ -1,18 +1,19 @@
 // create log after user send command to bot, and log it to file
 module.exports = {
-    /**
-     * @param {String} interaction - The interaction
-     * @param {String} message - The message
-     * @param {String} member - The member
-     * @param {String} user - The user
-     * @param {String} channel - The channel
-     * @param {String} guild - The guild
-     */
     time: {
         date: new Date(),
         date2: new Date().toLocaleDateString().replace(/\//g, '-'),
         date3: new Date().toLocaleString().replace(/\//g, '-').replace(/:/g, '-'),
     },
+    /**
+     * @param {String} interaction - The interaction or message Example: "Info", "Error", "Warn"
+     * @param {String} message - The message of the output interaction Example: "This is a message"
+     * @param {String} member - The member name who use the command Example: "Z3RO#4032"
+     * @param {String} user - The user id who use the command Example: "123456789012345678"
+     * @param {String} channel - The channel id where the command is used Example: "123456789012345678"
+     * @param {String} guild - The guild id where the command is used Example: "123456789012345678"
+     * @param {String} commandType - The command type Example: Slash Command, Message Command
+     */
     log: function (interaction, message, member, user, channel, guild ) {
         const fs = require('fs');
         const time = require("./log")
