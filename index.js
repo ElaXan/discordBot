@@ -54,8 +54,10 @@ for (const folder of commandFolders) {
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Watching });
-    // get module.export time.time from index.js
     const time = require("./src/log/log")
+    if (!fs.existsSync('./logs')) {
+        fs.mkdirSync('./logs');
+    }
     fs.writeFileSync(String(`./logs/log-${time.time.date3}.txt`), `Logged in as ${client.user.tag}!`, function (err) {
         if (err) throw err;
         console.log('Saved!');
