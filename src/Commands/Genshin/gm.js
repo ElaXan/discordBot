@@ -108,11 +108,11 @@ searchGM = async (search, categoryId) => {
             } else {
                 for await (const line of rl) {
                     if (line.startsWith("//")) {
-                        category = line.replace("//", "");
+                        category = line.replace("//", "").replace(" ", "");
                     }
                     if (line.includes(focusedValue)) {
                         choices.push({
-                            name: `${line.split(':')[1].trim()} | (${category} )`,
+                            name: `${line.split(':')[1].trim()} | (${category})`,
                             value: line.split(':')[0].trim(),
                         });
                     }
