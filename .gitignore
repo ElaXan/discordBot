@@ -4,3 +4,4 @@ config.json
 gm.txt
 blacklist.txt
 package-lock.json
+logs

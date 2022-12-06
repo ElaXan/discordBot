@@ -10,8 +10,7 @@
         "Items": "items.txt",
         "Monsters": "monsters.txt",
         "Quests": "quests.txt",
-        "If_Choices_is_Null": "gm.txt",
-        "gio", "gio.txt"
+        "If_Choices_is_Null": "gm.txt"
     },
     "RPC": {
         "Details": "Urmom"
