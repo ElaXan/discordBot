@@ -57,6 +57,7 @@ module.exports = {
                 description: 'Search for a ID in the GM Handhook',
                 type: 3,
                 required: true,
+                autocomplete: true
             },
             {
                 name: 'category',
@@ -87,6 +88,30 @@ module.exports = {
                 ],
             },
         ],
+    },
+    async autocomplete(interaction) {
+        const focusedValue = interaction.options.getFocused();
+		const choices = [];
+        const fs = require('fs');
+        const readline = require('readline');
+        const fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
+        for await (const line of rl) {
+            if (line.startsWith("//")) {
+                category = line.replace("//", "");
+            }
+            if (line.includes(focusedValue)) {
+                const name = line.trim();
+                choices.push({
+                    name: name,
+                    value: name,
+                });
+            }
+        }
+        interaction.respond(choices.slice(0, 25));
     },
     async execute(interaction) {
         const search = interaction.options.getString('search');
