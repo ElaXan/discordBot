@@ -111,17 +111,25 @@ searchGM = async (search, categoryId) => {
                         category = line.replace("//", "").replace(" ", "");
                     }
                     if (line.includes(focusedValue)) {
-                        choices.push({
-                            name: `${line.split(':')[1].trim()} | (${category})`,
-                            value: line.split(':')[0].trim(),
-                        });
+                        if (line.length < 1) {
+                            choices.push({
+                                name: "Not Found",
+                                value: "Not Found",
+                            })
+                        } else {
+                            choices.push({
+                                // Must be between 1 and 100 in length.
+
+                                name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
+                                value: line.split(':')[0].trim(),
+                            });
+                        }
                     }
                 }
             }
-            interaction.respond(choices.slice(0, 25));
+            interaction.respond(choices.slice(1, 25));
         },
         async execute(interaction) {
-            const { CHANNEL_ID_LOG } = require("../../../config.json");
             const search = interaction.options.getString('search');
             const category = interaction.options.getString('category');
             //const searchUpperCase = search.replace(/\b\w/g, l => l.toUpperCase());
