@@ -101,7 +101,6 @@ searchGM = async (search, categoryId) => {
                 input: fileStream,
                 crlfDelay: Infinity
             });
-            console.log(search)
             if (search.length === 0) {
                 choices.push({
                     name: "Please type something",
@@ -113,7 +112,6 @@ searchGM = async (search, categoryId) => {
                         category = line.replace("//", "").replace(" ", "");
                     }
                     if (line.includes(search)) {
-                        console.log(line);
                         if (line.length < 1) {
                             choices.push({
                                 name: "Not Found",
