@@ -10,6 +10,7 @@
         "Items": "items.txt",
         "Monsters": "monsters.txt",
         "Quests": "quests.txt",
+        "Gadgets": "gadgets.txt",
         "If_Choices_is_Null": "gm.txt"
     },
     "RPC": {

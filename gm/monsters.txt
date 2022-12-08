@@ -283,7 +283,7 @@
 25050401 : AahigaruTaisho_Male_01 - Shogunate Infantry Captain
 25050402 : AahigaruTaisho_Male_01_02 - [N/A] 220906409
 25050501 : Aahigaru_Male_02 - Sangonomiya Cohort
-25050502 : Aahigaru_Male_02_02 - [FR] - (test)å¿æµ·ä¸ªäººçº¿åæåè¶³è½»
+25050502 : Aahigaru_Male_02_02 - [FR] - (test)心海个人线反抗军足轻
 25060101 : Thoarder_MuscleMan_NoWeapon_01 - [N/A] 3034153769
 25060102 : Thoarder_MuscleMan_NoWeapon_01_02 - [N/A] 2830824473
 25070101 : Thoarder_MuscleMan_Hammer_01 - [N/A] 2923584017
@@ -447,9 +447,9 @@
 28010302 : Frog_02 - Mud Frog
 28010303 : Frog_03 - Blue Frog
 28010304 : Frog_04 - [N/A] 13583441
-28010401 : Eel_01 - [FR] - ï¼testï¼ææ³é³01
+28010401 : Eel_01 - [FR] - （test）摇曳鳗01
 28010402 : Eel_02 - [N/A] 1374216297
-28010403 : Eel_03 - [FR] - ï¼testï¼ææ³é³03
+28010403 : Eel_03 - [FR] - （test）摇曳鳗03
 28010404 : Eel_04 - [N/A] 2823603497
 28020101 : Fox_01 - Snow Fox
 28020102 : Fox_02 - Crimson Fox
@@ -532,6 +532,7 @@
 28030311 : Pigeon_05 - Black King Pigeon
 28030312 : Pigeon_01 - [N/A] 1045054721
 28030313 : Pigeon_Beak_01 - [N/A] 45487625
+28030314 : Crow_01 - [N/A] 3254419441
 28030401 : Tit_01 - Crimson Finch
 28030402 : Tit_02 - Golden Finch
 28030403 : Tit_03 - Snow Finch
@@ -772,6 +773,7 @@
 29070103 : Monster_Nada - [N/A] 887141825
 29070104 : Monster_Nada - [N/A] 3834332121
 29070105 : Monster_Nada - [N/A] 1547264913
+29070106 : Monster_Nada - [N/A] 641768601
 35210101 : Partner_Eremite_Female_Hatchet_01 - [N/A] 2099947705
 35210102 : Partner_Panther_01 - [N/A] 2521295977
 35210301 : NPC_Quest_Male_Standard_Soldier_12801 - [N/A] 2275792137
@@ -790,4 +792,4 @@
 36090790 : Partner_Fumgus_Deux_Alpha_Fire - [N/A] 165437385
 36090890 : Partner_Fumgus_Deux_Epsilon_Wind - [N/A] 864320241
 36090990 : Partner_Fumgus_Deux_Beta_Rock - [N/A] 3379305585
-36091090 : Partner_Fumgu
+36091090 : Partner_Fumgus_Deux_Delta_Electric - [N/A] 1780358665

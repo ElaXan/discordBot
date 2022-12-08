@@ -17,6 +17,8 @@ searchGM = async (search, categoryId) => {
         fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Monsters}`);
     } else if (categoryId === "scenes") {
         fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Scenes}`);
+    } else if (categoryId === "gadgets") {
+        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Gadgets}`);
     } else {
         fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
     }
@@ -85,6 +87,10 @@ searchGM = async (search, categoryId) => {
                             name: 'Scenes',
                             value: 'scenes',
                         },
+                        {
+                            name: 'Gadgets',
+                            value: 'gadgets',
+                        }
                     ],
                 },
             ],
