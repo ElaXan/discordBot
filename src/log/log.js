@@ -1,9 +1,11 @@
 
+const { Timezone } = require("../../config.json")
+
 module.exports = {
-    now: new Date().toLocaleString().replace(/\//g, '-').replace(/:/g, '-'),
+    now: new Date().toLocaleString("en-US", {timeZone: Timezone}).replace(/\//g, '-').replace(/:/g, '-'),
     time: {
         date3: function() {
-            const dateNow = new Date().toLocaleString().replace(/\//g, '-').replace(/:/g, '-')
+            const dateNow = new Date().toLocaleString("en-US", {timeZone: Timezone}).replace(/\//g, '-').replace(/:/g, '-')
             const fs = require('fs');
             if (!fs.existsSync('./logs')) {
                 fs.mkdirSync('./logs');

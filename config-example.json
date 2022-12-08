@@ -4,6 +4,7 @@
     "CLIENT_ID": "CLIENT_ID_HERE",
     "OWNER_ID": "OWNER_ID_HERE",
     "Prefix": "z!",
+    "Timezone": "Asia/Jakarta",
     "Path_GM_Handhook": {
         "Path": "./gm",
         "Avatars": "avatars.txt",
@@ -14,6 +15,8 @@
         "If_Choices_is_Null": "gm.txt"
     },
     "RPC": {
+        "Type": "Playing",
+        "Status": "dnd",
         "Details": "Urmom"
     },
     "Blocked_Command_Shell": [

@@ -53,7 +53,20 @@ for (const folder of commandFolders) {
 // when ready
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Watching });
+    if (RPC.Type === "Playing" || RPC.Type === "PLAYING" || RPC.Type === "playing") {
+        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Playing });
+    } else if (RPC.Type === "Listening" || RPC.Type === "LISTENING" || RPC.Type === "listening") {
+        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Listening });
+    } else if (RPC.Type === "Watching" || RPC.Type === "WATCHING" || RPC.Type === "watching") {
+        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Watching });
+    } else if (RPC.Type === "Streaming" || RPC.Type === "STREAMING" || RPC.Type === "streaming") {
+        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Streaming });
+    } else if (RPC.Type === "Competing" || RPC.Type === "COMPETING" || RPC.Type === "competing") {
+        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Competing });
+    } else {
+        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Playing });
+    }
+    client.user.setStatus(RPC.Status);
     const time = require("./src/log/log")
     time.time.date3()
 })
