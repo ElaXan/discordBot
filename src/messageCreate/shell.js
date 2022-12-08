@@ -30,10 +30,10 @@ module.exports = {
                         ]
                     }
                 );
-                log("info", `Run: ${message.content.slice(7)}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+                log("bash", `Run: ${message.content.slice(7)}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
             } else {
                 message.reply({ content: `\`\`\`${stdout}\`\`\``, ephemeral: true }).catch(console.error);
-                log("info", `Run: ${message.content.slice(7)}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+                log("bash", `Run: ${message.content.slice(7)}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
             }
         });
     },

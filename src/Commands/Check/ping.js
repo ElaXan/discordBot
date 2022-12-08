@@ -14,6 +14,6 @@ module.exports = {
             .setColor('Green')
             .setTimestamp(new Date())
         await interaction.reply({ embeds: [embed] })
-        log.log('info', `Ping: ${new Date().getTime() - interaction.createdTimestamp}ms`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+        log.log("Ping", `Ping: ${new Date().getTime() - interaction.createdTimestamp}ms`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
     }
 };

@@ -97,14 +97,15 @@ module.exports = {
                 .setDescription('Item not found')
                 .setColor('Red')
                 .setTimestamp()
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            interaction.reply({ embeds: [embed], ephemeral: true });
+            return log.log("GIO", `Item not found: ${items}`, interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
         } else {
             if (amount === null) {
                 interaction.reply({ content: `/mail uid:${uid} command:gitem-${search.id}-<amount>`, ephemeral: true });
-                return log.log(`[GIO] ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id}) used GIO command: /mail uid:${uid} command:gitem-${search.id}-<amount>`, "GIO", interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
+                return log.log("GIO", `/mail uid:${uid} command:gitem-${search.id}-<amount>`, interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
             }
             interaction.reply({ content: `/mail uid:${uid} command:gitem-${search.id}-${amount}`, ephemeral: true });
-            return log.log(`[GIO] ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id}) used GIO command: /mail uid:${uid} command:gitem-${search.id}-${amount}`, "GIO", interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log("GIO", `/mail uid:${uid} command:gitem-${search.id}-${amount}`, interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
         }
     }
 }

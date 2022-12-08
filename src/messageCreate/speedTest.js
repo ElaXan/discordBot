@@ -17,7 +17,7 @@ module.exports = {
                     return;
                 }
                 msg.edit({ content: `\`\`\`${stdout}\`\`\``, ephemeral: true }).catch(console.error);
-                log("info", `Speedtest: ${stdout}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+                log("Speedtest", stdout, message.author.tag, message.author.id, message.channel.id, message.guild.id)
             });
         });
     }

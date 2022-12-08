@@ -10,7 +10,7 @@ module.exports = {
             }
             fs.writeFile(`./logs/log-main.json`, `{ "date": "${dateNow}" }`, function (err) {
                 if (err) throw err;
-                console.log('Saved log file name!');
+                console.log('Log name saved in ./logs/log-main.json');
             });
         }
     },
@@ -25,7 +25,6 @@ module.exports = {
      */
     log: function (interaction, message, member, user, channel, guild ) {
         const fs = require('fs');
-        const time = require("./log")
         const { date } = require("../../logs/log-main.json")
         if (interaction) {
             console.log(`${this.now} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}`);

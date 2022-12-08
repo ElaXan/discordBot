@@ -23,11 +23,13 @@ module.exports = {
         const log = require("../../log/log")
 
         if (interaction.user.id !== OWNER_ID) {
-            return interaction.reply({ content: 'You are not the owner of this bot.', ephemeral: true });
+            interaction.reply({ content: 'You are not the owner of this bot.', ephemeral: true });
+            return log.log("Upload", `You are not the owner of this bot.`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
         }
         
         if (!fs.existsSync(file)) {
-            return interaction.reply({ content: 'File not found.', ephemeral: true });
+            interaction.reply({ content: 'File not found.', ephemeral: true });
+            return log.log("Upload", `File not found.`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
         }
         if (getPath === ".") {
             const getPath = process.cwd();
@@ -44,7 +46,7 @@ module.exports = {
                     ]
                 }
             );
-            return log.log(`Uploaded ${basename} Directory ${getPath}`, "Upload", interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log("Upload", `Uploading ${basename} Directory ${getPath}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
         }
         await interaction.reply(
             {
@@ -59,6 +61,6 @@ module.exports = {
                 ]
             }
         );
-        return log.log(`Uploaded ${basename} Directory ${getPath}`, "Upload", interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+        return log.log("Upload", `Uploading ${basename} Directory ${getPath}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
     }
 }

@@ -9,6 +9,6 @@ module.exports = {
         if (args.length < 1) return message.reply({ content: "Please provide a message to say.", ephemeral: true });
         message.delete();
         message.channel.send({ content: args });
-        log("info", `Said: ${args}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+        log("Say", `Say: ${args}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
     }
 }

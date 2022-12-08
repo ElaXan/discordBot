@@ -9,10 +9,10 @@ module.exports = {
         try {
             const code = message.content.slice(6);
             const output = eval(code);
-            log("info", `Eval: ${output}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+            log("Eval", `Eval: ${output}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
         } catch (err) {
             message.reply({ content: `\`\`\`js\nError:\n${err}\n\`\`\``, ephemeral: true });
-            log("error", `Eval: ${err}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+            log("Eval", `Error: ${err}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
         }
     }
 }

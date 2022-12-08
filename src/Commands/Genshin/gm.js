@@ -143,8 +143,8 @@ searchGM = async (search, categoryId) => {
                         text: `Requested by ${interaction.user.username}`,
                         iconURL: interaction.user.displayAvatarURL()
                     });
-                log.log('info', `Search Result: Not Found for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
                 await interaction.reply({ embeds: [embed], ephemeral: true });
+                log.log("GM", `Not found ID for ${searchUpperCase}}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
             } else {
                 const embed = new EmbedBuilder()
                     .setTitle('Search Result')
@@ -162,9 +162,8 @@ searchGM = async (search, categoryId) => {
                             .setStyle(ButtonStyle.Primary)
                             .setCustomId('show_id')
                     );
-                log.log('info', `Search Result: ID: ${searchResult.id} Name: ${searchResult.name} Category:${searchResult.category}`, `${interaction.user.tag}`, `${interaction.user.id}`, `${interaction.channel.id}`, `${interaction.guild.id}`);
-
                 await interaction.reply({ embeds: [embed], ephemeral: true, components: [button] });
+                log.log("GM", `Found ID for ${searchUpperCase}}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
 
                 const filter = (i) => i.customId === 'show_id' && i.user.id === interaction.user.id;
                 const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });

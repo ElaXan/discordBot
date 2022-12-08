@@ -13,7 +13,7 @@ module.exports = {
             }
             if (i + 1 === Blocked_Command_Shell.length) {
                 message.reply({ content: `\`\`\`\n${listblockc}\n\`\`\`` });
-                log("info", `Listed Blocked Commands`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+                log("List Blacklist Commands", `List Blacklist Commands: ${listblockc}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
             }
         }
     }

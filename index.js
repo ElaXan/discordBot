@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 
 const { TOKEN, RPC } = require('./config.json');
+const { log } = require('./src/log/log');
 
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
@@ -68,6 +69,7 @@ client.on(Events.InteractionCreate, async interaction => {
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            log("Error", error, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
         }
     } else {
         if (!interaction.isChatInputCommand()) return;
@@ -79,6 +81,7 @@ client.on(Events.InteractionCreate, async interaction => {
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            log("Error", error, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
         }
     }
 });
@@ -96,6 +99,7 @@ client.on(Events.MessageCreate, async message => {
         } catch (error) {
             console.error(error);
             await message.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            log("Error", error, message.author.tag, message.author.id, message.channel.id, message.guild.id)
         }
     }
 });
