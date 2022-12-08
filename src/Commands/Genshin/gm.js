@@ -126,7 +126,7 @@ searchGM = async (search, categoryId) => {
                         } else {
                             choices.push({
                                 name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
-                                value: line.split(':')[0].trim(),
+                                value: line.split(':')[1].trim().substring(0, 85)
                             });
                         }
                     }
@@ -154,9 +154,22 @@ searchGM = async (search, categoryId) => {
             } else {
                 const embed = new EmbedBuilder()
                     .setTitle('Search Result')
-                    .setDescription(`ID: ${searchResult.id}\nName: ${searchResult.name}\nCategory:${searchResult.category}`)
+                    .setDescription(`Found for ${searchResult.name}!`)
                     .setColor('Green')
                     .setTimestamp(new Date())
+                    .addFields({
+                        name: '🆔 ID',
+                        value: searchResult.id,
+                        inline: true
+                    })
+                    .addFields({
+                        name: '🔖 Name',
+                        value: searchResult.name,
+                    })
+                    .addFields({
+                        name: '🗃️ Category',
+                        value: searchResult.category,
+                    })
                     .setFooter({
                         text: `Requested by ${interaction.user.username}`,
                         iconURL: interaction.user.displayAvatarURL()
@@ -169,7 +182,7 @@ searchGM = async (search, categoryId) => {
                             .setCustomId('show_id')
                     );
                 await interaction.reply({ embeds: [embed], ephemeral: true, components: [button] });
-                log.log("GM", `Found ID for ${searchUpperCase}}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
+                log.log("GM", `Found ID for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
 
                 const filter = (i) => i.customId === 'show_id' && i.user.id === interaction.user.id;
                 const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
