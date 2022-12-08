@@ -2,8 +2,6 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('
 const { Path_GM_Handhook } = require('../../../config.json');
 const log = require('../../log/log');
 
-// No leak gobloggers tolol
-
 searchGM = async (search, categoryId) => {
     const fs = require('fs');
     const readline = require('readline');
