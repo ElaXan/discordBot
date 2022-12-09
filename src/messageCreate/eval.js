@@ -2,6 +2,20 @@ module.exports = {
     name: "eval",
     async execute(message) {
         const { OWNER_ID, Prefix } = require("../../config.json")
+        // No need to require discord.js, it's already required in the main file, maybe i will add a check for that later
+        const {
+            Client,
+            Collection,
+            EmbedBuilder,
+            Guild,
+            GuildMember,
+            Message,
+            ActionRowBuilder,
+            ButtonBuilder,
+            ButtonStyle,
+            SelectMenuBuilder,
+            SelectMenuOptionBuilder,
+        } = require("discord.js");
         if (!message.content.startsWith(Prefix)) return;
         if (message.author.id !== OWNER_ID) return;
         if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
