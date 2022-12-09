@@ -58,6 +58,6 @@ module.exports = {
                 iconURL: interaction.user.displayAvatarURL()
             });
         await interaction.reply({ embeds: [embed] })
-        log.log("Ping", `Ping: ${new Date().getTime() - interaction.createdTimestamp}ms | API Ping: ${Math.round(client.ws.ping)}ms | Uptime: ${Math.round(client.uptime / 1000)}s`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+        log.log("Ping", `Ping command used by ${interaction.user.tag}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
     }
 };
