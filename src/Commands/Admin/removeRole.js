@@ -18,8 +18,6 @@ module.exports = {
         ]
     },
     async execute(interaction) {
-        const { OWNER_ID } = require("../../../config.json")
-        if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "This feature still on development", ephemeral: true });
         const { PermissionsBitField } = require("discord.js")
         const user = interaction.options.getUser("user");
         const role = interaction.options.getRole("role");
