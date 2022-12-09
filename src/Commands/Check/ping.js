@@ -10,32 +10,18 @@ module.exports = {
         const log = require("../../log/log")
         const client = interaction.client;
         const uptime = {
-            seconds: Math.round(client.uptime / 1000),
-            minutes: Math.round(client.uptime / (1000 * 60)),
-            hours: Math.round(client.uptime / (1000 * 60 * 60)),
-            days: Math.round(client.uptime / (1000 * 60 * 60 * 24)),
+            days: Math.floor(client.uptime / 86400000),
+            hours: Math.floor(client.uptime / 3600000) % 24,
+            minutes: Math.floor(client.uptime / 60000) % 60,
+            seconds: Math.floor(client.uptime / 1000) % 60
         };
-        if (Math.round(client.uptime / 1000) < 60) {
-            uptime.seconds = Math.round(client.uptime / 1000);
-            uptime.minutes = 0;
-            uptime.hours = 0;
-            uptime.days = 0;
-        } else if (Math.round(client.uptime / (1000 * 60)) < 60) {
-            uptime.seconds = Math.round(client.uptime / 1000);
-            uptime.minutes = Math.round(client.uptime / (1000 * 60));
-            uptime.hours = 0;
-            uptime.days = 0;
-        } else if (Math.round(client.uptime / (1000 * 60 * 60)) < 24) {
-            uptime.seconds = Math.round(client.uptime / 1000);
-            uptime.minutes = Math.round(client.uptime / (1000 * 60));
-            uptime.hours = Math.round(client.uptime / (1000 * 60 * 60));
-            uptime.days = 0;
-        } else {
-            uptime.seconds = Math.round(client.uptime / 1000);
-            uptime.minutes = Math.round(client.uptime / (1000 * 60));
-            uptime.hours = Math.round(client.uptime / (1000 * 60 * 60));
-            uptime.days = Math.round(client.uptime / (1000 * 60 * 60 * 24));
-        }
+
+        uptime.days = uptime.days > 30 ? 30 : uptime.days;
+        uptime.hours = uptime.hours > 24 ? 24 : uptime.hours;
+        uptime.minutes = uptime.minutes > 60 ? 60 : uptime.minutes;
+        uptime.seconds = uptime.seconds > 60 ? 60 : uptime.seconds;
+
+
         const embed = new EmbedBuilder()
             .setTitle('Pong!')
             .setDescription("Check PING")
