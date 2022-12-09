@@ -15,8 +15,7 @@ module.exports = {
             minutes: Math.floor(client.uptime / 60000) % 60,
             seconds: Math.floor(client.uptime / 1000) % 60
         };
-
-        uptime.days = uptime.days > 30 ? 30 : uptime.days;
+        
         uptime.hours = uptime.hours > 24 ? 24 : uptime.hours;
         uptime.minutes = uptime.minutes > 60 ? 60 : uptime.minutes;
         uptime.seconds = uptime.seconds > 60 ? 60 : uptime.seconds;
