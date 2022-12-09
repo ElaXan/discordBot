@@ -9,6 +9,33 @@ module.exports = {
     async execute(interaction) {
         const log = require("../../log/log")
         const client = interaction.client;
+        const uptime = {
+            seconds: Math.round(client.uptime / 1000),
+            minutes: Math.round(client.uptime / (1000 * 60)),
+            hours: Math.round(client.uptime / (1000 * 60 * 60)),
+            days: Math.round(client.uptime / (1000 * 60 * 60 * 24)),
+        };
+        if (Math.round(client.uptime / 1000) < 60) {
+            uptime.seconds = Math.round(client.uptime / 1000);
+            uptime.minutes = 0;
+            uptime.hours = 0;
+            uptime.days = 0;
+        } else if (Math.round(client.uptime / (1000 * 60)) < 60) {
+            uptime.seconds = Math.round(client.uptime / 1000);
+            uptime.minutes = Math.round(client.uptime / (1000 * 60));
+            uptime.hours = 0;
+            uptime.days = 0;
+        } else if (Math.round(client.uptime / (1000 * 60 * 60)) < 24) {
+            uptime.seconds = Math.round(client.uptime / 1000);
+            uptime.minutes = Math.round(client.uptime / (1000 * 60));
+            uptime.hours = Math.round(client.uptime / (1000 * 60 * 60));
+            uptime.days = 0;
+        } else {
+            uptime.seconds = Math.round(client.uptime / 1000);
+            uptime.minutes = Math.round(client.uptime / (1000 * 60));
+            uptime.hours = Math.round(client.uptime / (1000 * 60 * 60));
+            uptime.days = Math.round(client.uptime / (1000 * 60 * 60 * 24));
+        }
         const embed = new EmbedBuilder()
             .setTitle('Pong!')
             .setDescription("Check PING")
@@ -22,7 +49,7 @@ module.exports = {
             })
             .addFields({
                 name: 'Uptime',
-                value: `${Math.round(client.uptime / 1000)}s`,
+                value: `${uptime.days}d ${uptime.hours}h ${uptime.minutes}m ${uptime.seconds}s`,
             })
             .setColor('Green')
             .setTimestamp(new Date())
