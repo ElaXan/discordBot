@@ -13,6 +13,7 @@ module.exports = {
             fs.writeFile(`./logs/log-main.json`, `{ "date": "${dateNow}" }`, function (err) {
                 if (err) throw err;
                 console.log('Log name saved in ./logs/log-main.json');
+                console.log("----------------------------------------");
             });
         }
     },
