@@ -8,6 +8,7 @@ module.exports = {
     },
     async execute(interaction) {
         const log = require("../../log/log")
+        const { db } = require("../../../index")
         const client = interaction.client;
         const uptime = {
             days: Math.floor(client.uptime / 86400000),
@@ -20,7 +21,6 @@ module.exports = {
         uptime.minutes = uptime.minutes > 60 ? 60 : uptime.minutes;
         uptime.seconds = uptime.seconds > 60 ? 60 : uptime.seconds;
 
-
         const embed = new EmbedBuilder()
             .setTitle('Pong!')
             .setDescription("Check PING")
@@ -31,6 +31,10 @@ module.exports = {
             .addFields({
                 name: 'API Ping',
                 value: `${Math.round(client.ws.ping)}ms`,
+            })
+            .addFields({
+                name: "MongoDB Ping",
+                value: `${(await db.ping()).toFixed()}ms`,
             })
             .addFields({
                 name: 'Uptime',
