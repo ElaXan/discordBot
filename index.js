@@ -1,7 +1,10 @@
 const fs = require('node:fs');
 
-const { TOKEN, RPC } = require('./config.json');
+const { TOKEN, RPC, MONGO } = require('./config.json');
 const { log } = require('./src/log/log');
+const { Database } = require('quickmongo');
+const db = new Database(MONGO.URL + "/" + MONGO.DB);
+
 
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
@@ -72,7 +75,7 @@ client.on("ready", () => {
 })
 
 
-// client events
+// client events interactionCreate
 client.on(Events.InteractionCreate, async interaction => {
     if (interaction.isAutocomplete()) {
         const command = client.commands.get(interaction.commandName);
@@ -99,6 +102,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
+
+// client events messageCreate
 client.on(Events.MessageCreate, async message => {
     const prefix = 'z!';
     if (!message.content.startsWith(prefix)) return;
@@ -117,4 +122,16 @@ client.on(Events.MessageCreate, async message => {
     }
 });
 
-client.login(TOKEN);
+db.on("ready", () => {
+    console.log("Connected to database");
+    client.login(TOKEN);
+});
+
+db.on("error", (err) => {
+    console.log("Error connecting to database");
+    console.log(err);
+    process.exit(1);
+});
+
+module.exports = { db };
+db.connect()

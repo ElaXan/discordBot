@@ -4,6 +4,7 @@
     "detritus-client": "^0.12.1",
     "discord-api-types": "^0.37.20",
     "discord.js": "^14.7.1",
+    "quickmongo": "^5.2.0",
     "rest": "^2.0.0"
   },
   "scripts": {

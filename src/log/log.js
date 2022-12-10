@@ -2,18 +2,14 @@
 const { Timezone } = require("../../config.json")
 
 module.exports = {
-    now: new Date().toLocaleString("en-US", {timeZone: Timezone}).replace(/\//g, '-').replace(/:/g, '-'),
     time: {
         date3: function() {
+            const { db } = require("../../index")
             const dateNow = new Date().toLocaleString("en-US", {timeZone: Timezone}).replace(/\//g, '-').replace(/:/g, '-')
-            const fs = require('fs');
-            if (!fs.existsSync('./logs')) {
-                fs.mkdirSync('./logs');
-            }
-            fs.writeFile(`./logs/log-main.json`, `{ "date": "${dateNow}" }`, function (err) {
-                if (err) throw err;
-                console.log('Log name saved in ./logs/log-main.json');
-                console.log("----------------------------------------");
+            db.set("date", dateNow).then(() => {
+                console.log("Success write date to Mongodb Database!")
+            }).catch((err) => {
+                console.error(err);
             });
         }
     },
@@ -28,14 +24,19 @@ module.exports = {
      */
     log: function (interaction, message, member, user, channel, guild ) {
         const fs = require('fs');
-        const { date } = require("../../logs/log-main.json")
-        if (interaction) {
-            console.log(`${this.now} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}`);
-            console.log("----------------------------------------");
-            fs.appendFileSync(String(`./logs/log-${date}.txt`), `\n\n------------------------------------\n${date} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}\n------------------------------------`, function (err) {
-                if (err) throw err;
-                console.log('Saved!');
-            });
-        }
+        const { db } = require("../../index")
+        db.get("date").then((date) => {
+            if (interaction) {
+                console.log(`${date} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}`);
+                console.log("----------------------------------------");
+                fs.appendFileSync(String(`./logs/log-${date}.txt`), `\n\n------------------------------------\n${date} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}\n------------------------------------`, function (err) {
+                    if (err) throw err;
+                    console.log('Saved!');
+                });
+            }
+        }).catch((err) => {
+            console.log("Error read date to Mongodb Database!")
+            console.error(err);
+        });
     }
 }
