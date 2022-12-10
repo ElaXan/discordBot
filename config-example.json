@@ -5,6 +5,10 @@
     "OWNER_ID": "OWNER_ID_HERE",
     "Prefix": "z!",
     "Timezone": "Asia/Jakarta",
+    "MONGO": {
+        "URL": "mongodb://127.0.0.1:27017",
+        "DB": "zerobot"
+    },
     "Path_GM_Handhook": {
         "Path": "./gm",
         "Avatars": "avatars.txt",
