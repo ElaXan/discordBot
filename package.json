@@ -1,16 +1,14 @@
 {
   "dependencies": {
-    "axios": "^1.2.0",
-    "detritus-client": "^0.12.1",
-    "discord-api-types": "^0.37.20",
     "discord.js": "^14.7.1",
-    "quickmongo": "^5.2.0",
-    "rest": "^2.0.0"
+    "quickmongo": "^5.2.0"
   },
   "scripts": {
     "start": "node .",
     "reg": "node ./slashCommand.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "npm install --save discord.js",
+    "uninstall": "npm uninstall --save discord.js",
+    "version": "npm run build"
   },
   "version": "1.0.0",
   "description": "Discord Bot",
@@ -21,5 +19,18 @@
     "name": "ElaXan",
     "email": "zero@elaxan.com",
     "url": "https://elaxan.com"
-  } 
+  },
+  "cpu": [
+    "x64",
+    "x86",
+    "x86_64",
+    "arm64"
+  ],
+  "engines": {
+    "node": ">=16.6.0"
+  },
+  "license": "ISC",
+  "main": "index.js",
+  "name": "discordbot",
+  "private": true
 }
