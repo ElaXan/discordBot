@@ -95,7 +95,7 @@ searchGM = async (search, categoryId) => {
         },
         async autocomplete(interaction) {
             const focusedValue = interaction.options.getFocused();
-            const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+            const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(Or|The|A|Of)/g, letter => letter.toLowerCase());
             //const search = focusedValue.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
             const choices = [];
             const fs = require('fs');
@@ -136,7 +136,8 @@ searchGM = async (search, categoryId) => {
             const search = interaction.options.getString('search');
             const category = interaction.options.getString('category');
             const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
-            const searchResult = await searchGM(searchUpperCase, category);
+            const searchLowerCase = search.replace(/(Or|The|A|Of)/g, letter => letter.toLowerCase());
+            const searchResult = await searchGM(searchLowerCase, category);
             if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
                 const embed = new EmbedBuilder()
                     .setTitle('Search Result')
@@ -147,7 +148,7 @@ searchGM = async (search, categoryId) => {
                         text: `Requested by ${interaction.user.username}`,
                         iconURL: interaction.user.displayAvatarURL()
                     });
-                await interaction.reply({ embeds: [embed], ephemeral: true });
+                await interaction.reply({ embeds: [embed] });
                 log.log("GM", `Not found ID for ${searchUpperCase}}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
             } else {
                 const embed = new EmbedBuilder()
@@ -179,7 +180,7 @@ searchGM = async (search, categoryId) => {
                             .setStyle(ButtonStyle.Primary)
                             .setCustomId('show_id')
                     );
-                await interaction.reply({ embeds: [embed], ephemeral: true, components: [button] });
+                await interaction.reply({ embeds: [embed], components: [button] });
                 log.log("GM", `Found ID for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
 
                 const filter = (i) => i.customId === 'show_id' && i.user.id === interaction.user.id;
