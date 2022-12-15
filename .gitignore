@@ -1,7 +1,5 @@
 node_modules
 config.json
-# gm.txt is all text include Avatars, Monster, Quest, etc.
-gm.txt
 blacklist.txt
 package-lock.json
 logs
