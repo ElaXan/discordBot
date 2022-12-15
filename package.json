@@ -11,5 +11,15 @@
     "start": "node .",
     "reg": "node ./slashCommand.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  },
+  "version": "1.0.0",
+  "description": "Discord Bot",
+  "repository": {
+    "url": "https://github.com/ElaXan/discordBot"
+  },
+  "author": {
+    "name": "ElaXan",
+    "email": "zero@elaxan.com",
+    "url": "https://elaxan.com"
+  } 
 }
