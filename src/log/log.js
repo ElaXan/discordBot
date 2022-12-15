@@ -29,6 +29,9 @@ module.exports = {
             if (interaction) {
                 console.log(`${date} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}`);
                 console.log("----------------------------------------");
+                if (!fs.existsSync("./logs")) {
+                    fs.mkdirSync("./logs");
+                }
                 fs.appendFileSync(String(`./logs/log-${date}.txt`), `\n\n------------------------------------\n${date} \nInteraction: ${interaction} \nMessage: ${message} \nMember: ${member} \nUser: ${user} \nChannel ID: ${channel} \nGuild ID: ${guild}\n------------------------------------`, function (err) {
                     if (err) throw err;
                     console.log('Saved!');
