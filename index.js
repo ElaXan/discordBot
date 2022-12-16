@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 
-const { TOKEN, RPC, MONGO } = require('./config.json');
+const { TOKEN, RPC, MONGO, Prefix } = require('./config.json');
 const { log } = require('./src/log/log');
 const { Database } = require('quickmongo');
 const db = new Database(MONGO.URL + "/" + MONGO.DB);
@@ -11,7 +11,7 @@ process.on('unhandledRejection', error => {
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -104,8 +104,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // client events messageCreate
 client.on(Events.MessageCreate, async message => {
-    const prefix = 'z!';
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(Prefix)) return;
     if (!message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
     const messageCreateFiles = fs.readdirSync('./src/messageCreate').filter(file => file.endsWith('.js'));
     for (const file of messageCreateFiles) {
