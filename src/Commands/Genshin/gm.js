@@ -47,6 +47,23 @@ searchGM = async (search, categoryId) => {
     }
 },
 
+/**
+ * @param {String} category - The category of the ID for search command name
+ */
+commandsName = async (category, id) => {
+    if (category === " Avatars") {
+        return `/give ${id} lv<level> c<constellation>`;
+    } else if (category === " Quest") {
+        return `/q add ${id}`;
+    } else if (category === " Items") {
+        return `/give ${id} x<amount>`;
+    } else if (category === " Monsters") {
+        return `/spawn ${id} x<amount> lv<level> hp<health>`;
+    } else {
+        return "unknown"
+    }
+}
+
     module.exports = {
         data: {
             name: 'gm',
@@ -138,6 +155,7 @@ searchGM = async (search, categoryId) => {
             const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
             const searchLowerCase = search.replace(/( Or | The | A | Of )/g, letter => letter.toLowerCase());
             const searchResult = await searchGM(searchLowerCase, category);
+            const commands = await commandsName(searchResult.category, searchResult.id);
             if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
                 const embed = new EmbedBuilder()
                     .setTitle('Search Result')
@@ -168,6 +186,10 @@ searchGM = async (search, categoryId) => {
                     .addFields({
                         name: '🗃️ Category',
                         value: searchResult.category,
+                    })
+                    .addFields({
+                        name: '📝 Commands',
+                        value: `${commands}`
                     })
                     .setFooter({
                         text: `Requested by ${interaction.user.username}`,
