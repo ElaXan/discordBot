@@ -5,7 +5,7 @@ module.exports = {
         const { Prefix } = require("../../config.json");
         const { log } = require("../log/log")
         if (!message.content.startsWith(Prefix)) return;
-        if (!message.content === `${Prefix}${this.name}`) return;
+        if (message.content !== `${Prefix}${this.name}`) return;
         message.delete();
         const embed = new EmbedBuilder()
             .setTitle("Forum Solved")
