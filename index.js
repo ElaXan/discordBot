@@ -106,7 +106,7 @@ client.on("threadCreate", async thread => {
     const channel = thread.guild.channels.cache.get(thread.id)
     const embed = new EmbedBuilder()
         .setTitle("New Post")
-        .setDescription(`You create new post in forum, you can see your post [here](${thread.url})\n\nDon't forget to close your post if you already solve your problem!`)
+        .setDescription(`You create new post in forum, Link post [here](${thread.url})\n\nDon't forget to close your post if you already solve your problem!`)
         .addFields({
             name: "Post Title",
             value: thread.name,

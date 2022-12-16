@@ -54,8 +54,8 @@ searchGM = async (search, categoryId) => {
 commandsName = async (category, id) => {
     if (category === " Avatars") {
         return `/give ${id} lv<level> c<constellation>`;
-    } else if (category === " Quest") {
-        return `/q add ${id}`;
+    } else if (category === " Quests") {
+        return `/q add ${id}\n/q remove ${id}`;
     } else if (category === " Items") {
         return `/give ${id} x<amount>`;
     } else if (category === " Monsters") {
