@@ -27,9 +27,10 @@ Bot for private channels on Discord, not for public use.
 5.  Copy Application ID from the General Information page and paste it into the `config.json` file
 6.  Copy your Discord ID and paste it into the `config.json` file
 7.  Copy your Webhook URL and paste it into the `config.json` file
-8.  Start the bot with `npm run start`
+8.  Register for slash commands with `npm run reg`
+9.  Start the bot with `npm run start`
 
 # Tested on
 
--   Ubuntu 20.04.2 LTS
--   Android (Termux)
+-   Ubuntu 20.04.2 LTS (AMD64)
+-   Android Termux (Arm64)
