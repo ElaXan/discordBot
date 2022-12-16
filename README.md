@@ -25,10 +25,11 @@ Bot for private channels on Discord, not for public use.
 3.  Copy the `config.example.json` file to `config.json` and fill in the required fields
 4.  Invite the bot to your server with the following link: `https://discord.com/oauth2/authorize?client_id=CLIENT_ID&scope=bot&permissions=8` (replace `CLIENT_ID` with your client ID)
 5.  Copy Application ID from the General Information page and paste it into the `config.json` file
-6.  Copy your Discord ID and paste it into the `config.json` file
-7.  Copy your Webhook URL and paste it into the `config.json` file
-8.  Register for slash commands with `npm run reg`
-9.  Start the bot with `npm run start`
+6.  Copy Guild ID from the your server and paste it into the `config.json` file
+7.  Copy your Discord ID and paste it into the `config.json` file
+8.  Copy your Webhook URL and paste it into the `config.json` file
+9.  Register for slash commands with `npm run reg`
+10.  Start the bot with `npm run start`
 
 # Tested on
 
