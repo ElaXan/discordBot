@@ -24,7 +24,7 @@ Bot for private channels on Discord, not for public use.
 
 1.  Create a new application on the [Discord Developer Portal](https://discord.com/developers/applications)
 2.  Create a new bot user and copy the token
-3.  Copy the `config.example.json` file to `config.json` and fill in the required fields
+3.  Copy the `config-example.json` file to `config.json` and fill in the required fields
 4.  Invite the bot to your server with the following link: `https://discord.com/oauth2/authorize?client_id=CLIENT_ID&scope=bot&permissions=8` (replace `CLIENT_ID` with your client ID)
 5.  Register for slash commands with `npm run reg`
 6.  Start the bot with `npm run start`
@@ -39,5 +39,5 @@ Bot for private channels on Discord, not for public use.
 
 # Tested on
 
--   Ubuntu 20.04.2 LTS (amd64)
--   Android Termux (arm64)
+-   Ubuntu 20.04.5 LTS (amd64)
+-   Ubuntu 22.04.1 LTS (arm64)
