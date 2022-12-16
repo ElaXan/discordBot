@@ -11,7 +11,7 @@ process.on('unhandledRejection', error => {
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, ChannelFlags, ChannelManager, ChannelType, ChannelSelectMenuBuilder, ChannelSelectMenuInteraction, EmbedBuilder } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
     intents: [

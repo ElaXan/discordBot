@@ -1,5 +1,7 @@
 
+const { EmbedBuilder } = require("discord.js");
 const { Timezone } = require("../../config.json")
+const { WEBHOOK_URL } = require("../../config.json")
 
 module.exports = {
     time: {
@@ -37,6 +39,47 @@ module.exports = {
                     console.log('Saved!');
                 });
             }
+            const { WebhookClient } = require('discord.js');
+            const webhookClient = new WebhookClient({ url: WEBHOOK_URL });
+            const embed = new EmbedBuilder()
+                .setTitle("Log")
+                .setDescription("Someone used a command!")
+                .addFields({
+                    name: "Interaction",
+                    value: interaction,
+                    inline: true
+                })
+                .addFields({
+                    name: "Message",
+                    value: message, 
+                    inline: true
+                })
+                .addFields({
+                    name: "Member",
+                    value: member,
+                    inline: true
+                })
+                .addFields({
+                    name: "User",
+                    value: user,
+                    inline: true
+                })
+                .addFields({
+                    name: "Channel ID",
+                    value: channel,
+                    inline: true
+                })
+                .addFields({
+                    name: "Guild ID",
+                    value: guild,
+                    inline: true
+                })
+                .setTimestamp()
+                .setColor("Green");
+            webhookClient.send({
+                username: "Z3RO",
+                embeds: [embed]
+            });
         }).catch((err) => {
             console.log("Error read date to Mongodb Database!")
             console.error(err);
