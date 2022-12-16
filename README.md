@@ -2,6 +2,8 @@
 
 Bot for private channels on Discord, not for public use.
 
+![Licenses](https://img.shields.io/github/license/ElaXan/discordBot) ![Version](https://img.shields.io/github/package-json/v/ElaXan/discordBot) ![Last Commit](https://img.shields.io/github/last-commit/ElaXan/discordBot) ![Code Size](https://img.shields.io/github/languages/code-size/ElaXan/discordBot) ![Repo Size](https://img.shields.io/github/repo-size/ElaXan/discordBot) ![Files Total](https://img.shields.io/github/directory-file-count/ElaXan/discordBot) ![Files Code](https://img.shields.io/github/languages/count/ElaXan/discordBot)
+
 ## Requirements
 
 -   [Node.js](https://nodejs.org/en/) (v16.6.0 or newer)

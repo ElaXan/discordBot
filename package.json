@@ -32,5 +32,6 @@
   "license": "MIT",
   "main": "index.js",
   "name": "discordbot",
-  "private": "false"
+  "private": "false",
+  "markdown": "github"
 }
