@@ -11,7 +11,7 @@ process.on('unhandledRejection', error => {
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, ChannelFlags, ChannelManager, ChannelType, ChannelSelectMenuBuilder, ChannelSelectMenuInteraction, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -102,6 +102,19 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
+client.on("threadCreate", async thread => {
+    const channel = thread.guild.channels.cache.get(thread.id)
+    const embed = new EmbedBuilder()
+        .setTitle("New Post")
+        .setDescription(`You create new post in forum, you can see your post [here](${thread.url})\n\nDon't forget to close your post if you already solve your problem!`)
+        .addFields({
+            name: "Post Title",
+            value: thread.name,
+        })
+        .setTimestamp()
+        .setColor("Green")
+    await channel.send({ embeds: [embed] });
+});
 
 // client events messageCreate
 client.on(Events.MessageCreate, async message => {

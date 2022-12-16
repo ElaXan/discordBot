@@ -49,6 +49,7 @@ searchGM = async (search, categoryId) => {
 
 /**
  * @param {String} category - The category of the ID for search command name
+ * @param {String} id - The ID of the item
  */
 commandsName = async (category, id) => {
     if (category === " Avatars") {
@@ -60,7 +61,7 @@ commandsName = async (category, id) => {
     } else if (category === " Monsters") {
         return `/spawn ${id} x<amount> lv<level> hp<health>`;
     } else {
-        return "unknown"
+        return `Not yet applied to category${category}`
     }
 }
 
@@ -152,9 +153,8 @@ commandsName = async (category, id) => {
         async execute(interaction) {
             const search = interaction.options.getString('search');
             const category = interaction.options.getString('category');
-            const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
-            const searchLowerCase = search.replace(/( Or | The | A | Of )/g, letter => letter.toLowerCase());
-            const searchResult = await searchGM(searchLowerCase, category);
+            const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/( Or | The | A | Of )/g, letter => letter.toLowerCase());
+            const searchResult = await searchGM(searchUpperCase, category);
             const commands = await commandsName(searchResult.category, searchResult.id);
             if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
                 const embed = new EmbedBuilder()
