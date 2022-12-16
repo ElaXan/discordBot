@@ -6,11 +6,11 @@
   "scripts": {
     "start": "node .",
     "reg": "node ./slashCommand.js",
-    "install": "npm install --save discord.js",
-    "uninstall": "npm uninstall --save discord.js",
+    "install": "npm install --save discord.js && npm install --save quickmongo",
+    "uninstall": "npm uninstall --save discord.js && npm uninstall --save quickmongo",
     "version": "npm run build"
   },
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Discord Bot",
   "repository": {
     "url": "https://github.com/ElaXan/discordBot"
@@ -29,8 +29,8 @@
   "engines": {
     "node": ">=16.6.0"
   },
-  "license": "ISC",
+  "license": "MIT",
   "main": "index.js",
   "name": "discordbot",
-  "private": true
+  "private": "false"
 }
