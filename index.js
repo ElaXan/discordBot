@@ -2,9 +2,6 @@ const fs = require('node:fs');
 
 const { TOKEN, RPC, MONGO, Prefix } = require('./config.json');
 const { log } = require('./src/log/log');
-const { Database } = require('quickmongo');
-const db = new Database(MONGO.URL + "/" + MONGO.DB);
-
 
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
@@ -70,8 +67,6 @@ client.on("ready", () => {
         client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Playing });
     }
     client.user.setStatus(RPC.Status);
-    const time = require("./src/log/log")
-    time.time.date3()
 })
 
 
@@ -120,16 +115,4 @@ client.on(Events.MessageCreate, async message => {
     }
 });
 
-db.on("ready", () => {
-    console.log("Connected to database");
-    client.login(TOKEN);
-});
-
-db.on("error", (err) => {
-    console.log("Error connecting to database");
-    console.log(err);
-    process.exit(1);
-});
-
-module.exports = { db };
-db.connect()
+client.login(TOKEN);
