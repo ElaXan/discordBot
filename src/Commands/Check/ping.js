@@ -33,10 +33,6 @@ module.exports = {
                 value: `${Math.round(client.ws.ping)}ms`,
             })
             .addFields({
-                name: "MongoDB Ping",
-                value: `${(await db.ping()).toFixed()}ms`,
-            })
-            .addFields({
                 name: 'Uptime',
                 value: `${uptime.days}d ${uptime.hours}h ${uptime.minutes}m ${uptime.seconds}s`,
             })
