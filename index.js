@@ -8,7 +8,7 @@ process.on('unhandledRejection', error => {
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, ThreadManager, ThreadChannel, GuildForumThreadManager, ForumChannel, ThreadMemberManager, ThreadMember, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -115,20 +115,36 @@ client.on(Events.MessageCreate, async message => {
     }
 }); 
 
-client.on("threadCreate", async thread => {
-    if (!thread.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return log("Error", "I don't have permission to send message in this server!", thread.guild.name, thread.guild.id, thread.id, thread.guild.id);
-    const channel = thread.guild.channels.cache.get(thread.id)
-    const embed = new EmbedBuilder()
-        .setTitle("New Post Support")
-        .setDescription(`You create new post in forum, Link post [here](${thread.url})\n\nDon't forget to close your post if you already solve your problem!`)
-        .addFields({
-            name: "Post Title",
-            value: thread.name,
-        })
-        .setTimestamp()
-        .setColor("Green")
-    await channel.send({ embeds: [embed] });
-    log("Thread Create", `New post in forum, Link post [here](${thread.url})`, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guild.id)
-});
+client.on("threadUpdate", async thread => {
+    if (thread.archived === false) {
+        if (thread.appliedTags.includes("1053873835981668362") === false) {
+            const user = await client.users.fetch(thread.ownerId)
+            const embed = new EmbedBuilder()
+                .setTitle("Thread Closed")
+                .setDescription("Your thread has been closed as problem has been solved.")
+                .addFields({
+                    name: "Thread Name",
+                    value: thread.name,
+                })
+                .addFields({
+                    name: "Link to Thread",
+                    value: `[Click Here](${thread.url})`,
+                })
+                .setColor("Green")
+                .setTimestamp()
+            user.send({ embeds: [embed] }).then(() => {
+                log("Thread", `Success send message to ${user.tag}`, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
+            }).catch((err) => {
+                log("Error", `Failed to send message to ${user.tag} ${err}`, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
+            })
+            thread.setArchived(true).then(() => {
+                log("Thread", "Thread has been archived", `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
+            })
+            .catch((err) => {
+                log("Error", "Failed to archive thread" + err, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
+            })
+        }
+    }
+})
 
 client.login(TOKEN);
