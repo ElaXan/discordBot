@@ -116,6 +116,7 @@ client.on(Events.MessageCreate, async message => {
 }); 
 
 client.on("threadCreate", async thread => {
+    if (!thread.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return log("Error", "I don't have permission to send message in this server!", thread.guild.name, thread.guild.id, thread.id, thread.guild.id);
     const channel = thread.guild.channels.cache.get(thread.id)
     const embed = new EmbedBuilder()
         .setTitle("New Post Support")
@@ -127,6 +128,7 @@ client.on("threadCreate", async thread => {
         .setTimestamp()
         .setColor("Green")
     await channel.send({ embeds: [embed] });
+    log("Thread Create", `New post in forum, Link post [here](${thread.url})`, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guild.id)
 });
 
 client.login(TOKEN);
