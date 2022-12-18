@@ -8,7 +8,6 @@ Bot for private channels on Discord, not for public use.
 
 -   [Node.js](https://nodejs.org/en/) (v16.6.0 or newer)
 -   [Discord.js](https://discord.js.org/#/) (v14.7.1 or newer)
--   [MongoDB](https://www.mongodb.com/) (v4.2.0 or newer)
 
 ## Support Architecture
 

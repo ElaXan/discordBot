@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 
-const { TOKEN, RPC, MONGO, Prefix } = require('./config.json');
+const { TOKEN, RPC, Prefix } = require('./config.json');
 const { log } = require('./src/log/log');
 
 process.on('unhandledRejection', error => {
