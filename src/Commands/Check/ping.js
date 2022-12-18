@@ -4,11 +4,10 @@ const { EmbedBuilder } = require('discord.js');
 module.exports = {
     data: {
         name: 'ping',
-        description: 'Replies with Pong!',
+        description: 'Check PING, Uptime, Memory Usage, CPU Usage, Node Version, Discord.js Version, OS',
     },
     async execute(interaction) {
         const log = require("../../log/log")
-        const { db } = require("../../../index")
         const client = interaction.client;
         const uptime = {
             days: Math.floor(client.uptime / 86400000),
@@ -35,6 +34,26 @@ module.exports = {
             .addFields({
                 name: 'Uptime',
                 value: `${uptime.days}d ${uptime.hours}h ${uptime.minutes}m ${uptime.seconds}s`,
+            })
+            .addFields({
+                name: 'Memory Usage',
+                value: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+            })
+            .addFields({
+                name: 'CPU Usage',
+                value: `${(process.cpuUsage().user / 1024 / 1024).toFixed(2)} MB`,
+            })
+            .addFields({
+                name: 'Node Version',
+                value: `${process.version}`,
+            })
+            .addFields({
+                name: 'Discord.js Version',
+                value: `${require('discord.js').version}`,
+            })
+            .addFields({
+                name: 'OS',
+                value: `${process.platform}`,
             })
             .setColor('Green')
             .setTimestamp(new Date())
