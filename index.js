@@ -116,7 +116,6 @@ client.on(Events.MessageCreate, async message => {
 });
 
 client.on("threadUpdate", async (oldThread, newThread) => {
-    console.log(newThread)
     if (newThread.archived === true && newThread.appliedTags.includes("1053873835981668362") === true) {
         const user = await client.users.fetch(newThread.ownerId)
         const embed = new EmbedBuilder()
