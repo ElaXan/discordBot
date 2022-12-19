@@ -113,37 +113,30 @@ client.on(Events.MessageCreate, async message => {
             log("Error", error, message.author.tag, message.author.id, message.channel.id, message.guild.id)
         }
     }
-}); 
+});
 
-client.on("threadUpdate", async thread => {
-    if (thread.archived === false) {
-        if (thread.appliedTags.includes("1053873835981668362") === false) {
-            const user = await client.users.fetch(thread.ownerId)
-            const embed = new EmbedBuilder()
-                .setTitle("Thread Closed")
-                .setDescription("Your thread has been closed as problem has been solved.")
-                .addFields({
-                    name: "Thread Name",
-                    value: thread.name,
-                })
-                .addFields({
-                    name: "Link to Thread",
-                    value: `[Click Here](${thread.url})`,
-                })
-                .setColor("Green")
-                .setTimestamp()
-            user.send({ embeds: [embed] }).then(() => {
-                log("Thread", `Success send message to ${user.tag}`, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
-            }).catch((err) => {
-                log("Error", `Failed to send message to ${user.tag} ${err}`, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
+client.on("threadUpdate", async (oldThread, newThread) => {
+    console.log(newThread)
+    if (newThread.archived === true && newThread.appliedTags.includes("1053873835981668362") === true) {
+        const user = await client.users.fetch(newThread.ownerId)
+        const embed = new EmbedBuilder()
+            .setTitle("Thread Closed")
+            .setDescription("Your thread has been closed as problem has been solved.")
+            .addFields({
+                name: "Thread Name",
+                value: newThread.name,
             })
-            thread.setArchived(true).then(() => {
-                log("Thread", "Thread has been archived", `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
+            .addFields({
+                name: "Link to Thread",
+                value: `[Click Here](${newThread.url})`,
             })
-            .catch((err) => {
-                log("Error", "Failed to archive thread" + err, `<@${thread.ownerId}>`, thread.ownerId, thread.id, thread.guildId)
-            })
-        }
+            .setColor("Green")
+            .setTimestamp()
+        user.send({ embeds: [embed] }).then(() => {
+            log("Thread", `Success send message to ${user.tag}`, user.tag, user.id, newThread.channelId, newThread.guildId)
+        }).catch((error) => {
+            log("Thread", `Failed send message to ${user.tag}\nError: ${error}`, user.tag, user.id, newThread.channelId, newThread.guildId)
+        })
     }
 })
 
