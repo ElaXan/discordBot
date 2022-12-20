@@ -116,7 +116,9 @@ client.on(Events.MessageCreate, async message => {
 });
 
 client.on("threadUpdate", async (oldThread, newThread) => {
-    if (newThread.archived === true && newThread.appliedTags.includes("1053873835981668362") === true) {
+    // 1048877201296207882 - Tags id Solved in Yuuki Server
+    // Replace 1048877201296207882 with your tags id
+    if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === true) {
         const user = await client.users.fetch(newThread.ownerId)
         const embed = new EmbedBuilder()
             .setTitle("Thread Closed")
@@ -132,9 +134,9 @@ client.on("threadUpdate", async (oldThread, newThread) => {
             .setColor("Green")
             .setTimestamp()
         user.send({ embeds: [embed] }).then(() => {
-            log("Thread", `Success send message to ${user.tag}`, user.tag, user.id, newThread.channelId, newThread.guildId)
+            log("Thread", `Success send message to ${user.tag}`, `<@${newThread.ownerId}>`, newThread.ownerId, newThread.id, newThread.guildId)
         }).catch((error) => {
-            log("Thread", `Failed send message to ${user.tag}\nError: ${error}`, user.tag, user.id, newThread.channelId, newThread.guildId)
+            log("Thread", `Failed send message to ${user.tag}\nError: ${error}`, `<@${newThread.ownerId}>`, newThread.ownerId, newThread.id, newThread.guildId)
         })
     }
 })
