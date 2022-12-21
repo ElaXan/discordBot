@@ -80,7 +80,29 @@ client.on(Events.InteractionCreate, async interaction => {
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            log("Error", error, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
+            log({
+                interaction: interaction.commandName,
+                color: "Red",
+                description: "Error while executing command",
+                fields: [
+                    {
+                        name: "Error output",
+                        value: error
+                    },
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag} (${interaction.user.id})`
+                    },
+                    {
+                        name: "Channel",
+                        value: `<#${interaction.channel.id}> (${interaction.channel.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name} (${interaction.guild.id})`
+                    }
+                ]
+            })
         }
     } else {
         if (!interaction.isChatInputCommand()) return;
@@ -92,7 +114,29 @@ client.on(Events.InteractionCreate, async interaction => {
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            log("Error", error, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
+            log({
+                interaction: interaction.commandName,
+                color: "Red",
+                description: "Error while executing command",
+                fields: [
+                    {
+                        name: "Error output",
+                        value: error
+                    },
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag} (${interaction.user.id})`
+                    },
+                    {
+                        name: "Channel",
+                        value: `<#${interaction.channel.id}> (${interaction.channel.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name} (${interaction.guild.id})`
+                    }
+                ]
+            })
         }
     }
 });
@@ -110,7 +154,29 @@ client.on(Events.MessageCreate, async message => {
         } catch (error) {
             console.error(error);
             await message.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            log("Error", error, message.author.tag, message.author.id, message.channel.id, message.guild.id)
+            log({
+                interaction: message.content,
+                color: "Red",
+                description: "Error while executing command",
+                fields: [
+                    {
+                        name: "Error output",
+                        value: error
+                    },
+                    {
+                        name: "User",
+                        value: `${message.author.tag} (${message.author.id})`
+                    },
+                    {
+                        name: "Channel",
+                        value: `<#${message.channel.id}> (${message.channel.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${message.guild.name} (${message.guild.id})`
+                    }
+                ]
+            })
         }
     }
 });
@@ -134,9 +200,49 @@ client.on("threadUpdate", async (oldThread, newThread) => {
             .setColor("Green")
             .setTimestamp()
         user.send({ embeds: [embed] }).then(() => {
-            log("Thread", `Success send message to ${user.tag}`, `<@${newThread.ownerId}>`, newThread.ownerId, newThread.id, newThread.guildId)
+            log({
+                interaction: "Thread Closed",
+                color: "Green",
+                description: "Closed thread and sent message to user",
+                fields: [
+                    {
+                        name: "User",
+                        value: `${user.tag} (${user.id})`
+                    },
+                    {
+                        name: "Thread",
+                        value: `${newThread.name} (${newThread.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${newThread.guild.name} (${newThread.guild.id})`
+                    }
+                ]
+            })
         }).catch((error) => {
-            log("Thread", `Failed send message to ${user.tag}\nError: ${error}`, `<@${newThread.ownerId}>`, newThread.ownerId, newThread.id, newThread.guildId)
+            log({
+                interaction: "Thread Closed",
+                color: "Red",
+                description: "Closed thread but couldn't send message to user",
+                fields: [
+                    {
+                        name: "Error output",
+                        value: error
+                    },
+                    {
+                        name: "User",
+                        value: `${user.tag} (${user.id})`
+                    },
+                    {
+                        name: "Thread",
+                        value: `${newThread.name} (${newThread.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${newThread.guild.name} (${newThread.guild.id})`
+                    }
+                ]
+            })
         })
     }
 })
