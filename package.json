@@ -6,10 +6,9 @@
     "start": "node .",
     "reg": "node ./slashCommand.js",
     "install": "npm install --save discord.js",
-    "uninstall": "npm uninstall --save discord.js",
-    "version": "echo Version 1.0.2"
+    "uninstall": "npm uninstall --save discord.js"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Discord Bot",
   "repository": {
     "url": "https://github.com/ElaXan/discordBot"
