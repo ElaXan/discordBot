@@ -29,7 +29,43 @@ module.exports = {
         
         if (!fs.existsSync(file)) {
             interaction.reply({ content: 'File not found.', ephemeral: true });
-            return log.log("Upload", `File not found.`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log({
+                interaction: "upload",
+                color: "Red",
+                description: `File not found.`,
+                fields: [
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag}`,
+                        inline: true
+                    },
+                    {
+                        name: "File",
+                        value: `${basename}`,
+                        inline: true
+                    },
+                    {
+                        name: "Directory",
+                        value: `${getPath}`,
+                        inline: true
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Channel",
+                        value: `${interaction.channel.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Message ID",
+                        value: `${interaction.id}`,
+                        inline: true
+                    }
+                ]
+            })
         }
         if (getPath === ".") {
             const getPath = process.cwd();
@@ -46,7 +82,43 @@ module.exports = {
                     ]
                 }
             );
-            return log.log("Upload", `Uploading ${basename} Directory ${getPath}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log({
+                interaction: "upload",
+                color: "Green",
+                description: `Uploading ${basename} Directory ${getPath}`,
+                fields: [
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag}`,
+                        inline: true
+                    },
+                    {
+                        name: "File",
+                        value: `${basename}`,
+                        inline: true
+                    },
+                    {
+                        name: "Directory",
+                        value: `${getPath}`,
+                        inline: true
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Channel",
+                        value: `${interaction.channel.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Message ID",
+                        value: `${interaction.id}`,
+                        inline: true
+                    }
+                ]
+            })
         }
         await interaction.reply(
             {
@@ -61,6 +133,42 @@ module.exports = {
                 ]
             }
         );
-        return log.log("Upload", `Uploading ${basename} Directory ${getPath}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+        return log.log({
+            interaction: "upload",
+            color: "Green",
+            description: `Uploading ${basename} Directory ${getPath}`,
+            fields: [
+                {
+                    name: "User",
+                    value: `${interaction.user.tag}`,
+                    inline: true
+                },
+                {
+                    name: "File",
+                    value: `${basename}`,
+                    inline: true
+                },
+                {
+                    name: "Directory",
+                    value: `${getPath}`,
+                    inline: true
+                },
+                {
+                    name: "Guild",
+                    value: `${interaction.guild.name}`,
+                    inline: true
+                },
+                {
+                    name: "Channel",
+                    value: `${interaction.channel.name}`,
+                    inline: true
+                },
+                {
+                    name: "Message ID",
+                    value: `${interaction.id}`,
+                    inline: true
+                }
+            ]
+        })
     }
 }

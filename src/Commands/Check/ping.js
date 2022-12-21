@@ -62,6 +62,47 @@ module.exports = {
                 iconURL: interaction.user.displayAvatarURL()
             });
         await interaction.reply({ embeds: [embed] })
-        log.log("Ping", `Ping command used by ${interaction.user.tag}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+        log.log({
+            interaction: "ping",
+            description: "Slash Command PING was used",
+            color: "Green",
+            fields: [
+                {
+                    name: "User",
+                    value: `${interaction.user.tag}`,
+                    inline: true
+                },
+                {
+                    name: "Ping",
+                    value: `${new Date().getTime() - interaction.createdTimestamp}ms`,
+                    inline: true
+                },
+                {
+                    name: "API Ping",
+                    value: `${Math.round(client.ws.ping)}ms`,
+                    inline: true
+                },
+                {
+                    name: "Guild",
+                    value: `${interaction.guild.name}`,
+                    inline: true
+                },
+                {
+                    name: "Channel",
+                    value: `${interaction.channel.name}`,
+                    inline: true
+                },
+                {
+                    name: "Message ID",
+                    value: `${interaction.id}`,
+                    inline: true
+                },
+                {
+                    name: "Message URL",
+                    value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
+                    inline: true
+                },
+            ]
+        })
     }
 };

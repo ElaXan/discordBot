@@ -11,7 +11,38 @@ module.exports = {
 
         if (interaction.user.id !== OWNER_ID) {
             interaction.reply({ content: `You are not the owner of this bot.\n\nGet the source code from ${repository.url}`, ephemeral: true });
-            return log.log("Git Pull", `You are not the owner of this bot.\n\nGet the sources code from ${repository.url}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
+            return log.log({
+                interaction: "gitpull",
+                description: "Failed to pull latest changes from git because user is not the owner of the bot",
+                color: "Red",
+                fields: [
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag}`,
+                        inline: true
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Channel",
+                        value: `${interaction.channel.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Message ID",
+                        value: `${interaction.id}`,
+                        inline: true
+                    },
+                    {
+                        name: "Message URL",
+                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
+                        inline: true
+                    },
+                ]
+            })
         }
         await interaction.reply(
             {
@@ -27,7 +58,42 @@ module.exports = {
                         ephemeral: true
                     }
                 );
-                return log.log("Git Pull", `Error: ${err}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+                return log.log({
+                    interaction: "gitpull",
+                    description: "Failed to pull latest changes from git",
+                    color: "Red",
+                    fields: [
+                        {
+                            name: "Output",
+                            value: `\`\`\`\n${err}\`\`\``,
+                        },
+                        {
+                            name: "User",
+                            value: `${interaction.user.tag}`,
+                            inline: true
+                        },
+                        {
+                            name: "Guild",
+                            value: `${interaction.guild.name}`,
+                            inline: true
+                        },
+                        {
+                            name: "Channel",
+                            value: `${interaction.channel.name}`,
+                            inline: true
+                        },
+                        {
+                            name: "Message ID",
+                            value: `${interaction.id}`,
+                            inline: true
+                        },
+                        {
+                            name: "Message URL",
+                            value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
+                            inline: true
+                        },
+                    ]
+                })
             }
             if (stderr) {
                 interaction.editReply(
@@ -36,7 +102,42 @@ module.exports = {
                         ephemeral: true
                     }
                 );
-                return log.log("Git Pull", `Error: ${stderr}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+                return log.log({
+                    interaction: "gitpull",
+                    description: "Failed to pull latest changes from git",
+                    color: "Red",
+                    fields: [
+                        {
+                            name: "Output",
+                            value: `\`\`\`\n${stderr}\`\`\``,
+                        },
+                        {
+                            name: "User",
+                            value: `${interaction.user.tag}`,
+                            inline: true
+                        },
+                        {
+                            name: "Guild",
+                            value: `${interaction.guild.name}`,
+                            inline: true
+                        },
+                        {
+                            name: "Channel",
+                            value: `${interaction.channel.name}`,
+                            inline: true
+                        },
+                        {
+                            name: "Message ID",
+                            value: `${interaction.id}`,
+                            inline: true
+                        },
+                        {
+                            name: "Message URL",
+                            value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
+                            inline: true
+                        },
+                    ]
+                })
             }
             interaction.editReply(
                 {
@@ -44,7 +145,42 @@ module.exports = {
                     ephemeral: true
                 }
             );
-            return log.log("Git Pull", `Output: ${stdout}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log({
+                interaction: "gitpull",
+                description: "Successfully git pull commands",
+                color: "Green",
+                fields: [
+                    {
+                        name: "Output",
+                        value: `\`\`\`\n${stdout}\`\`\``,
+                    },
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag}`,
+                        inline: true
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Channel",
+                        value: `${interaction.channel.name}`,
+                        inline: true
+                    },
+                    {
+                        name: "Message ID",
+                        value: `${interaction.id}`,
+                        inline: true
+                    },
+                    {
+                        name: "Message URL",
+                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
+                        inline: true
+                    },
+                ]
+            })
         });
     }
 }

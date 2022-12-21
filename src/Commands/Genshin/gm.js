@@ -167,7 +167,37 @@ module.exports = {
                     iconURL: interaction.user.displayAvatarURL()
                 });
             await interaction.reply({ embeds: [embed] });
-            log.log("GM", `Not found ID for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
+            log.log({
+                color: "Red",
+                interaction: "GM",
+                description: "Not found ID for " + searchUpperCase,
+                fields: [
+                    {
+                        name: "User",
+                        value: interaction.user.username
+                    },
+                    {
+                        name: "User ID",
+                        value: interaction.user.id
+                    },
+                    {
+                        name: "Guild",
+                        value: interaction.guild.name
+                    },
+                    {
+                        name: "Channel",
+                        value: interaction.channel.name
+                    },
+                    {
+                        name: "Message Link",
+                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`
+                    },
+                    {
+                        name: "Message ID",
+                        value: interaction.id
+                    }
+                ]
+            })
         } else {
             const embed = new EmbedBuilder()
                 .setTitle('Search Result')
@@ -203,7 +233,37 @@ module.exports = {
                         .setCustomId('show_id')
                 );
             await interaction.reply({ embeds: [embed], components: [button] });
-            log.log("GM", `Found ID for ${searchUpperCase}`, interaction.user.tag, interaction.user.id, interaction.channel.id, interaction.guild.id)
+            log.log({
+                color: "Green",
+                interaction: "GM",
+                description: "Found ID for " + searchUpperCase,
+                fields: [
+                    {
+                        name: "User",
+                        value: interaction.user.username
+                    },
+                    {
+                        name: "User ID",
+                        value: interaction.user.id
+                    },
+                    {
+                        name: "Guild",
+                        value: interaction.guild.name
+                    },
+                    {
+                        name: "Channel",
+                        value: interaction.channel.name
+                    },
+                    {
+                        name: "Message Link",
+                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`
+                    },
+                    {
+                        name: "Message ID",
+                        value: interaction.id
+                    }
+                ]
+            })
 
             const filter = (i) => i.customId === 'show_id' && i.user.id === interaction.user.id;
             const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });

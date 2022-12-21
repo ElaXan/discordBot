@@ -9,6 +9,28 @@ module.exports = {
         if (args.length < 1) return message.reply({ content: "Please provide a message to say.", ephemeral: true });
         message.delete();
         message.channel.send({ content: args });
-        log("Say", `Say: ${args}`, message.author.tag, message.author.id, message.channel.id, message.guild.id);
+        log({
+            color: "Green",
+            interaction: "Say",
+            description: `Command Say was used`,
+            fields: [
+                {
+                    name: "Output",
+                    value: `\`\`\`\n${args}\n\`\`\``,
+                },
+                {
+                    name: "Used by",
+                    value: `${message.author.tag} (${message.author.id})`,
+                },
+                {
+                    name: "Used in",
+                    value: `${message.channel.name} (${message.channel.id})`,
+                },
+                {
+                    name: "Used in guild",
+                    value: `${message.guild.name} (${message.guild.id})`,
+                }
+            ]
+        })
     }
 }

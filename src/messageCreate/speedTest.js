@@ -17,7 +17,29 @@ module.exports = {
                     return;
                 }
                 msg.edit({ content: `\`\`\`${stdout}\`\`\``, ephemeral: true }).catch(console.error);
-                log("Speedtest", stdout, message.author.tag, message.author.id, message.channel.id, message.guild.id)
+                log({
+                    color: "Green",
+                    interaction: "Speedtest",
+                    description: `Command Speedtest was used`,
+                    fields: [
+                        {
+                            name: "Output",
+                            value: `\`\`\`\n${stdout}\n\`\`\``,
+                        },
+                        {
+                            name: "Used by",
+                            value: `${message.author.tag} (${message.author.id})`,
+                        },
+                        {
+                            name: "Used in",
+                            value: `${message.channel.name} (${message.channel.id})`,
+                        },
+                        {
+                            name: "Used in guild",
+                            value: `${message.guild.name} (${message.guild.id})`,
+                        }
+                    ]
+                })
             });
         });
     }

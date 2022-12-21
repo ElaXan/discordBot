@@ -98,14 +98,26 @@ module.exports = {
                 .setColor('Red')
                 .setTimestamp()
             interaction.reply({ embeds: [embed], ephemeral: true });
-            return log.log("GIO", `Item not found: ${items}`, interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log({
+                interaction: "GIO",
+                description: "Item not found for " + items,
+                color: "Red"
+            })
         } else {
             if (amount === null) {
                 interaction.reply({ content: `/mail uid:${uid} command:gitem-${search.id}-<amount>`, ephemeral: true });
-                return log.log("GIO", `/mail uid:${uid} command:gitem-${search.id}-<amount>`, interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
+                return log.log({
+                    interaction: "GIO",
+                    description: `/mail uid:${uid} command:gitem-${search.id}-<amount>`,
+                    color: "Green"
+                })
             }
             interaction.reply({ content: `/mail uid:${uid} command:gitem-${search.id}-${amount}`, ephemeral: true });
-            return log.log("GIO", `/mail uid:${uid} command:gitem-${search.id}-${amount}`, interaction.user.discriminator, interaction.user.id, interaction.channel.id, interaction.guild.id);
+            return log.log({
+                interaction: "GIO",
+                description: `/mail uid:${uid} command:gitem-${search.id}-${amount}`,
+                color: "Green"
+            })
         }
     }
 }
