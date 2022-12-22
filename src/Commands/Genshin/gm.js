@@ -113,8 +113,26 @@ module.exports = {
     },
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
-        const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/( Or | The | A | Of )/g, letter => letter.toLowerCase());
-        //const search = focusedValue.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
+        
+        const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
+                                    .replace(/( Or )/g, letter => letter.toLowerCase())
+                                    .replace(/( Of )/g, letter => letter.toLowerCase())
+                                    .replace(/( A )/g, letter => letter.toLowerCase())
+                                    .replace(/( An )/g, letter => letter.toLowerCase())
+                                    .replace(/( And )/g, letter => letter.toLowerCase())
+                                    .replace(/( The )/g, letter => letter.toLowerCase())
+                                    .replace(/( In )/g, letter => letter.toLowerCase())
+                                    .replace(/( On )/g, letter => letter.toLowerCase())
+                                    .replace(/( To )/g, letter => letter.toLowerCase())
+                                    .replace(/( For )/g, letter => letter.toLowerCase())
+                                    .replace(/( From )/g, letter => letter.toLowerCase())
+                                    .replace(/( With )/g, letter => letter.toLowerCase())
+                                    .replace(/( At )/g, letter => letter.toLowerCase())
+                                    .replace(/( By )/g, letter => letter.toLowerCase())
+                                    .replace(/( Into )/g, letter => letter.toLowerCase())
+                                    .replace(/( Near )/g, letter => letter.toLowerCase())
+                                    .replace(/( Off )/g, letter => letter.toLowerCase())
+                                    .replace(/( Up )/g, letter => letter.toLowerCase());
         const choices = [];
         const fs = require('fs');
         const readline = require('readline');
@@ -153,7 +171,25 @@ module.exports = {
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
-        const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/( Or | The | A | Of )/g, letter => letter.toLowerCase());
+        const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
+                                    .replace(/( Or )/g, letter => letter.toLowerCase())
+                                    .replace(/( Of )/g, letter => letter.toLowerCase())
+                                    .replace(/( A )/g, letter => letter.toLowerCase())
+                                    .replace(/( An )/g, letter => letter.toLowerCase())
+                                    .replace(/( And )/g, letter => letter.toLowerCase())
+                                    .replace(/( The )/g, letter => letter.toLowerCase())
+                                    .replace(/( In )/g, letter => letter.toLowerCase())
+                                    .replace(/( On )/g, letter => letter.toLowerCase())
+                                    .replace(/( To )/g, letter => letter.toLowerCase())
+                                    .replace(/( For )/g, letter => letter.toLowerCase())
+                                    .replace(/( From )/g, letter => letter.toLowerCase())
+                                    .replace(/( With )/g, letter => letter.toLowerCase())
+                                    .replace(/( At )/g, letter => letter.toLowerCase())
+                                    .replace(/( By )/g, letter => letter.toLowerCase())
+                                    .replace(/( Into )/g, letter => letter.toLowerCase())
+                                    .replace(/( Near )/g, letter => letter.toLowerCase())
+                                    .replace(/( Off )/g, letter => letter.toLowerCase())
+                                    .replace(/( Up )/g, letter => letter.toLowerCase());
         const searchResult = await searchGM(searchUpperCase, category);
         const commands = await commandsName(searchResult.category, searchResult.id);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
