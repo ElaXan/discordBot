@@ -1,12 +1,13 @@
 {
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "discord.js": "^14.7.1"
   },
   "scripts": {
     "start": "node .",
     "reg": "node ./slashCommand.js",
-    "install": "npm install --save discord.js",
-    "uninstall": "npm uninstall --save discord.js"
+    "install": "npm install --save discord.js cheerio",
+    "uninstall": "npm uninstall --save discord.js cheerio"
   },
   "version": "1.0.3",
   "description": "Discord Bot",

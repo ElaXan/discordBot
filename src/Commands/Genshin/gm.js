@@ -65,6 +65,21 @@ commandsName = async (category, id) => {
     }
 }
 
+getImage = async (name) => {
+    const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
+    const fetch = require("node-fetch");
+    const cheerio = require("cheerio");
+    const response = await fetch(url);
+    const body = await response.text();
+    const $ = cheerio.load(body);
+    const image = $(".pi-image-thumbnail").attr("src");
+    if (image === undefined) {
+        return "https://static.thenounproject.com/png/1400397-200.png";
+    } else {
+        return image;
+    }
+}
+
 module.exports = {
     data: {
         name: 'gm',
@@ -160,7 +175,7 @@ module.exports = {
                     } else {
                         choices.push({
                             name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
-                            value: line.split(':')[1].trim().substring(0, 85)
+                            value: line.split(":")[1].trim().substring(0, 85),
                         });
                     }
                 }
@@ -190,7 +205,9 @@ module.exports = {
                                     .replace(/( Near )/g, letter => letter.toLowerCase())
                                     .replace(/( Off )/g, letter => letter.toLowerCase())
                                     .replace(/( Up )/g, letter => letter.toLowerCase());
+        interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
+        const image = await getImage(searchUpperCase);
         const commands = await commandsName(searchResult.category, searchResult.id);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
             const embed = new EmbedBuilder()
@@ -202,7 +219,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            await interaction.reply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
             log.log({
                 color: "Red",
                 interaction: "GM",
@@ -239,6 +256,7 @@ module.exports = {
                 .setTitle('Search Result')
                 .setDescription(`Found for ${searchResult.name}!`)
                 .setColor('Green')
+                .setThumbnail(image)
                 .setTimestamp(new Date())
                 .addFields({
                     name: '🆔 ID',
@@ -268,7 +286,7 @@ module.exports = {
                         .setStyle(ButtonStyle.Primary)
                         .setCustomId('show_id')
                 );
-            await interaction.reply({ embeds: [embed], components: [button] });
+            await interaction.editReply({ embeds: [embed], components: [button] });
             log.log({
                 color: "Green",
                 interaction: "GM",

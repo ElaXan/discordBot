@@ -8,7 +8,7 @@ process.on('unhandledRejection', error => {
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, ThreadManager, ThreadChannel, GuildForumThreadManager, ForumChannel, ThreadMemberManager, ThreadMember, EmbedBuilder } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -87,7 +87,7 @@ client.on(Events.InteractionCreate, async interaction => {
                 fields: [
                     {
                         name: "Error output",
-                        value: error
+                        value: `${error}`
                     },
                     {
                         name: "User",
@@ -112,16 +112,18 @@ client.on(Events.InteractionCreate, async interaction => {
         try {
             await code.execute(interaction);
         } catch (error) {
-            console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
             log({
-                interaction: interaction.commandName,
                 color: "Red",
                 description: "Error while executing command",
                 fields: [
                     {
                         name: "Error output",
-                        value: error
+                        value: `${error}`
+                    },
+                    {
+                        name: "Command used",
+                        value: `/${interaction.commandName}`
                     },
                     {
                         name: "User",
@@ -134,9 +136,9 @@ client.on(Events.InteractionCreate, async interaction => {
                     {
                         name: "Guild",
                         value: `${interaction.guild.name} (${interaction.guild.id})`
-                    }
+                    },
                 ]
-            })
+            })   
         }
     }
 });
@@ -161,7 +163,7 @@ client.on(Events.MessageCreate, async message => {
                 fields: [
                     {
                         name: "Error output",
-                        value: error
+                        value: `${error}`
                     },
                     {
                         name: "User",
