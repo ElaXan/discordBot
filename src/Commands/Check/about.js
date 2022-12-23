@@ -5,7 +5,7 @@ module.exports = {
     },
     async execute(interaction) {
         const { EmbedBuilder } = require("discord.js")
-        const { version } = require("../../../package.json")
+        const { version, repository, author, license } = require("../../../package.json")
         const { Prefix } = require("../../../config.json")
         const { log } = require("../../log/log")
         const lastCommit = require("child_process").execSync("git log -1 --pretty=%B").toString().trim()
@@ -14,25 +14,33 @@ module.exports = {
         const availabePrefixCommands = fs.readdirSync("./src/messageCreate").filter(file => file.endsWith(".js")).map(file => file.slice(0, -3))
         const embed = new EmbedBuilder()
             .setTitle("About")
-            .setDescription("This bot is made by [ElaXan](https://elaxan.com) and based on [Discord.js](https://discord.js.org)")
+            .setDescription(`This bot is made by [${author.name}](${author.url}) and based on [Discord.js](https://discord.js.org) and [Node.js](https://nodejs.org/en/)\nUsing [Github](https://github.com) for source code management and Server (Ubuntu) for hosting`)
             .addFields({
-                name: "Version",
+                name: "👑 Author",
+                value: `[${author.name}](${author.url}) (${author.email})`,
+            })
+            .addFields({
+                name: "🪪 License",
+                value: license,
+            })
+            .addFields({
+                name: "⚙️ Version",
                 value: version,
             })
             .addFields({
-                name: "Source Code",
-                value: "[Click Here](https://github.com/ElaXan/discordBot)",
+                name: "👨‍💻 Source Code",
+                value: `[Click Here](${repository.url})`,
             })
             .addFields({
-                name: "Last Commit",
+                name: "📌 Last Commit",
                 value: lastCommit,
             })
             .addFields({
-                name: "Available Slash Commands (/)",
+                name: "📔 Available Slash Commands (/)",
                 value: availabeSlashCommands.join(", "),
             })
             .addFields({
-                name: `Available Prefix Commands (${Prefix})`,
+                name: `📓 Available Prefix Commands (${Prefix})`,
                 value: availabePrefixCommands.join(", "),
             })
             .setColor("Green")
