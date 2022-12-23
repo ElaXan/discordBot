@@ -205,7 +205,6 @@ module.exports = {
                                     .replace(/( Near )/g, letter => letter.toLowerCase())
                                     .replace(/( Off )/g, letter => letter.toLowerCase())
                                     .replace(/( Up )/g, letter => letter.toLowerCase());
-        interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
         const image = await getImage(searchUpperCase);
         const commands = await commandsName(searchResult.category, searchResult.id);
@@ -219,7 +218,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            await interaction.editReply({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed] });
             log.log({
                 color: "Red",
                 interaction: "GM",
@@ -286,7 +285,7 @@ module.exports = {
                         .setStyle(ButtonStyle.Primary)
                         .setCustomId('show_id')
                 );
-            await interaction.editReply({ embeds: [embed], components: [button] });
+            await interaction.reply({ embeds: [embed], components: [button] });
             log.log({
                 color: "Green",
                 interaction: "GM",
