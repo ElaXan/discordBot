@@ -22,7 +22,49 @@ module.exports = {
         const user = interaction.options.getUser("user");
         const role = interaction.options.getRole("role");
         const member = interaction.guild.members.cache.get(user.id);
-        const log = require("../../log/log").log
+        const log = require("../../log/log").log;
+        const userField = {
+            name: "User",
+            value: `${interaction.user.tag}`,
+            inline: true
+        };
+
+        const roleField = {
+            name: "Role",
+            value: `${role.name}`,
+            inline: true
+        };
+
+        const targetUserField = {
+            name: "Target User",
+            value: `${user.tag}`,
+            inline: true
+        };
+
+        const guildField = {
+            name: "Guild",
+            value: `${interaction.guild.name}`,
+            inline: true
+        };
+
+        const channelField = {
+            name: "Channel",
+            value: `${interaction.channel.name}`,
+            inline: true
+        };
+
+        const messageIdField = {
+            name: "Message ID",
+            value: `${interaction.id}`,
+            inline: true
+        };
+
+        const messageUrlField = {
+            name: "Message URL",
+            value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
+            inline: true
+        };
+
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
             interaction.reply({ content: "You don't have permission to manage roles", ephemeral: true });
             return log({
@@ -30,35 +72,13 @@ module.exports = {
                 color: "Red",
                 description: `Failed to remove role ${role.name} from ${user.tag} because ${interaction.user.tag} doesn't have permission to manage roles`,
                 fields: [
-                    {
-                        name: "Role",
-                        value: `${role.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "User",
-                        value: `${user.tag}`,
-                        inline: true
-                    },
-                    {
-                        name: "User who ran the command",
-                        value: `${interaction.user.tag}`,
-                    },
-                    {
-                        name: "Guild",
-                        value: `${interaction.guild.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Channel",
-                        value: `${interaction.channel.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Message ID",
-                        value: `${interaction.id}`,
-                        inline: true
-                    }
+                    roleField,
+                    targetUserField,
+                    userField,
+                    guildField,
+                    channelField,
+                    messageIdField,
+                    messageUrlField
                 ]
             })
         }
@@ -69,35 +89,13 @@ module.exports = {
                 color: "Red",
                 description: `Failed to remove role ${role.name} from ${user.tag} because their highest role is higher than or equal to my highest role`,
                 fields: [
-                    {
-                        name: "Role",
-                        value: `${role.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "User",
-                        value: `${user.tag}`,
-                        inline: true
-                    },
-                    {
-                        name: "User who ran the command",
-                        value: `${interaction.user.tag}`,
-                    },
-                    {
-                        name: "Guild",
-                        value: `${interaction.guild.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Channel",
-                        value: `${interaction.channel.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Message ID",
-                        value: `${interaction.id}`,
-                        inline: true
-                    }
+                    roleField,
+                    targetUserField,
+                    userField,
+                    guildField,
+                    channelField,
+                    messageIdField,
+                    messageUrlField
                 ]
             })
         }
@@ -108,35 +106,12 @@ module.exports = {
                 color: "Red",
                 description: `Failed to remove role ${role.name} from ${user.tag} because they don't have this role`,
                 fields: [
-                    {
-                        name: "Role",
-                        value: `${role.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "User",
-                        value: `${user.tag}`,
-                        inline: true
-                    },
-                    {
-                        name: "User who ran the command",
-                        value: `${interaction.user.tag}`,
-                    },
-                    {
-                        name: "Guild",
-                        value: `${interaction.guild.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Channel",
-                        value: `${interaction.channel.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Message ID",
-                        value: `${interaction.id}`,
-                        inline: true
-                    }
+                    roleField,
+                    targetUserField,
+                    userField,
+                    guildField,
+                    messageIdField,
+                    messageUrlField
                 ]
             })
         }
@@ -147,76 +122,47 @@ module.exports = {
                 color: "Red",
                 description: `Failed to remove role ${role.name} from ${user.tag} because I don't have permission to manage roles`,
                 fields: [
-                    {
-                        name: "Role",
-                        value: `${role.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "User",
-                        value: `${user.tag}`,
-                        inline: true
-                    },
-                    {
-                        name: "User who ran the command",
-                        value: `${interaction.user.tag}`,
-                    },
-                    {
-                        name: "Guild",
-                        value: `${interaction.guild.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Channel",
-                        value: `${interaction.channel.name}`,
-                        inline: true
-                    },
-                    {
-                        name: "Message ID",
-                        value: `${interaction.id}`,
-                        inline: true
-                    }
+                    roleField,
+                    targetUserField,
+                    userField,
+                    guildField,
+                    messageIdField,
+                    messageUrlField
                 ]
             });
         }
-        member.roles.remove(role);
-        log({
-            interaction: "removerole",
-            color: "Green",
-            description: `Removed role ${role.name} from ${user.tag}`,
-            fields: [
-                {
-                    name: "Role",
-                    value: `${role.name}`,
-                    inline: true
-                },
-                {
-                    name: "User",
-                    value: `${user.tag}`,
-                    inline: true
-                },
-                {
-                    name: "User who ran the command",
-                    value: `${interaction.user.tag}`,
-                },
-                {
-                    name: "Guild",
-                    value: `${interaction.guild.name}`,
-                    inline: true
-                },
-                {
-                    name: "Channel",
-                    value: `${interaction.channel.name}`,
-                    inline: true
-                },
-                {
-                    name: "Message ID",
-                    value: `${interaction.id}`,
-                    inline: true
-                }
-            ]
+        member.roles.remove(role).then(() => {
+            interaction.reply({ content: `Removed role ${role.name} from ${user.tag}` });
+            log({
+                interaction: "removerole",
+                color: "Green",
+                description: `Successfully removed role ${role.name} from ${user.tag}`,
+                fields: [
+                    roleField,
+                    targetUserField,
+                    userField,
+                    guildField,
+                    channelField,
+                    messageIdField,
+                    messageUrlField
+                ]
+            })
+        }).catch(() => {
+            interaction.reply({ content: "I don't have permission to remove this role from this user", ephemeral: true });
+            log({
+                interaction: "removerole",
+                color: "Red",
+                description: `Failed to remove role ${role.name} from ${user.tag} because I don't have permission to remove this role from this user`,
+                fields: [
+                    roleField,
+                    targetUserField,
+                    userField,
+                    guildField,
+                    channelField,
+                    messageIdField,
+                    messageUrlField
+                ]
+            })
         })
-        return await interaction.reply({ content: `Removed role ${role.name} from ${user.tag}`});
-        
     }
 }
