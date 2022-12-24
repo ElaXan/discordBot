@@ -69,19 +69,21 @@ searchGM = async (search, categoryId) => {
     * @param {String} category - The category of the ID for search command name
     * @param {String} id - The ID of the item
     */
-    commandsName = async (category, id) => {
-        if (category === " Avatars") {
-            return `/give ${id} lv<level> c<constellation>`;
-        } else if (category === " Quests") {
-            return `/q add ${id}\n/q remove ${id}`;
-        } else if (category === " Items") {
-            return `/give ${id} x<amount>`;
-        } else if (category === " Monsters") {
-            return `/spawn ${id} x<amount> lv<level> hp<health>`;
-        } else {
-            return `Not yet applied to category${category}`
+    commandsName = (category, id) => {
+        switch (category) {
+            case " Avatars":
+                return `/give ${id} lv<level> c<constellation>`;
+            case " Quests":
+                return `/q add ${id}\n/q remove ${id}`;
+            case " Items":
+                return `/give ${id} x<amount>`;
+            case " Monsters":
+                return `/spawn ${id} x<amount> lv<level> hp<health>`;
+            default:
+                return `Not yet applied to category${category}`;
         }
     }
+
 
 getImage = async (name) => {
     const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
