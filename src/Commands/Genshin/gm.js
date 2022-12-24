@@ -28,31 +28,41 @@ searchGM = async (search, categoryId) => {
             fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
             break;
     }
-    const rl = readline.createInterface({
-        input: fileStream,
-        crlfDelay: Infinity
-    });
+    try {
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
 
-    for await (const line of rl) {
-        if (line.startsWith("//")) {
-            category = line.replace("//", "");
+        for await (const line of rl) {
+            if (line.startsWith("//")) {
+                category = line.replace("//", "");
+            }
+            if (line.includes(search)) {
+                const id = line.split(":")[0].trim();
+                const name = line.split(":")[1].trim();
+                return {
+                    id: id,
+                    name: name,
+                    category: category
+                };
+            }
         }
-        if (line.includes(search)) {
-            const id = line.split(":")[0].trim();
-            const name = line.split(":")[1].trim();
-            return {
-                id: id,
-                name: name,
-                category: category
-            };
-        }
+
+        return {
+            id: "Not Found",
+            name: "Not Found",
+            category: "Not Found"
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            id: "Error",
+            name: "Error",
+            category: "Error"
+        };
     }
 
-    return {
-        id: "Not Found",
-        name: "Not Found",
-        category: "Not Found"
-    }
 },
 
     /**
