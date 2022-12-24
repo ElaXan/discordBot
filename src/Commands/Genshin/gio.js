@@ -3,19 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 searchGM = async (search, categoryId) => {
     const fs = require('fs');
     const readline = require('readline');
-    if (categoryId === "avatars") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Avatars}`);
-    } else if (categoryId === "quest") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Quest}`);
-    } else if (categoryId === "items") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
-    } else if (categoryId === "monsters") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Monsters}`);
-    } else if (categoryId === "scenes") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Scenes}`);
-    } else {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
-    }
+    fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
     const rl = readline.createInterface({
         input: fileStream,
         crlfDelay: Infinity
