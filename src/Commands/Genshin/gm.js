@@ -5,20 +5,28 @@ const log = require('../../log/log');
 searchGM = async (search, categoryId) => {
     const fs = require('fs');
     const readline = require('readline');
-    if (categoryId === "avatars") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Avatars}`);
-    } else if (categoryId === "quest") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Quest}`);
-    } else if (categoryId === "items") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
-    } else if (categoryId === "monsters") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Monsters}`);
-    } else if (categoryId === "scenes") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Scenes}`);
-    } else if (categoryId === "gadgets") {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Gadgets}`);
-    } else {
-        fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
+    switch (categoryId) {
+        case "avatars":
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Avatars}`);
+            break;
+        case "quest":
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Quest}`);
+            break;
+        case "items":
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
+            break;
+        case "monsters":
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Monsters}`);
+            break;
+        case "scenes":
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Scenes}`);
+            break;
+        case "gadgets":
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Gadgets}`);
+            break;
+        default:
+            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
+            break;
     }
     const rl = readline.createInterface({
         input: fileStream,
@@ -47,23 +55,23 @@ searchGM = async (search, categoryId) => {
     }
 },
 
-/**
-* @param {String} category - The category of the ID for search command name
-* @param {String} id - The ID of the item
-*/
-commandsName = async (category, id) => {
-    if (category === " Avatars") {
-        return `/give ${id} lv<level> c<constellation>`;
-    } else if (category === " Quests") {
-        return `/q add ${id}\n/q remove ${id}`;
-    } else if (category === " Items") {
-        return `/give ${id} x<amount>`;
-    } else if (category === " Monsters") {
-        return `/spawn ${id} x<amount> lv<level> hp<health>`;
-    } else {
-        return `Not yet applied to category${category}`
+    /**
+    * @param {String} category - The category of the ID for search command name
+    * @param {String} id - The ID of the item
+    */
+    commandsName = async (category, id) => {
+        if (category === " Avatars") {
+            return `/give ${id} lv<level> c<constellation>`;
+        } else if (category === " Quests") {
+            return `/q add ${id}\n/q remove ${id}`;
+        } else if (category === " Items") {
+            return `/give ${id} x<amount>`;
+        } else if (category === " Monsters") {
+            return `/spawn ${id} x<amount> lv<level> hp<health>`;
+        } else {
+            return `Not yet applied to category${category}`
+        }
     }
-}
 
 getImage = async (name) => {
     const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
@@ -128,26 +136,26 @@ module.exports = {
     },
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
-        
+
         const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
-                                    .replace(/( Or )/g, letter => letter.toLowerCase())
-                                    .replace(/( Of )/g, letter => letter.toLowerCase())
-                                    .replace(/( A )/g, letter => letter.toLowerCase())
-                                    .replace(/( An )/g, letter => letter.toLowerCase())
-                                    .replace(/( And )/g, letter => letter.toLowerCase())
-                                    .replace(/( The )/g, letter => letter.toLowerCase())
-                                    .replace(/( In )/g, letter => letter.toLowerCase())
-                                    .replace(/( On )/g, letter => letter.toLowerCase())
-                                    .replace(/( To )/g, letter => letter.toLowerCase())
-                                    .replace(/( For )/g, letter => letter.toLowerCase())
-                                    .replace(/( From )/g, letter => letter.toLowerCase())
-                                    .replace(/( With )/g, letter => letter.toLowerCase())
-                                    .replace(/( At )/g, letter => letter.toLowerCase())
-                                    .replace(/( By )/g, letter => letter.toLowerCase())
-                                    .replace(/( Into )/g, letter => letter.toLowerCase())
-                                    .replace(/( Near )/g, letter => letter.toLowerCase())
-                                    .replace(/( Off )/g, letter => letter.toLowerCase())
-                                    .replace(/( Up )/g, letter => letter.toLowerCase());
+            .replace(/( Or )/g, letter => letter.toLowerCase())
+            .replace(/( Of )/g, letter => letter.toLowerCase())
+            .replace(/( A )/g, letter => letter.toLowerCase())
+            .replace(/( An )/g, letter => letter.toLowerCase())
+            .replace(/( And )/g, letter => letter.toLowerCase())
+            .replace(/( The )/g, letter => letter.toLowerCase())
+            .replace(/( In )/g, letter => letter.toLowerCase())
+            .replace(/( On )/g, letter => letter.toLowerCase())
+            .replace(/( To )/g, letter => letter.toLowerCase())
+            .replace(/( For )/g, letter => letter.toLowerCase())
+            .replace(/( From )/g, letter => letter.toLowerCase())
+            .replace(/( With )/g, letter => letter.toLowerCase())
+            .replace(/( At )/g, letter => letter.toLowerCase())
+            .replace(/( By )/g, letter => letter.toLowerCase())
+            .replace(/( Into )/g, letter => letter.toLowerCase())
+            .replace(/( Near )/g, letter => letter.toLowerCase())
+            .replace(/( Off )/g, letter => letter.toLowerCase())
+            .replace(/( Up )/g, letter => letter.toLowerCase());
         const choices = [];
         const fs = require('fs');
         const readline = require('readline');
@@ -187,24 +195,24 @@ module.exports = {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
         const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
-                                    .replace(/( Or )/g, letter => letter.toLowerCase())
-                                    .replace(/( Of )/g, letter => letter.toLowerCase())
-                                    .replace(/( A )/g, letter => letter.toLowerCase())
-                                    .replace(/( An )/g, letter => letter.toLowerCase())
-                                    .replace(/( And )/g, letter => letter.toLowerCase())
-                                    .replace(/( The )/g, letter => letter.toLowerCase())
-                                    .replace(/( In )/g, letter => letter.toLowerCase())
-                                    .replace(/( On )/g, letter => letter.toLowerCase())
-                                    .replace(/( To )/g, letter => letter.toLowerCase())
-                                    .replace(/( For )/g, letter => letter.toLowerCase())
-                                    .replace(/( From )/g, letter => letter.toLowerCase())
-                                    .replace(/( With )/g, letter => letter.toLowerCase())
-                                    .replace(/( At )/g, letter => letter.toLowerCase())
-                                    .replace(/( By )/g, letter => letter.toLowerCase())
-                                    .replace(/( Into )/g, letter => letter.toLowerCase())
-                                    .replace(/( Near )/g, letter => letter.toLowerCase())
-                                    .replace(/( Off )/g, letter => letter.toLowerCase())
-                                    .replace(/( Up )/g, letter => letter.toLowerCase());
+            .replace(/( Or )/g, letter => letter.toLowerCase())
+            .replace(/( Of )/g, letter => letter.toLowerCase())
+            .replace(/( A )/g, letter => letter.toLowerCase())
+            .replace(/( An )/g, letter => letter.toLowerCase())
+            .replace(/( And )/g, letter => letter.toLowerCase())
+            .replace(/( The )/g, letter => letter.toLowerCase())
+            .replace(/( In )/g, letter => letter.toLowerCase())
+            .replace(/( On )/g, letter => letter.toLowerCase())
+            .replace(/( To )/g, letter => letter.toLowerCase())
+            .replace(/( For )/g, letter => letter.toLowerCase())
+            .replace(/( From )/g, letter => letter.toLowerCase())
+            .replace(/( With )/g, letter => letter.toLowerCase())
+            .replace(/( At )/g, letter => letter.toLowerCase())
+            .replace(/( By )/g, letter => letter.toLowerCase())
+            .replace(/( Into )/g, letter => letter.toLowerCase())
+            .replace(/( Near )/g, letter => letter.toLowerCase())
+            .replace(/( Off )/g, letter => letter.toLowerCase())
+            .replace(/( Up )/g, letter => letter.toLowerCase());
         const searchResult = await searchGM(searchUpperCase, category);
         const image = await getImage(searchUpperCase);
         const commands = await commandsName(searchResult.category, searchResult.id);
