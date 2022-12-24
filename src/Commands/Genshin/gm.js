@@ -271,39 +271,45 @@ module.exports = {
                 ]
             })
         } else {
-            const embed = new EmbedBuilder()
-                .setTitle('Search Result')
-                .setDescription(`Found for ${searchResult.name}!`)
-                .setColor('Green')
-                .setThumbnail(image)
-                .setTimestamp(new Date())
-                .addFields({
-                    name: '🆔 ID',
-                    value: searchResult.id,
-                    inline: true
-                })
-                .addFields({
-                    name: '🔖 Name',
-                    value: searchResult.name,
-                })
-                .addFields({
-                    name: '🗃️ Category',
-                    value: searchResult.category,
-                })
-                .addFields({
-                    name: '📝 Commands',
-                    value: `${commands}`
-                })
-                .setFooter({
-                    text: `Requested by ${interaction.user.username}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                });
+            const embed = new EmbedBuilder();
+            embed.setTitle('Search Result')
+            embed.setDescription(`Found for ${searchResult.name}!`)
+            embed.setColor('Green')
+            embed.setThumbnail(image)
+            embed.setTimestamp(new Date())
+            embed.addFields({
+                name: '🆔 ID',
+                value: searchResult.id,
+                inline: true
+            })
+            embed.addFields({
+                name: '🔖 Name',
+                value: searchResult.name,
+            })
+            embed.addFields({
+                name: '🗃️ Category',
+                value: searchResult.category,
+            })
+            embed.addFields({
+                name: '📝 Commands',
+                value: `${commands}`
+            })
+            embed.setFooter({
+                text: `Requested by ${interaction.user.username}`,
+                iconURL: interaction.user.displayAvatarURL()
+            });
             const button = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setLabel('Show ID Only')
                         .setStyle(ButtonStyle.Primary)
                         .setCustomId('show_id')
+                )
+                .addComponents(
+                    new ButtonBuilder()
+                        .setLabel('Image Bigger')
+                        .setStyle(ButtonStyle.Secondary)
+                        .setCustomId('image_bigger')
                 );
             await interaction.reply({ embeds: [embed], components: [button] });
             log.log({
@@ -338,7 +344,7 @@ module.exports = {
                 ]
             })
 
-            const filter = (i) => i.customId === 'show_id' && i.user.id === interaction.user.id;
+            const filter = (i) => i.customId === 'show_id' || i.customId === "image_bigger" && i.user.id === interaction.user.id;
             const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
             collector.on('collect', async (i) => {
@@ -349,6 +355,41 @@ module.exports = {
                         ephemeral: true,
                         embeds: [],
                         components: []
+                    });
+                }
+                // Show Image
+                if (i.customId === 'image_bigger') {
+                    embed.setThumbnail(null);
+                    embed.setImage(image);
+                    const buttonShowImage = new ActionRowBuilder()
+                        .addComponents(
+                            new ButtonBuilder()
+                                .setLabel('Back')
+                                .setStyle(ButtonStyle.Danger)
+                                .setCustomId('back')
+                        );
+                    await i.deferUpdate();
+                    await interaction.editReply({
+                        content: null,
+                        embeds: [embed],
+                        components: [buttonShowImage]
+                    });
+                    const filterShowImage = (i) => i.customId === 'back' && i.user.id === interaction.user.id;
+                    const collectorShowImage = interaction.channel.createMessageComponentCollector({ filterShowImage, time: 15000 });
+                    collectorShowImage.on('collect', async (i) => {
+                        if (i.customId === 'back') {
+                            embed.setImage(null);
+                            embed.setThumbnail(image);
+                            await i.deferUpdate();
+                            await interaction.editReply({
+                                content: null,
+                                embeds: [embed],
+                                components: []
+                            });
+                        }
+                    });
+                    collectorShowImage.on("end", async () => {
+                        await interaction.editReply({ components: [] });
                     });
                 }
             });
