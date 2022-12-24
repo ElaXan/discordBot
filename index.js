@@ -10,34 +10,35 @@ process.on('unhandledRejection', error => {
 
 const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder } = require('discord.js');
 
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.GuildMessageTyping,
-        GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildPresences,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.DirectMessageReactions,
-        GatewayIntentBits.DirectMessageTyping,
-        GatewayIntentBits.GuildBans,
-        GatewayIntentBits.GuildIntegrations,
-        GatewayIntentBits.GuildWebhooks,
-        GatewayIntentBits.GuildInvites,
-        GatewayIntentBits.GuildVoiceStates,
-    ],
-    partials: [
-        Partials.GuildMember,
-        Partials.Message,
-        Partials.Reaction,
-        Partials.User,
-        Partials.Channel,
-        Partials.GuildScheduledEvent
-    ],
-});
+const intents = [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildWebhooks,
+    GatewayIntentBits.GuildInvites,
+    GatewayIntentBits.GuildVoiceStates,
+];
+
+const partials = [
+    Partials.GuildMember,
+    Partials.Message,
+    Partials.Reaction,
+    Partials.User,
+    Partials.Channel,
+    Partials.GuildScheduledEvent
+];
+
+const client = new Client({ intents, partials });
 
 client.commands = new Collection();
 const commandFolders = fs.readdirSync('./src/Commands');
@@ -53,33 +54,36 @@ for (const folder of commandFolders) {
 // when ready
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    if (RPC.Type === "Playing" || RPC.Type === "PLAYING" || RPC.Type === "playing") {
-        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Playing });
-    } else if (RPC.Type === "Listening" || RPC.Type === "LISTENING" || RPC.Type === "listening") {
-        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Listening });
-    } else if (RPC.Type === "Watching" || RPC.Type === "WATCHING" || RPC.Type === "watching") {
-        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Watching });
-    } else if (RPC.Type === "Streaming" || RPC.Type === "STREAMING" || RPC.Type === "streaming") {
-        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Streaming });
-    } else if (RPC.Type === "Competing" || RPC.Type === "COMPETING" || RPC.Type === "competing") {
-        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Competing });
-    } else {
-        client.user.setActivity(`${RPC.Details}`, { type: ActivityType.Playing });
-    }
-    client.user.setStatus(RPC.Status);
-})
 
+    const activityTypeMap = {
+        playing: ActivityType.Playing,
+        listening: ActivityType.Listening,
+        watching: ActivityType.Watching,
+        streaming: ActivityType.Streaming,
+        competing: ActivityType.Competing,
+    }
+
+    const activityType = activityTypeMap[RPC.Type.toLowerCase()] || ActivityType.Playing;
+    client.user.setActivity(RPC.Details, { type: activityType });
+    client.user.setStatus(RPC.Status);
+});
 
 // client events interactionCreate
 client.on(Events.InteractionCreate, async interaction => {
     if (interaction.isAutocomplete()) {
         const command = client.commands.get(interaction.commandName);
-        if (!command) return;
+        if (!command) {
+            return;
+        }
+
         try {
             await command.autocomplete(interaction);
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.reply({
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            });
             log({
                 interaction: interaction.commandName,
                 color: "Red",
@@ -102,17 +106,26 @@ client.on(Events.InteractionCreate, async interaction => {
                         value: `${interaction.guild.name} (${interaction.guild.id})`
                     }
                 ]
-            })
+            });
         }
     } else {
-        if (!interaction.isChatInputCommand()) return;
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
-        const code = client.commands.get(interaction.commandName);
-        if (!code) return;
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) {
+            return;
+        }
+
+        const command = client.commands.get(interaction.commandName);
+        if (!command) {
+            return;
+        }
+
         try {
-            await code.execute(interaction);
+            await command.execute(interaction);
         } catch (error) {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            console.error(error);
+            await interaction.reply({
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            });
             log({
                 color: "Red",
                 description: "Error while executing command",
@@ -138,24 +151,31 @@ client.on(Events.InteractionCreate, async interaction => {
                         value: `${interaction.guild.name} (${interaction.guild.id})`
                     },
                 ]
-            })   
+            });
         }
     }
 });
 
 // client events messageCreate
 client.on(Events.MessageCreate, async message => {
-    if (!message.content.startsWith(Prefix)) return;
-    if (!message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return;
-    const messageCreateFiles = fs.readdirSync('./src/messageCreate').filter(file => file.endsWith('.js'));
+    if (!message.content.startsWith(Prefix) || !message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) {
+        return;
+    }
+    const messageCreateFiles = fs.readdirSync('./src/messageCreate')
+        .filter(file => file.endsWith('.js'));
     for (const file of messageCreateFiles) {
         const code = require(`./src/messageCreate/${file}`);
-        if (!code) return;
+        if (!code) {
+            return;
+        }
         try {
             await code.execute(message);
         } catch (error) {
             console.error(error);
-            await message.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await message.reply({
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            });
             log({
                 interaction: message.content,
                 color: "Red",
