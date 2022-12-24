@@ -13,7 +13,7 @@
   "version": "1.0.3",
   "description": "Discord Bot",
   "repository": {
-    "url": "https://github.com/ElaXan/discordBot"
+    "url": "https://github.com/Score-Inc/discordBot"
   },
   "author": {
     "name": "ElaXan",
@@ -32,7 +32,7 @@
   "license": "MIT",
   "main": "index.js",
   "name": "discordbot",
-  "private": "false",
+  "private": false,
   "markdown": "github",
   "devDependencies": {
     "@babel/cli": "^7.20.7",
