@@ -389,7 +389,9 @@ module.exports = {
                         }
                     });
                     collectorShowImage.on("end", async () => {
-                        await interaction.editReply({ components: [] });
+                        embed.setImage(null);
+                        embed.setThumbnail(image);
+                        await interaction.editReply({ embeds: [embed] ,components: [] });
                     });
                 }
             });
