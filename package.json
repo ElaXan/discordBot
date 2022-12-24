@@ -33,5 +33,9 @@
   "main": "index.js",
   "name": "discordbot",
   "private": "false",
-  "markdown": "github"
+  "markdown": "github",
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.7"
+  }
 }

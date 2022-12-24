@@ -1,6 +1,7 @@
 
 const { EmbedBuilder, WebhookClient } = require("discord.js");
 const { WEBHOOK_URL } = require("../../config.json")
+const url = require("url")
 
 module.exports = {
     /**
@@ -38,6 +39,11 @@ module.exports = {
      *  })
      */
     log: async function (options) {
+        const parseUrl = url.parse(WEBHOOK_URL);
+        if (!parseUrl) {
+            console.log("Invalid webhook url")
+            process.exit(1)
+        }
         const webhook = new WebhookClient({ url: WEBHOOK_URL });
         if (!options.color) {
             options.color = "Green"
