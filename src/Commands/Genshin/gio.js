@@ -89,7 +89,21 @@ module.exports = {
             return log.log({
                 interaction: "GIO",
                 description: "Item not found for " + items,
-                color: "Red"
+                color: "Red",
+                fields: [
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag} (${interaction.user.id})`,
+                    },
+                    {
+                        name: "Channel",
+                        value: `${interaction.channel.name} (${interaction.channel.id})`,
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name} (${interaction.guild.id})`,
+                    }
+                ]
             })
         } else {
             if (amount === null) {
@@ -97,14 +111,42 @@ module.exports = {
                 return log.log({
                     interaction: "GIO",
                     description: `/mail uid:${uid} command:gitem-${search.id}-<amount>`,
-                    color: "Green"
+                    color: "Green",
+                    fields: [
+                        {
+                            name: "User",
+                            value: `${interaction.user.tag} (${interaction.user.id})`,
+                        },
+                        {
+                            name: "Channel",
+                            value: `${interaction.channel.name} (${interaction.channel.id})`,
+                        },
+                        {
+                            name: "Guild",
+                            value: `${interaction.guild.name} (${interaction.guild.id})`,
+                        }
+                    ]
                 })
             }
             interaction.reply({ content: `/mail uid:${uid} command:gitem-${search.id}-${amount}`, ephemeral: true });
             return log.log({
                 interaction: "GIO",
                 description: `/mail uid:${uid} command:gitem-${search.id}-${amount}`,
-                color: "Green"
+                color: "Green",
+                fields: [
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag} (${interaction.user.id})`,
+                    },
+                    {
+                        name: "Channel",
+                        value: `${interaction.channel.name} (${interaction.channel.id})`,
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name} (${interaction.guild.id})`,
+                    }
+                ]
             })
         }
     }
