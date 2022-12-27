@@ -15,19 +15,24 @@ module.exports = {
         ]
     },
     async execute(interaction) {
+        // ambil nama anime dari opsi
         const anime = interaction.options.getString('search');
         // gunakan API anime untuk mencari anime yang diberikan nama
         fetch(`https://api.jikan.moe/v4/anime?q=${anime.replace(" ", "_")}&sfw`)
             .then(res => res.json())
             .then(json => {
-                // jika tidak ada anime yang ditemukan, kirim pesan
-                console.log(json.data[0])
                 try {
+                    // buat embed baru
                     const embed = new EmbedBuilder()
+                        // set judul embed
                         .setTitle(json.data[0].title)
+                        // set url embed
                         .setURL(json.data[0].url)
+                        // set thumbnail embed
                         .setThumbnail(json.data[0].images.jpg.image_url)
+                        // set deskripsi embed
                         .setDescription(json.data[0].background)
+                        // tambahkan field
                         .addFields({
                             name: "Source",
                             value: `${json.data[0].source}`,
@@ -64,13 +69,17 @@ module.exports = {
                             name: "Producers",
                             value: `${json.data[0].producers.map(producer => producer.name).join(", ") ? json.data[0].producers.map(producer => producer.name).join(", ") : "No producers found"}`,
                         })
+                        // set warna embed ke hijau
                         .setColor("Green")
+                        // tambahkan footer
                         .setFooter({
                             text: "Powered by Jikan API",
                             iconURL: "https://jikan.moe/assets/images/logo/jikan.logo.png",
                         })
+                    // kirim embed
                     interaction.reply({ embeds: [embed] })
                 } catch (error) {
+                    // jika ada error, kirim embed yang berisi error
                     console.error(`${error}`)
                     const embed = new EmbedBuilder()
                         .setTitle(anime)
@@ -80,6 +89,7 @@ module.exports = {
                             value: `${error}`,
                         })
                         .setColor("Red")
+                    // kirim embed
                     interaction.reply({ embeds: [embed] })
                 }
             }
