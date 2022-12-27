@@ -5,7 +5,7 @@ module.exports = {
         if (!message.content.startsWith(Prefix)) return;
         if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
         const { exec } = require('child_process');
-        const log = require("../log/log").log
+        const log = require("../log/log").log;
         message.reply("Running speedtest...").then(async msg => {
             exec('speedtest --simple', (error, stdout, stderr) => {
                 if (error) {
@@ -39,7 +39,7 @@ module.exports = {
                             value: `${message.guild.name} (${message.guild.id})`,
                         }
                     ]
-                })
+                });
             });
         });
     }

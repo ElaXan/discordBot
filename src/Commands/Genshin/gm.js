@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { Path_GM_Handhook } = require('../../../config.json');
 const log = require('../../log/log');
+const { exec } = require('child_process');
 
 searchGM = async (search, categoryId) => {
     const fs = require('fs');
@@ -80,7 +81,7 @@ searchGM = async (search, categoryId) => {
             case " Monsters":
                 return `/spawn ${id} x<amount> lv<level> hp<health>`;
             default:
-                return `Not yet applied to category${category}`;
+                return `Not yet applied to category ${category}`;
         }
     }
 
@@ -243,6 +244,48 @@ module.exports = {
                 color: "Red",
                 interaction: "GM",
                 description: "Not found ID for " + searchUpperCase,
+                fields: [
+                    {
+                        name: "User",
+                        value: interaction.user.username
+                    },
+                    {
+                        name: "User ID",
+                        value: interaction.user.id
+                    },
+                    {
+                        name: "Guild",
+                        value: interaction.guild.name
+                    },
+                    {
+                        name: "Channel",
+                        value: interaction.channel.name
+                    },
+                    {
+                        name: "Message Link",
+                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`
+                    },
+                    {
+                        name: "Message ID",
+                        value: interaction.id
+                    }
+                ]
+            })
+        } else if (searchResult.id === "Error" && searchResult.name === "Error" && searchResult.category === "Error") {
+            const embed = new EmbedBuilder()
+                .setTitle('Search Result')
+                .setDescription('Error for find ID ' + searchUpperCase)
+                .setColor('Red')
+                .setTimestamp(new Date())
+                .setFooter({
+                    text: `Requested by ${interaction.user.username}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+            await interaction.reply({ embeds: [embed] });
+            log.log({
+                color: "Red",
+                interaction: "GM",
+                description: "Error for " + searchUpperCase,
                 fields: [
                     {
                         name: "User",
