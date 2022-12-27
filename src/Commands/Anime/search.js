@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js")
 const fetch = require('node-fetch');
+const { log } = require("../../log/log")
 
 module.exports = {
     data: {
@@ -78,6 +79,30 @@ module.exports = {
                         })
                     // kirim embed
                     interaction.reply({ embeds: [embed] })
+                    // log
+                    log({
+                        color: "Green",
+                        interaction: "Anime",
+                        description: `Command Anime was used`,
+                        fields: [
+                            {
+                                name: "Anime",
+                                value: anime
+                            },
+                            {
+                                name: "Used by",
+                                value: `${interaction.user.tag} (${interaction.user.id})`,
+                            },
+                            {
+                                name: "Channel",
+                                value: `${interaction.channel.name} (${interaction.channel.id})`,
+                            },
+                            {
+                                name: "Guild",
+                                value: `${interaction.guild.name} (${interaction.guild.id})`,
+                            }
+                        ]
+                    })
                 } catch (error) {
                     // jika ada error, kirim embed yang berisi error
                     console.error(`${error}`)
@@ -91,6 +116,34 @@ module.exports = {
                         .setColor("Red")
                     // kirim embed
                     interaction.reply({ embeds: [embed] })
+                    // log
+                    log({
+                        color: "Red",
+                        interaction: "Anime",
+                        description: `Command Anime was used and results not found`,
+                        fields: [
+                            {
+                                name: "Anime",
+                                value: anime
+                            },
+                            {
+                                name: "Output Error",
+                                value: `${error}`,
+                            },
+                            {
+                                name: "Used by",
+                                value: `${interaction.user.tag} (${interaction.user.id})`,
+                            },
+                            {
+                                name: "Channel",
+                                value: `${interaction.channel.name} (${interaction.channel.id})`,
+                            },
+                            {
+                                name: "Guild",
+                                value: `${interaction.guild.name} (${interaction.guild.id})`,
+                            }
+                        ]
+                    })
                 }
             }
         )
