@@ -10,7 +10,7 @@
     "install": "npm install --save discord.js cheerio node-fetch@2",
     "uninstall": "npm uninstall --save discord.js cheerio node-fetch@2"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Discord Bot",
   "repository": {
     "url": "https://github.com/Score-Inc/discordBot"
