@@ -13,7 +13,9 @@
   "version": "1.0.4",
   "description": "Discord Bot",
   "repository": {
-    "url": "https://github.com/Score-Inc/discordBot"
+    "url": "https://github.com/Score-Inc/discordBot",
+    "directory": "discordBot",
+    "type": "git"
   },
   "author": {
     "name": "ElaXan",
@@ -27,7 +29,8 @@
     "arm64"
   ],
   "engines": {
-    "node": ">=16.6.0"
+    "node": ">=16.6.0",
+    "vscode": "^1.22.0"
   },
   "license": "MIT",
   "main": "index.js",
@@ -37,5 +40,11 @@
   "devDependencies": {
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.7"
-  }
+  },
+  "contributors": [
+    {
+      "name": "ElaXan",
+      "email": "zero@elaxan.com"
+    }
+  ]
 }
