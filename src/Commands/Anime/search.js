@@ -19,7 +19,7 @@ module.exports = {
         // ambil nama anime dari opsi
         const anime = interaction.options.getString('search');
         // gunakan API anime untuk mencari anime yang diberikan nama
-        fetch(`https://api.jikan.moe/v4/anime?q=${anime.replace(" ", "_")}&sfw`)
+        fetch(`https://api.jikan.moe/v4/anime?q=${anime}&sfw`)
             .then(res => res.json())
             .then(json => {
                 try {
