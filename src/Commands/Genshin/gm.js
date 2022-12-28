@@ -101,10 +101,17 @@ module.exports = {
                             value: "No results found"
                         })
                     } else {
-                        choices.push({
-                            name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
-                            value: line.split(":")[1].trim().substring(0, 85),
-                        })
+                        if (line === undefined) {
+                            choices.push({
+                                name: "No results found",
+                                value: "No results found"
+                            })
+                        } else {
+                            choices.push({
+                                name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
+                                value: line.split(":")[1].trim().substring(0, 85),
+                            })
+                        }
                     }
                 }
             }
