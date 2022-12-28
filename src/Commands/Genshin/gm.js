@@ -1,6 +1,9 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const log = require('../../log/log');
-const { searchGM, getImage, commandsName, autocomplete } = require("../../Utils/Genshin/gmHandbook")
+const { searchGM, getImage, commandsName } = require("../../Utils/Genshin/gmHandbook")
+const { Path_GM_Handhook } = require("../../../config.json")
+const fs = require('fs');
+const readline = require('readline');
 
 module.exports = {
     data: {
@@ -75,11 +78,37 @@ module.exports = {
         stringsToReplace.forEach(str => {
             search = search.replace(str, letter => letter.toLowerCase());
         });
-
+        const choices = [];
+        const fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
         if (search.length < 1) {
-            return interaction.respond([{ name: 'Please type something', value: 'Please type something' }]);
+            return interaction.respond([{
+                name: "Please enter a Name or ID",
+                value: "Please enter a Name or ID"
+            }])
+        } else {
+            for await (const line of rl) {
+                if (line.startsWith("//")) {
+                    category = line.replace("//", "").replace(" ", "");
+                }
+                if (line.includes(search)) {
+                    if (line.length < 1) {
+                        choices.push({
+                            name: "No results found",
+                            value: "No results found"
+                        })
+                    } else {
+                        choices.push({
+                            name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
+                            value: line.split(":")[1].trim().substring(0, 85),
+                        })
+                    }
+                }
+            }
         }
-        const choices = await autocomplete(search);
         interaction.respond(choices.slice(0, 25));
     },
     async execute(interaction) {

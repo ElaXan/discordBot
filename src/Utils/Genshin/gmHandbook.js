@@ -107,35 +107,5 @@ module.exports = {
         } else {
             return image;
         }
-    },
-    autocomplete: async (search) => {
-        const choices = [];
-        const fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
-        const rl = readline.createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-        });
-        for await (const line of rl) {
-            if (line.startsWith("//")) {
-                category = line.replace("//", "").replace(" ", "");
-            }
-            if (line.includes(search)) {
-                if (line.length < 1) {
-                    return [
-                        {
-                            name: "Not Found",
-                            value: "Not Found"
-                        }
-                    ]
-                } else {
-                    choices.push({
-                        name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
-                        value: line.split(":")[1].trim().substring(0, 85),
-                    })
-                    return choices;
-                }
-            }
-
-        }
     }
 }
