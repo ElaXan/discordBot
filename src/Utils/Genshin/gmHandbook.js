@@ -119,9 +119,7 @@ module.exports = {
             if (line.startsWith("//")) {
                 category = line.replace("//", "").replace(" ", "");
             }
-            console.log(line)
             if (line.includes(search)) {
-                console.log(line)
                 if (line.length < 1) {
                     return [
                         {
