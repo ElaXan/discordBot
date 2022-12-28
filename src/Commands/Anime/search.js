@@ -24,7 +24,17 @@ module.exports = {
         const result = await search(anime);
         // jika tidak ada anime yang ditemukan, kirim balasan "No anime found"
         if (!result) {
-            return interaction.editReply("No anime found")
+            // bikin embed
+            const embed = new EmbedBuilder()
+                // set judul embed
+                .setTitle(anime)
+                // set deskripsi embed
+                .setDescription("No anime found")
+                // set warna embed ke merah
+                .setColor("Red")
+                // set footer embed dengan API yang digunakan
+                .setAuthor({ name: "Powered by Jikan API", iconURL: "https://jikan.moe/assets/images/logo/jikan.logo.png" })
+            return interaction.editReply({ embeds: [embed] })
         }
         const embed = new EmbedBuilder()
             // set judul embed

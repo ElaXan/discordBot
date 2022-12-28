@@ -79,11 +79,18 @@ client.on(Events.InteractionCreate, async interaction => {
         try {
             await command.autocomplete(interaction);
         } catch (error) {
-            console.error(error);
-            await interaction.reply({
-                content: 'There was an error while executing this command!',
-                ephemeral: true
-            });
+            // still testing about this code if it works or not
+            if (interaction.isRepliable()) {
+                await interaction.editReply({
+                    content: 'There was an error while executing this command!',
+                    ephemeral: true
+                });
+            } else {
+                await interaction.reply({
+                    content: 'There was an error while executing this command!',
+                    ephemeral: true
+                });
+            }
             log({
                 interaction: interaction.commandName,
                 color: "Red",

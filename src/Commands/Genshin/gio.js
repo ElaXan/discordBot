@@ -1,35 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-
-searchGM = async (search, categoryId) => {
-    const fs = require('fs');
-    const readline = require('readline');
-    fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
-    const rl = readline.createInterface({
-        input: fileStream,
-        crlfDelay: Infinity
-    });
-
-    for await (const line of rl) {
-        if (line.startsWith("//")) {
-            category = line.replace("//", "");
-        }
-        if (line.includes(search)) {
-            const id = line.split(":")[0].trim();
-            const name = line.split(":")[1].trim();
-            return {
-                id: id,
-                name: name,
-                category: category
-            };
-        }
-    }
-
-    return {
-        id: "Not Found",
-        name: "Not Found",
-        category: "Not Found"
-    }
-},
+const { searchGM } = require("../../Utils/Genshin/gmHandbook")
 
 module.exports = {
     data: {
