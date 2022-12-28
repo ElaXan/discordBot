@@ -104,8 +104,8 @@ module.exports = {
                 );
                 return log.log({
                     interaction: "gitpull",
-                    description: "Failed to pull latest changes from git",
-                    color: "Red",
+                    description: "Successfully git pull commands but there was an error",
+                    color: "Yellow",
                     fields: [
                         {
                             name: "Output",
