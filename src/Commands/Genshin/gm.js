@@ -1,105 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { Path_GM_Handhook } = require('../../../config.json');
 const log = require('../../log/log');
-const { exec } = require('child_process');
-
-searchGM = async (search, categoryId) => {
-    const fs = require('fs');
-    const readline = require('readline');
-    switch (categoryId) {
-        case "avatars":
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Avatars}`);
-            break;
-        case "quest":
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Quest}`);
-            break;
-        case "items":
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Items}`);
-            break;
-        case "monsters":
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Monsters}`);
-            break;
-        case "scenes":
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Scenes}`);
-            break;
-        case "gadgets":
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.Gadgets}`);
-            break;
-        default:
-            fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
-            break;
-    }
-    try {
-        const rl = readline.createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-        });
-
-        for await (const line of rl) {
-            if (line.startsWith("//")) {
-                category = line.replace("//", "");
-            }
-            if (line.includes(search)) {
-                const id = line.split(":")[0].trim();
-                const name = line.split(":")[1].trim();
-                return {
-                    id: id,
-                    name: name,
-                    category: category
-                };
-            }
-        }
-
-        return {
-            id: "Not Found",
-            name: "Not Found",
-            category: "Not Found"
-        };
-    } catch (error) {
-        console.error(error);
-        return {
-            id: "Error",
-            name: "Error",
-            category: "Error"
-        };
-    }
-
-},
-
-    /**
-    * @param {String} category - The category of the ID for search command name
-    * @param {String} id - The ID of the item
-    */
-    commandsName = (category, id) => {
-        switch (category) {
-            case " Avatars":
-                return `/give ${id} lv<level> c<constellation>`;
-            case " Quests":
-                return `/q add ${id}\n/q remove ${id}`;
-            case " Items":
-                return `/give ${id} x<amount>`;
-            case " Monsters":
-                return `/spawn ${id} x<amount> lv<level> hp<health>`;
-            default:
-                return `Not yet applied to category ${category}`;
-        }
-    }
-
-
-getImage = async (name) => {
-    const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
-    const fetch = require("node-fetch");
-    const cheerio = require("cheerio");
-    const response = await fetch(url);
-    const body = await response.text();
-    const $ = cheerio.load(body);
-    const image = $(".pi-image-thumbnail").attr("src");
-    if (image === undefined) {
-        return "https://static.thenounproject.com/png/1400397-200.png";
-    } else {
-        return image;
-    }
-}
+const { searchGM, getImage, commandsName, autocomplete } = require("../../Utils/Genshin/gmHandbook")
 
 module.exports = {
     data: {
@@ -150,82 +51,65 @@ module.exports = {
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
 
-        const search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
-            .replace(/( Or )/g, letter => letter.toLowerCase())
-            .replace(/( Of )/g, letter => letter.toLowerCase())
-            .replace(/( A )/g, letter => letter.toLowerCase())
-            .replace(/( An )/g, letter => letter.toLowerCase())
-            .replace(/( And )/g, letter => letter.toLowerCase())
-            .replace(/( The )/g, letter => letter.toLowerCase())
-            .replace(/( In )/g, letter => letter.toLowerCase())
-            .replace(/( On )/g, letter => letter.toLowerCase())
-            .replace(/( To )/g, letter => letter.toLowerCase())
-            .replace(/( For )/g, letter => letter.toLowerCase())
-            .replace(/( From )/g, letter => letter.toLowerCase())
-            .replace(/( With )/g, letter => letter.toLowerCase())
-            .replace(/( At )/g, letter => letter.toLowerCase())
-            .replace(/( By )/g, letter => letter.toLowerCase())
-            .replace(/( Into )/g, letter => letter.toLowerCase())
-            .replace(/( Near )/g, letter => letter.toLowerCase())
-            .replace(/( Off )/g, letter => letter.toLowerCase())
-            .replace(/( Up )/g, letter => letter.toLowerCase());
-        const choices = [];
-        const fs = require('fs');
-        const readline = require('readline');
-        const fileStream = fs.createReadStream(`${Path_GM_Handhook.Path}/${Path_GM_Handhook.If_Choices_is_Null}`);
-        const rl = readline.createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
+        const stringsToReplace = [
+            ' Or ',
+            ' Of ',
+            ' A ',
+            ' An ',
+            ' And ',
+            ' The ',
+            ' In ',
+            ' On ',
+            ' To ',
+            ' For ',
+            ' From ',
+            ' With ',
+            ' At ',
+            ' By ',
+            ' Into ',
+            ' Near ',
+            ' Off ',
+            ' Up '
+        ];
+        let search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+        stringsToReplace.forEach(str => {
+            search = search.replace(str, letter => letter.toLowerCase());
         });
-        if (search.length === 0) {
-            choices.push({
-                name: "Please type something",
-                value: "Please type something",
-            });
-        } else {
-            for await (const line of rl) {
-                if (line.startsWith("//")) {
-                    category = line.replace("//", "").replace(" ", "");
-                }
-                if (line.includes(search)) {
-                    if (line.length < 1) {
-                        choices.push({
-                            name: "Not Found",
-                            value: "Not Found",
-                        })
-                    } else {
-                        choices.push({
-                            name: line.split(":")[1].trim().substring(0, 85) + ` | (${category})`,
-                            value: line.split(":")[1].trim().substring(0, 85),
-                        });
-                    }
-                }
-            }
+
+        if (search.length < 1) {
+            return interaction.respond([{ name: 'Please type something', value: 'Please type something' }]);
         }
+        const choices = await autocomplete(search);
         interaction.respond(choices.slice(0, 25));
     },
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
-        const searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
-            .replace(/( Or )/g, letter => letter.toLowerCase())
-            .replace(/( Of )/g, letter => letter.toLowerCase())
-            .replace(/( A )/g, letter => letter.toLowerCase())
-            .replace(/( An )/g, letter => letter.toLowerCase())
-            .replace(/( And )/g, letter => letter.toLowerCase())
-            .replace(/( The )/g, letter => letter.toLowerCase())
-            .replace(/( In )/g, letter => letter.toLowerCase())
-            .replace(/( On )/g, letter => letter.toLowerCase())
-            .replace(/( To )/g, letter => letter.toLowerCase())
-            .replace(/( For )/g, letter => letter.toLowerCase())
-            .replace(/( From )/g, letter => letter.toLowerCase())
-            .replace(/( With )/g, letter => letter.toLowerCase())
-            .replace(/( At )/g, letter => letter.toLowerCase())
-            .replace(/( By )/g, letter => letter.toLowerCase())
-            .replace(/( Into )/g, letter => letter.toLowerCase())
-            .replace(/( Near )/g, letter => letter.toLowerCase())
-            .replace(/( Off )/g, letter => letter.toLowerCase())
-            .replace(/( Up )/g, letter => letter.toLowerCase());
+        const stringsToReplace = [
+            ' Or ',
+            ' Of ',
+            ' A ',
+            ' An ',
+            ' And ',
+            ' The ',
+            ' In ',
+            ' On ',
+            ' To ',
+            ' For ',
+            ' From ',
+            ' With ',
+            ' At ',
+            ' By ',
+            ' Into ',
+            ' Near ',
+            ' Off ',
+            ' Up '
+        ];
+        let searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+        for (const str of stringsToReplace) {
+            searchUpperCase = searchUpperCase.replace(str, letter => letter.toLowerCase());
+        }
+        interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
         const image = await getImage(searchUpperCase);
         const commands = await commandsName(searchResult.category, searchResult.id);
@@ -239,7 +123,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            await interaction.reply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
             log.log({
                 color: "Red",
                 interaction: "GM",
@@ -281,7 +165,7 @@ module.exports = {
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
-            await interaction.reply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
             log.log({
                 color: "Red",
                 interaction: "GM",
@@ -354,7 +238,7 @@ module.exports = {
                         .setStyle(ButtonStyle.Secondary)
                         .setCustomId('image_bigger')
                 );
-            await interaction.reply({ embeds: [embed], components: [button] });
+            await interaction.editReply({ embeds: [embed], components: [button] });
             log.log({
                 color: "Green",
                 interaction: "GM",
@@ -434,7 +318,7 @@ module.exports = {
                     collectorShowImage.on("end", async () => {
                         embed.setImage(null);
                         embed.setThumbnail(image);
-                        await interaction.editReply({ embeds: [embed] ,components: [] });
+                        await interaction.editReply({ embeds: [embed], components: [] });
                     });
                 }
             });
