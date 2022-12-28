@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js")
-const fetch = require('node-fetch');
+const { search } = require("../../Utils/Anime/searchAnime")
 const { log } = require("../../log/log")
 
 module.exports = {
@@ -18,134 +18,82 @@ module.exports = {
     async execute(interaction) {
         // ambil nama anime dari opsi
         const anime = interaction.options.getString('search');
-        // gunakan API anime untuk mencari anime yang diberikan nama
-        fetch(`https://api.jikan.moe/v4/anime?q=${anime}&sfw`)
-            .then(res => res.json())
-            .then(json => {
-                try {
-                    // buat embed baru
-                    const embed = new EmbedBuilder()
-                        // set judul embed
-                        .setTitle(json.data[0].title)
-                        // set url embed
-                        .setURL(json.data[0].url)
-                        // set thumbnail embed
-                        .setThumbnail(json.data[0].images.jpg.image_url)
-                        // set deskripsi embed
-                        .setDescription(json.data[0].background)
-                        // tambahkan field
-                        .addFields({
-                            name: "Source",
-                            value: `${json.data[0].source}`,
-                        })
-                        .addFields({
-                            name: "Scores",
-                            value: `${json.data[0].score}`,
-                        })
-                        .addFields({
-                            name: "Episodes",
-                            value: `${json.data[0].episodes}`,
-                        })
-                        .addFields({
-                            name: "Duration",
-                            value: `${json.data[0].duration}`,
-                        })
-                        .addFields({
-                            name: "Rating",
-                            value: `${json.data[0].rating}`,
-                        })
-                        .addFields({
-                            name: "Status",
-                            value: `${json.data[0].status}`,
-                        })
-                        .addFields({
-                            name: "Genres",
-                            value: `${json.data[0].genres.map(genre => genre.name).join(", ") ? json.data[0].genres.map(genre => genre.name).join(", ") : "No genres found"}`,
-                        })
-                        .addFields({
-                            name: "Studios",
-                            value: `${json.data[0].studios.map(studio => studio.name).join(", ") ? json.data[0].studios.map(studio => studio.name).join(", ") : "No studios found"}`,
-                        })
-                        .addFields({
-                            name: "Producers",
-                            value: `${json.data[0].producers.map(producer => producer.name).join(", ") ? json.data[0].producers.map(producer => producer.name).join(", ") : "No producers found"}`,
-                        })
-                        // set warna embed ke hijau
-                        .setColor("Green")
-                        // tambahkan footer
-                        .setFooter({
-                            text: "Powered by Jikan API",
-                            iconURL: "https://jikan.moe/assets/images/logo/jikan.logo.png",
-                        })
-                    // kirim embed
-                    interaction.reply({ embeds: [embed] })
-                    // log
-                    log({
-                        color: "Green",
-                        interaction: "Anime",
-                        description: `Command Anime was used`,
-                        fields: [
-                            {
-                                name: "Anime",
-                                value: anime
-                            },
-                            {
-                                name: "Used by",
-                                value: `${interaction.user.tag} (${interaction.user.id})`,
-                            },
-                            {
-                                name: "Channel",
-                                value: `${interaction.channel.name} (${interaction.channel.id})`,
-                            },
-                            {
-                                name: "Guild",
-                                value: `${interaction.guild.name} (${interaction.guild.id})`,
-                            }
-                        ]
-                    })
-                } catch (error) {
-                    // jika ada error, kirim embed yang berisi error
-                    console.error(`${error}`)
-                    const embed = new EmbedBuilder()
-                        .setTitle(anime)
-                        .setDescription("Anime not found")
-                        .addFields({
-                            name: "Reason",
-                            value: `${error}`,
-                        })
-                        .setColor("Red")
-                    // kirim embed
-                    interaction.reply({ embeds: [embed] })
-                    // log
-                    log({
-                        color: "Red",
-                        interaction: "Anime",
-                        description: `Command Anime was used and results not found`,
-                        fields: [
-                            {
-                                name: "Anime",
-                                value: anime
-                            },
-                            {
-                                name: "Output Error",
-                                value: `${error}`,
-                            },
-                            {
-                                name: "Used by",
-                                value: `${interaction.user.tag} (${interaction.user.id})`,
-                            },
-                            {
-                                name: "Channel",
-                                value: `${interaction.channel.name} (${interaction.channel.id})`,
-                            },
-                            {
-                                name: "Guild",
-                                value: `${interaction.guild.name} (${interaction.guild.id})`,
-                            }
-                        ]
-                    })
+        // kirim balasan sebelum mencari anime "(nama bot) is thinking..."
+        interaction.deferReply()
+        // cari anime
+        const result = await search(anime);
+        // jika tidak ada anime yang ditemukan, kirim balasan "No anime found"
+        if (!result) {
+            return interaction.editReply("No anime found")
+        }
+        const embed = new EmbedBuilder()
+            // set judul embed
+            .setTitle(result.title)
+            // set deskripsi embed (background)
+            .setDescription(result.background)
+            // set warna embed ke hijau
+            .setColor("Green")
+            // tambahkan field
+            .addFields(
+                {
+                    name: "Genres",
+                    value: `${result.genres}`,
+                },
+                {
+                    name: "Source",
+                    value: `${result.source}`,
+                },
+                {
+                    name: "Status",
+                    value: `${result.status}`,
+                },
+                {
+                    name: "Episodes",
+                    value: `${result.episodes}`,
+                },
+                {
+                    name: "Duration",
+                    value: `${result.duration}`,
+                },
+                {
+                    name: "Score",
+                    value: `${result.score}`,
+                },
+                {
+                    name: "Licensors",
+                    value: `${result.licensors}`,
                 }
-            }
-        )
+            )
+            // set gambar thumbnail sebagai gambar anime
+            .setThumbnail(result.images)
+            .setTimestamp()
+            // set footer embed dengan API yang digunakan
+            .setAuthor({ name: "Powered by Jikan API", iconURL: "https://jikan.moe/assets/images/logo/jikan.logo.png" })
+        // kirim balasan dengan embed
+        interaction.editReply({ embeds: [embed] })
+        // log ke webhook
+        log({
+            color: "Green",
+            interaction: "/anime",
+            description: `Searched for ${anime}`,
+            fields: [
+                {
+                    name: "Anime",
+                    value: anime
+                },
+                {
+                    name: "User",
+                    value: interaction.user.tag + " (" + interaction.user.id + ")"
+                },
+                {
+                    name: "Channel",
+                    value: interaction.channel.name + " (" + interaction.channel.id + ")"
+                },
+                {
+                    name: "Guild",
+                    value: interaction.guild.name + " (" + interaction.guild.id + ")"
+                },
+            ]
+        })
     }
 }
