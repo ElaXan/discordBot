@@ -45,7 +45,7 @@ module.exports = {
             })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
         // edit the message
-        interaction.editReply({
+        await interaction.editReply({
             content: null,
             embeds: [embed]
         })
