@@ -16,9 +16,7 @@ module.exports = {
             SelectMenuBuilder,
             SelectMenuOptionBuilder,
         } = require("discord.js");
-        if (!message.content.startsWith(Prefix)) return;
-        if (message.author.id !== OWNER_ID) return;
-        if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
+        if (!message.content.startsWith(Prefix) || message.author.id !== OWNER_ID || !message.content.startsWith(`${Prefix}${this.name}`)) return;
         const log = require("../log/log").log
         try {
             const code = message.content.slice(6);

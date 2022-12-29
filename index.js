@@ -123,12 +123,12 @@ client.on(Events.InteractionCreate, async interaction => {
         } catch (error) {
             console.error(error);
             if (error instanceof TypeError) {
-                interaction.editReply({
+                interaction.reply({
                     content: 'There was an error while executing this command!',
                     ephemeral: true
                 })
             } else {
-                interaction.reply({
+                interaction.editReply({
                     content: 'There was an error while executing this command!',
                     ephemeral: true
                 })
