@@ -27,7 +27,7 @@ module.exports = {
         if (interaction.user.id === OWNER_ID) {
             maxToken = OPENAI.Max_Tokens_Owners
         } else {
-            maxToken = OPENAI.Max_Tokens_Public
+            maxToken = OPENAI.Max_Tokens_Public.Max_Tokens
         }
         const completion = await openai.createCompletion(
             {
