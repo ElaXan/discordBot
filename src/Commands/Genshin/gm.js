@@ -145,7 +145,7 @@ module.exports = {
         for (const str of stringsToReplace) {
             searchUpperCase = searchUpperCase.replace(str, letter => letter.toLowerCase());
         }
-        interaction.deferReply();
+        await interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
         const image = await getImage(searchUpperCase);
         const commands = await commandsName(searchResult.category, searchResult.id);

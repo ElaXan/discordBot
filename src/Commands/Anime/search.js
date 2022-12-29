@@ -19,7 +19,7 @@ module.exports = {
         // ambil nama anime dari opsi
         const anime = interaction.options.getString('search');
         // kirim balasan sebelum mencari anime "(nama bot) is thinking..."
-        interaction.deferReply()
+        await interaction.deferReply()
         // cari anime
         const result = await search(anime);
         // jika tidak ada anime yang ditemukan, kirim balasan "No anime found"
