@@ -6,7 +6,7 @@ module.exports = {
     async execute(message) {
         if (!message.content.startsWith(Prefix)) return;
         if (!message.content.startsWith(`${Prefix}${this.name}`)) return;
-        if (message.author.id !== OWNER_ID) return message.reply("Only bot can ask questions.")
+        if (message.author.id !== OWNER_ID) return message.reply("Only owners can ask questions.")
         const prompt = message.content.slice(this.name.length + 2);
         const config = new Configuration({
             apiKey: OPENAI_API_KEY
