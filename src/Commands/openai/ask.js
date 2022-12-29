@@ -1,6 +1,8 @@
 const { Configuration, OpenAIApi } = require('openai');
 const { OPENAI_API_KEY } = require("../../../config.json")
 const { EmbedBuilder } = require("discord.js");
+const { log } = require('../../log/log');
+const { author } = require("../../../package.json")
 
 module.exports = {
     data: {
@@ -44,10 +46,37 @@ module.exports = {
                 value: output
             })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
+            .setFooter({
+                text: `Using API by ${author.name}`
+            })
+            .setURL("https://openai.com/")
         // edit the message
         await interaction.editReply({
             content: null,
             embeds: [embed]
+        })
+        log({
+            interaction: "/ask",
+            color: "Green",
+            description: "Asked a question to OpenAI",
+            fields: [
+                {
+                    name: "Question",
+                    value: prompt
+                },
+                {
+                    name: "User",
+                    value: `${interaction.user.tag} (${interaction.user.id})`
+                },
+                {
+                    name: "Channel",
+                    value: `<#${interaction.channel.id}> (${interaction.channel.id})`
+                },
+                {
+                    name: "Guild",
+                    value: `${interaction.guild.name} (${interaction.guild.id})`
+                }
+            ]
         })
     }
 }
