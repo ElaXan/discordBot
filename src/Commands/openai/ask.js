@@ -43,7 +43,7 @@ module.exports = {
             .setTimestamp()
             .addFields({
                 name: "Answer",
-                value: output
+                value: output.slice(0, 700)
             })
             .addFields({
                 name: "Suggestions",
@@ -51,7 +51,7 @@ module.exports = {
             })
             .addFields({
                 name: "Note",
-                value: "If the answer is cropped, then max_tokens is too low."
+                value: "If the answer is cropped, then max_tokens is too low. or too long"
             })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
