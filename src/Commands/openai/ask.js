@@ -35,6 +35,7 @@ module.exports = {
         );
         // Output the completion
         output = completion.data.choices[0].text
+        usage = completion.data.usage
         // Embed
         const embed = new EmbedBuilder()
             .setTitle("OpenAI")
@@ -71,6 +72,10 @@ module.exports = {
                 {
                     name: "Question",
                     value: prompt
+                },
+                {
+                    name: "Usage",
+                    value: `prompt: ${usage.prompt_tokens}\ncompletion: ${usage.completion_tokens}\nTotal: ${usage.total_tokens}`
                 },
                 {
                     name: "User",
