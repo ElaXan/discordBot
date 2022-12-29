@@ -4,8 +4,27 @@
     "CLIENT_ID": "CLIENT_ID_HERE",
     "OWNER_ID": "OWNER_ID_HERE",
     "WEBHOOK_URL": "WEBHOOK_URL_HERE",
+    "OPENAI": {
+        "API_KEY": "OPENAI_API_KEY_HERE",
+        "Model": "text-davinci-003",
+        "temperature": 0.9,
+        "Max_Tokens_Owners": 1000,  
+        "Max_Tokens_Public": {
+            "Active": true,
+            "Max_Tokens": 100
+        },
+        "Process_Text": "Processing... Please wait.",
+        "Title": {
+            "Name": "OpenAI",
+            "URL": "https://openai.com/"
+        },
+        "Description": "Here is the answer to your question",
+        "Footer": "Using API by ElaXan",
+        "Color": "Random",
+        "Suggestions": "If you think the answer is not correct, please send more details",
+        "Note": "If the answer is cropped, then max_tokens is too low. or answer is too long."
+    },
     "Prefix": "z!",
-    "OPENAI_API_KEY": "OPENAI_API_KEY_HERE",
     "Path_GM_Handhook": {
         "Path": "./gm",
         "Avatars": "avatars.txt",

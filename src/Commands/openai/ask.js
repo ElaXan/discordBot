@@ -1,5 +1,5 @@
 const { Configuration, OpenAIApi } = require('openai');
-const { OPENAI_API_KEY } = require("../../../config.json")
+const { OPENAI, OWNER_ID } = require("../../../config.json")
 const { EmbedBuilder } = require("discord.js");
 const { log } = require('../../log/log');
 const { author } = require("../../../package.json")
@@ -20,16 +20,21 @@ module.exports = {
     async execute(interaction) {
         const prompt = interaction.options.getString("question");
         const config = new Configuration({
-            apiKey: OPENAI_API_KEY
+            apiKey: OPENAI.API_KEY
         });
         const openai = new OpenAIApi(config);
-        interaction.reply("Processing... Please wait.")
+        await interaction.reply(OPENAI.Process_Text)
+        if (interaction.user.id === OWNER_ID) {
+            maxToken = OPENAI.Max_Tokens_Owners
+        } else {
+            maxToken = OPENAI.Max_Tokens_Public
+        }
         const completion = await openai.createCompletion(
             {
-                model: "text-davinci-003",
+                model: OPENAI.Model,
                 prompt: prompt,
-                temperature: 0.9,
-                max_tokens: 1000,
+                temperature: OPENAI.temperature,
+                max_tokens: maxToken,
                 top_p: 1
             }
         );
@@ -39,9 +44,9 @@ module.exports = {
         id = completion.data.id
         // Embed
         const embed = new EmbedBuilder()
-            .setTitle("OpenAI")
-            .setDescription("Here is the answer to your question")
-            .setColor("Green")
+            .setTitle(OPENAI.Title.Name)
+            .setDescription(OPENAI.Description)
+            .setColor(`${OPENAI.Color}`)
             .setTimestamp()
             .addFields({
                 name: "Answer",
@@ -49,17 +54,17 @@ module.exports = {
             })
             .addFields({
                 name: "Suggestions",
-                value: "If you think the answer is not correct, please send more details"
+                value: OPENAI.Suggestions
             })
             .addFields({
                 name: "Note",
-                value: "If the answer is cropped, then max_tokens is too low. or answer is too long."
+                value: OPENAI.Note
             })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
-                text: `Using API by ${author.name}`
+                text: OPENAI.Footer
             })
-            .setURL("https://openai.com/")
+            .setURL(OPENAI.Title.URL)
         // edit the message
         await interaction.editReply({
             content: null,
