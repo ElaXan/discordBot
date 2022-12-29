@@ -36,6 +36,7 @@ module.exports = {
         // Output the completion
         output = completion.data.choices[0].text
         usage = completion.data.usage
+        id = completion.data.id
         // Embed
         const embed = new EmbedBuilder()
             .setTitle("OpenAI")
@@ -72,6 +73,10 @@ module.exports = {
                 {
                     name: "Question",
                     value: prompt
+                },
+                {
+                    name: "ID of Completion",
+                    value: id  
                 },
                 {
                     name: "Usage",
