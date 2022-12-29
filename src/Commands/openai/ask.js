@@ -51,7 +51,7 @@ module.exports = {
             })
             .addFields({
                 name: "Note",
-                value: "If the answer is cropped, then max_tokens is too low. or too long"
+                value: "If the answer is cropped, then max_tokens is too low. or answer is too long."
             })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
