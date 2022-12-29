@@ -45,6 +45,14 @@ module.exports = {
                 name: "Answer",
                 value: output
             })
+            .addFields({
+                name: "Suggestions",
+                value: "If you think the answer is not correct, please send more details"
+            })
+            .addFields({
+                name: "Note",
+                value: "If the answer is cropped, then max_tokens is too low."
+            })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
                 text: `Using API by ${author.name}`
