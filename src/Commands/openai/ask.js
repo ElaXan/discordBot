@@ -1,5 +1,6 @@
 const { Configuration, OpenAIApi } = require('openai');
 const { OPENAI_API_KEY } = require("../../../config.json")
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
     data: {
@@ -32,9 +33,21 @@ module.exports = {
         );
         // Output the completion
         output = completion.data.choices[0].text
+        // Embed
+        const embed = new EmbedBuilder()
+            .setTitle("OpenAI")
+            .setDescription("Here is the answer to your question")
+            .setColor("Green")
+            .setTimestamp()
+            .addFields({
+                name: "Answer",
+                value: output
+            })
+            .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
         // edit the message
         interaction.editReply({
-            content: output
+            content: null,
+            embeds: [embed]
         })
     }
 }
