@@ -1,8 +1,7 @@
-const { Configuration, OpenAIApi } = require('openai');
 const { OPENAI, OWNER_ID } = require("../../../config.json")
 const { EmbedBuilder } = require("discord.js");
 const { log } = require('../../log/log');
-const { author } = require("../../../package.json")
+const { chat } = require("../../Utils/OpenAI/main")
 
 module.exports = {
     data: {
@@ -19,30 +18,14 @@ module.exports = {
     },
     async execute(interaction) {
         const prompt = interaction.options.getString("question");
-        const config = new Configuration({
-            apiKey: OPENAI.API_KEY
-        });
-        const openai = new OpenAIApi(config);
-        await interaction.reply(OPENAI.Process_Text)
+        await interaction.deferReply();
+        const results = await chat(prompt);
         if (interaction.user.id === OWNER_ID) {
             maxToken = OPENAI.Max_Tokens_Owners
         } else {
             maxToken = OPENAI.Max_Tokens_Public.Max_Tokens
         }
-        const completion = await openai.createCompletion(
-            {
-                model: OPENAI.Model,
-                prompt: prompt,
-                temperature: OPENAI.temperature,
-                max_tokens: maxToken,
-                top_p: 1
-            }
-        );
         // Output the completion
-        output = completion.data.choices[0].text
-        usage = completion.data.usage
-        id = completion.data.id
-        // Embed
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
             .setDescription(OPENAI.Description)
@@ -50,7 +33,7 @@ module.exports = {
             .setTimestamp()
             .addFields({
                 name: "Answer",
-                value: output.slice(0, 700)
+                value: results.answer.slice(0, 700)
             })
             .addFields({
                 name: "Suggestions",
@@ -81,11 +64,11 @@ module.exports = {
                 },
                 {
                     name: "ID of Completion",
-                    value: id  
+                    value: results.id
                 },
                 {
                     name: "Usage",
-                    value: `prompt: ${usage.prompt_tokens}\ncompletion: ${usage.completion_tokens}\nTotal: ${usage.total_tokens}`
+                    value: `Prompt: ${results.usage.prompt_tokens}\nXompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}`
                 },
                 {
                     name: "User",

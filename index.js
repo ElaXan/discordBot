@@ -1,14 +1,13 @@
-const fs = require('node:fs');
-
-const { TOKEN, RPC, Prefix } = require('./config.json');
-const { log } = require('./src/log/log');
+const fs = require("node:fs")
+const { TOKEN, RPC, Prefix } = require('./config.json')
+const { log } = require('./src/log/log')
 
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
     process.exit()
 });
 
-const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder} = require('discord.js')
 
 const intents = [
     GatewayIntentBits.Guilds,

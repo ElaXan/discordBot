@@ -11,7 +11,8 @@
         "Max_Tokens_Owners": 1000,  
         "Max_Tokens_Public": {
             "Active": true,
-            "Max_Tokens": 100
+            "Max_Tokens": 100,
+            "Message": "Only owners can ask questions"
         },
         "Process_Text": "Processing... Please wait.",
         "Title": {
