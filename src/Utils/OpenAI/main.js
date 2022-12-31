@@ -7,13 +7,19 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config)
 
+function zstop(getLenght) {
+    // if lenght is greeter than 400 lenght return
+    return getLenght.lenght > 400
+}
+
 async function chat(question) {
     const completion = await openai.createCompletion({
         model: OPENAI.Model,
         prompt: question,
         temperature: OPENAI.temperature,
         max_tokens: OPENAI.Max_Tokens_Public.Max_Tokens,
-        top_p: 1
+        top_p: 1,
+        stop: zstop,
     })
     return {
         answer: completion.data.choices[0].text,
