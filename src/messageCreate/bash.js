@@ -54,6 +54,32 @@ module.exports = {
                     ]
                 })
             } else {
+                if (stdout === "") {
+                    message.reply({ content: "```Success!```", ephemeral: true });
+                    return log({
+                        color: "Green",
+                        interaction: "Bash",
+                        description: `Command Bash was used`,
+                        fields: [
+                            {
+                                name: "Output",
+                                value: `\`\`\`\nSuccess\n\`\`\``,
+                            },
+                            {
+                                name: "Used by",
+                                value: `${message.author.tag} (${message.author.id})`,
+                            },
+                            {
+                                name: "Used in",
+                                value: `${message.channel.name} (${message.channel.id})`,
+                            },
+                            {
+                                name: "Used in guild",
+                                value: `${message.guild.name} (${message.guild.id})`,
+                            }
+                        ]
+                    });
+                }
                 message.reply({ content: `\`\`\`${stdout}\`\`\``, ephemeral: true }).catch(console.error);
                 log({
                     color: "Green",
