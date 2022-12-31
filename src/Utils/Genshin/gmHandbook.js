@@ -46,6 +46,13 @@ module.exports = {
                     category = line.replace("//", "");
                 }
                 if (line.includes(search)) {
+                    if (line === undefined) {
+                        return {
+                            id: "Not Found",
+                            name: "Not Found",
+                            category: "Not Found"
+                        };
+                    }
                     const id = line.split(":")[0].trim();
                     const name = line.split(":")[1].trim();
                     return {
