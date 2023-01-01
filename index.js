@@ -1,14 +1,27 @@
+// Description: Main file of the bot
+//
+// Dependencies:
+// - discord.js
+// - config.json
+// - log.js
+// - node:fs
+//
+
+// Require the modules
 const fs = require("node:fs")
 const { TOKEN, RPC, Prefix } = require('./config.json')
 const { log } = require('./src/log/log')
 
+// Unhandled promise rejection
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
     process.exit()
 });
 
+// Uncaught exception
 const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder} = require('discord.js')
 
+// Client options and intents
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -28,6 +41,7 @@ const intents = [
     GatewayIntentBits.GuildVoiceStates,
 ];
 
+// Partials
 const partials = [
     Partials.GuildMember,
     Partials.Message,
@@ -37,8 +51,10 @@ const partials = [
     Partials.GuildScheduledEvent
 ];
 
+// Client
 const client = new Client({ intents, partials });
 
+// get commands from folder and subfolders
 client.commands = new Collection();
 const commandFolders = fs.readdirSync('./src/Commands');
 for (const folder of commandFolders) {
@@ -52,8 +68,10 @@ for (const folder of commandFolders) {
 
 // when ready
 client.on("ready", () => {
+    // login message in console
     console.log(`Logged in as ${client.user.tag}!`);
 
+    // set activity and status from config.json
     const activityTypeMap = {
         playing: ActivityType.Playing,
         listening: ActivityType.Listening,
@@ -62,27 +80,36 @@ client.on("ready", () => {
         competing: ActivityType.Competing,
     }
 
+    // set activity and status from config.json
     const activityType = activityTypeMap[RPC.Type.toLowerCase()] || ActivityType.Playing;
     client.user.setActivity(RPC.Details, { type: activityType });
+    // Status can be: online, idle, dnd, invisible
     client.user.setStatus(RPC.Status);
 });
 
 // client events interactionCreate
 client.on(Events.InteractionCreate, async interaction => {
+    // if interaction is a autocomplete
     if (interaction.isAutocomplete()) {
+        // get command
         const command = client.commands.get(interaction.commandName);
+        // if command is not found then return
         if (!command) {
             return;
         }
 
         try {
+            // execute autocomplete
             await command.autocomplete(interaction);
         } catch (error) {
+            // if error then log it
             console.error(error);
+            // respond with error message
             interaction.respond([{
                 name: "Error while searching ID",
                 value: "There was an error while searching the ID"
             }])
+            // log error to webhook
             log({
                 interaction: interaction.commandName,
                 color: "Red",
@@ -108,19 +135,24 @@ client.on(Events.InteractionCreate, async interaction => {
             });
         }
     } else {
+        // If bot doesnt have permission to send messages then return
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) {
             return;
         }
 
+        // If interaction is not a command then return
         const command = client.commands.get(interaction.commandName);
         if (!command) {
             return;
         }
 
         try {
+            // Execute command
             await command.execute(interaction);
         } catch (error) {
+            // If error then log it
             console.error(error);
+            // if error is a type error then send ephemeral message
             if (error instanceof TypeError) {
                 interaction.reply({
                     content: 'There was an error while executing this command!',
@@ -132,6 +164,7 @@ client.on(Events.InteractionCreate, async interaction => {
                     ephemeral: true
                 })
             }
+            // log error to webhook
             log({
                 color: "Red",
                 description: "Error while executing command",
@@ -164,24 +197,33 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // client events messageCreate
 client.on(Events.MessageCreate, async message => {
+    // If bot doesnt have permission to send messages then return
     if (!message.content.startsWith(Prefix) || !message.member.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) {
         return;
     }
+    // get command .js files from folder messageCreate
     const messageCreateFiles = fs.readdirSync('./src/messageCreate')
         .filter(file => file.endsWith('.js'));
+    // loop through files
     for (const file of messageCreateFiles) {
+        // get code from file
         const code = require(`./src/messageCreate/${file}`);
+        // if code is not found then return
         if (!code) {
             return;
         }
         try {
+            // execute code
             await code.execute(message);
         } catch (error) {
+            // if error then log it
             console.error(error);
+            // respond with error message
             await message.reply({
                 content: 'There was an error while executing this command!',
                 ephemeral: true
             });
+            // log error to webhook
             log({
                 interaction: message.content,
                 color: "Red",
@@ -213,7 +255,9 @@ client.on("threadUpdate", async (oldThread, newThread) => {
     // 1048877201296207882 - Tags id Solved in Yuuki Server
     // Replace 1048877201296207882 with your tags id
     if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === true) {
+        // Get user from id
         const user = await client.users.fetch(newThread.ownerId)
+        // Create embed
         const embed = new EmbedBuilder()
             .setTitle("Thread Closed")
             .setDescription("Your thread has been closed as problem has been solved.")
@@ -227,6 +271,7 @@ client.on("threadUpdate", async (oldThread, newThread) => {
             })
             .setColor("Green")
             .setTimestamp()
+        // Send message to user
         user.send({ embeds: [embed] }).then(() => {
             log({
                 interaction: "Thread Closed",
@@ -248,6 +293,7 @@ client.on("threadUpdate", async (oldThread, newThread) => {
                 ]
             })
         }).catch((error) => {
+            // If cant send message to user then log it to webhook
             log({
                 interaction: "Thread Closed",
                 color: "Red",
@@ -275,4 +321,5 @@ client.on("threadUpdate", async (oldThread, newThread) => {
     }
 })
 
+// Login to discord with token
 client.login(TOKEN);
