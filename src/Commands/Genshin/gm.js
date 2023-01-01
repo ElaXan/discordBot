@@ -101,10 +101,10 @@ module.exports = {
                             value: "No results found"
                         })
                     } else {
-                        if (line === undefined) {
+                        if (line.split(":")[1] === undefined) {
                             choices.push({
-                                name: "No results found",
-                                value: "No results found"
+                                name: "??????",
+                                value: "No buddy, this is not the results. just dont click and try again :D"
                             })
                         } else {
                             choices.push({
