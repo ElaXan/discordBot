@@ -67,102 +67,26 @@ module.exports = {
 
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
             interaction.reply({ content: "You don't have permission to manage roles", ephemeral: true });
-            return log({
-                interaction: "removerole",
-                color: "Red",
-                description: `Failed to remove role ${role.name} from ${user.tag} because ${interaction.user.tag} doesn't have permission to manage roles`,
-                fields: [
-                    roleField,
-                    targetUserField,
-                    userField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            })
+            return log({ interaction: "removerole", color: "Red", description: `Failed to remove role ${role.name} from ${user.tag} because ${interaction.user.tag} doesn't have permission to manage roles`, fields: [roleField, targetUserField, userField, guildField, channelField, messageIdField, messageUrlField] })
         }
         if (member.roles.highest.position >= interaction.guild.members.me.roles.highest.position) {
             interaction.reply({ content: "I can't remove roles from this user because their highest role is higher than or equal to my highest role" });
-            return log({
-                interaction: "removerole",
-                color: "Red",
-                description: `Failed to remove role ${role.name} from ${user.tag} because their highest role is higher than or equal to my highest role`,
-                fields: [
-                    roleField,
-                    targetUserField,
-                    userField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            })
+            return log({ interaction: "removerole", color: "Red", description: `Failed to remove role ${role.name} from ${user.tag} because their highest role is higher than or equal to my highest role`, fields: [roleField, targetUserField, userField, guildField, channelField, messageIdField, messageUrlField] })
         }
         if (!member.roles.cache.has(role.id)) {
             interaction.reply({ content: "This user doesn't have this role", ephemeral: true });
-            return log({
-                interaction: "removerole",
-                color: "Red",
-                description: `Failed to remove role ${role.name} from ${user.tag} because they don't have this role`,
-                fields: [
-                    roleField,
-                    targetUserField,
-                    userField,
-                    guildField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            })
+            return log({ interaction: "removerole", color: "Red", description: `Failed to remove role ${role.name} from ${user.tag} because they don't have this role`, fields: [roleField, targetUserField, userField, guildField, messageIdField, messageUrlField] })
         }
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
             interaction.reply({ content: "I don't have permission to manage roles", ephemeral: true });
-            return log({
-                interaction: "removerole",
-                color: "Red",
-                description: `Failed to remove role ${role.name} from ${user.tag} because I don't have permission to manage roles`,
-                fields: [
-                    roleField,
-                    targetUserField,
-                    userField,
-                    guildField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            return log({ interaction: "removerole", color: "Red", description: `Failed to remove role ${role.name} from ${user.tag} because I don't have permission to manage roles`, fields: [roleField, targetUserField, userField, guildField, messageIdField, messageUrlField] });
         }
         member.roles.remove(role).then(() => {
             interaction.reply({ content: `Removed role ${role.name} from ${user.tag}` });
-            log({
-                interaction: "removerole",
-                color: "Green",
-                description: `Successfully removed role ${role.name} from ${user.tag}`,
-                fields: [
-                    roleField,
-                    targetUserField,
-                    userField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            })
+            log({ interaction: "removerole", color: "Green", description: `Successfully removed role ${role.name} from ${user.tag}`, fields: [roleField, targetUserField, userField, guildField, channelField, messageIdField, messageUrlField] })
         }).catch(() => {
             interaction.reply({ content: "I don't have permission to remove this role from this user", ephemeral: true });
-            log({
-                interaction: "removerole",
-                color: "Red",
-                description: `Failed to remove role ${role.name} from ${user.tag} because I don't have permission to remove this role from this user`,
-                fields: [
-                    roleField,
-                    targetUserField,
-                    userField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            })
+            log({ interaction: "removerole", color: "Red", description: `Failed to remove role ${role.name} from ${user.tag} because I don't have permission to remove this role from this user`, fields: [roleField, targetUserField, userField, guildField, channelField, messageIdField, messageUrlField] })
         })
     }
 }

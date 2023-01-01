@@ -61,104 +61,26 @@ module.exports = {
 
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
             interaction.reply({ content: "You don't have permission to manage roles", ephemeral: true });
-            return log({
-                interaction: "addrole",
-                color: "Red",
-                description: `Failed add role ${role.name} to ${user.tag}. Because the user doesn't have permission to manage roles`,
-                fields: [
-                    userField,
-                    roleField,
-                    targetUserField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            return log({ interaction: "addrole", color: "Red", description: `Failed add role ${role.name} to ${user.tag}. Because the user doesn't have permission to manage roles`, fields: [userField, roleField, targetUserField, guildField, channelField, messageIdField, messageUrlField] });
         }
         if (member.roles.highest.position >= interaction.guild.members.me.roles.highest.position) {
             interaction.reply({ content: "I can't add roles to this user because their highest role is higher than or equal to my highest role" });
-            return log({
-                interaction: "addrole",
-                color: "Red",
-                description: `Failed add role ${role.name} to ${user.tag}. Because the user's highest role is higher than or equal to my highest role`,
-                fields: [
-                    userField,
-                    roleField,
-                    targetUserField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            return log({ interaction: "addrole", color: "Red", description: `Failed add role ${role.name} to ${user.tag}. Because the user's highest role is higher than or equal to my highest role`, fields: [userField, roleField, targetUserField, guildField, channelField, messageIdField, messageUrlField] });
         }
         if (member.roles.cache.has(role.id)) {
-            interaction.reply({ content: `${user.tag} already has the role ${role.name}`});
-            return log({
-                interaction: "addrole",
-                color: "Green",
-                description: `Failed add role ${role.name} to ${user.tag}. Because the user already has the role`,
-                fields: [
-                    userField,
-                    roleField,
-                    targetUserField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            interaction.reply({ content: `${user.tag} already has the role ${role.name}` });
+            return log({ interaction: "addrole", color: "Green", description: `Failed add role ${role.name} to ${user.tag}. Because the user already has the role`, fields: [userField, roleField, targetUserField, guildField, channelField, messageIdField, messageUrlField] });
         }
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
             interaction.reply({ content: "I don't have permission to manage roles" });
-            return log({
-                interaction: "addrole",
-                color: "Red",
-                description: `Failed add role ${role.name} to ${user.tag}. Because I don't have permission to manage roles`,
-                fields: [
-                    userField,
-                    roleField,
-                    targetUserField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            return log({ interaction: "addrole", color: "Red", description: `Failed add role ${role.name} to ${user.tag}. Because I don't have permission to manage roles`, fields: [userField, roleField, targetUserField, guildField, channelField, messageIdField, messageUrlField] });
         }
         member.roles.add(role).then(() => {
-            interaction.reply({ content: `Added role ${role.name} to ${user.tag}`});
-            log({
-                interaction: "addrole",
-                color: "Green",
-                description: `Added role ${role.name} to ${user.tag}`,
-                fields: [
-                    userField,
-                    roleField,
-                    targetUserField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            interaction.reply({ content: `Added role ${role.name} to ${user.tag}` });
+            log({ interaction: "addrole", color: "Green", description: `Added role ${role.name} to ${user.tag}`, fields: [userField, roleField, targetUserField, guildField, channelField, messageIdField, messageUrlField] });
         }).catch(() => {
             interaction.reply({ content: "I don't have permission to add roles to this user" });
-            log({
-                interaction: "addrole",
-                color: "Red",
-                description: `Failed add role ${role.name} to ${user.tag}. Because I don't have permission to add roles to this user`,
-                fields: [
-                    userField,
-                    roleField,
-                    targetUserField,
-                    guildField,
-                    channelField,
-                    messageIdField,
-                    messageUrlField
-                ]
-            });
+            log({ interaction: "addrole", color: "Red", description: `Failed add role ${role.name} to ${user.tag}. Because I don't have permission to add roles to this user`, fields: [userField, roleField, targetUserField, guildField, channelField, messageIdField, messageUrlField] });
         });
     }
 }

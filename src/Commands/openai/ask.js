@@ -27,12 +27,7 @@ module.exports = {
             // send as a file
             await interaction.editReply({
                 content: "The answer is too long to be sent as a message, so I sent it as a file.",
-                files: [
-                    {
-                        name: "answer.txt",
-                        attachment: Buffer.from(`${author.name} (${author.email})\n${author.url}\n\nAnswer:\n${line}\n${results.answer}\n${line}`)
-                    }
-                ]
+                files: [ { name: "answer.txt", attachment: Buffer.from(`${author.name} (${author.email})\n${author.url}\n\nAnswer:\n${line}\n${results.answer}\n${line}`) } ]
             })
             if (prompt.lenght > 200) {
                 prompt = prompt.slice(0, 200) + "... (truncated)"

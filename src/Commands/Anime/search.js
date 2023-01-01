@@ -82,28 +82,6 @@ module.exports = {
         // kirim balasan dengan embed
         interaction.editReply({ embeds: [embed] })
         // log ke webhook
-        log({
-            color: "Green",
-            interaction: "/anime",
-            description: `Searched for ${anime}`,
-            fields: [
-                {
-                    name: "Anime",
-                    value: anime
-                },
-                {
-                    name: "User",
-                    value: interaction.user.tag + " (" + interaction.user.id + ")"
-                },
-                {
-                    name: "Channel",
-                    value: interaction.channel.name + " (" + interaction.channel.id + ")"
-                },
-                {
-                    name: "Guild",
-                    value: interaction.guild.name + " (" + interaction.guild.id + ")"
-                },
-            ]
-        })
+        log({ color: "Green", interaction: "/anime", description: `Searched for ${anime}`, fields: [{ name: "Anime", value: anime }, { name: "User", value: interaction.user.tag + " (" + interaction.user.id + ")" }, { name: "Channel", value: interaction.channel.name + " (" + interaction.channel.id + ")" }, { name: "Guild", value: interaction.guild.name + " (" + interaction.guild.id + ")" },] })
     }
 }

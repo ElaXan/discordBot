@@ -21,54 +21,10 @@ module.exports = {
         try {
             const code = message.content.slice(6);
             const output = eval(code);
-            log({
-                color: "Green",
-                interaction: "Eval",
-                description: `Command Eval was used`,
-                fields: [
-                    {
-                        name: "Output",
-                        value: `\`\`\`js\n${output}\n\`\`\``,
-                    },
-                    {
-                        name: "Used by",
-                        value: `${message.author.tag} (${message.author.id})`,
-                    },
-                    {
-                        name: "Used in",
-                        value: `${message.channel.name} (${message.channel.id})`,
-                    },
-                    {
-                        name: "Used in guild",
-                        value: `${message.guild.name} (${message.guild.id})`,
-                    }
-                ]
-            })
+            log({ color: "Green", interaction: "Eval", description: `Command Eval was used`, fields: [{ name: "Output", value: `\`\`\`js\n${output}\n\`\`\``, }, { name: "Used by", value: `${message.author.tag} (${message.author.id})`, }, { name: "Used in", value: `${message.channel.name} (${message.channel.id})`, }, { name: "Used in guild", value: `${message.guild.name} (${message.guild.id})`, }] })
         } catch (err) {
             message.reply({ content: `\`\`\`js\nError:\n${err}\n\`\`\``, ephemeral: true });
-            log({
-                color: "Red",
-                interaction: "Eval",
-                description: `Error while executing command Eval`,
-                fields: [
-                    {
-                        name: "Error",
-                        value: `\`\`\`js\n${err}\n\`\`\``,
-                    },
-                    {
-                        name: "Used by",
-                        value: `${message.author.tag} (${message.author.id})`,
-                    },
-                    {
-                        name: "Used in",
-                        value: `${message.channel.name} (${message.channel.id})`,
-                    },
-                    {
-                        name: "Used in guild",
-                        value: `${message.guild.name} (${message.guild.id})`,
-                    }
-                ]
-            })
+            log({ color: "Red", interaction: "Eval", description: `Error while executing command Eval`, fields: [{ name: "Error", value: `\`\`\`js\n${err}\n\`\`\``, }, { name: "Used by", value: `${message.author.tag} (${message.author.id})`, }, { name: "Used in", value: `${message.channel.name} (${message.channel.id})`, }, { name: "Used in guild", value: `${message.guild.name} (${message.guild.id})`, }] })
         }
     }
 }

@@ -46,24 +46,6 @@ module.exports = {
             .setColor("Green")
             .setTimestamp();
         await interaction.reply({ embeds: [embed] })
-        log({
-            interaction: "/about",
-            color: "Green",
-            description: "Sent about message",
-            fields: [
-                {
-                    name: "User",
-                    value: `${interaction.user.tag} (${interaction.user.id})`
-                },
-                {
-                    name: "Channel",
-                    value: `<#${interaction.channel.id}> (${interaction.channel.id})`
-                },
-                {
-                    name: "Guild",
-                    value: `${interaction.guild.name} (${interaction.guild.id})`
-                }
-            ]
-        })
+        log({ interaction: "/about", color: "Green", description: "Sent about message", fields: [{ name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` }] })
     }
 }

@@ -15,7 +15,7 @@ module.exports = {
             minutes: Math.floor(client.uptime / 60000) % 60,
             seconds: Math.floor(client.uptime / 1000) % 60
         };
-        
+
         uptime.hours = uptime.hours > 24 ? 24 : uptime.hours;
         uptime.minutes = uptime.minutes > 60 ? 60 : uptime.minutes;
         uptime.seconds = uptime.seconds > 60 ? 60 : uptime.seconds;
@@ -62,47 +62,6 @@ module.exports = {
                 iconURL: interaction.user.displayAvatarURL()
             });
         await interaction.reply({ embeds: [embed] })
-        log.log({
-            interaction: "ping",
-            description: "Slash Command PING was used",
-            color: "Green",
-            fields: [
-                {
-                    name: "User",
-                    value: `${interaction.user.tag}`,
-                    inline: true
-                },
-                {
-                    name: "Ping",
-                    value: `${new Date().getTime() - interaction.createdTimestamp}ms`,
-                    inline: true
-                },
-                {
-                    name: "API Ping",
-                    value: `${Math.round(client.ws.ping)}ms`,
-                    inline: true
-                },
-                {
-                    name: "Guild",
-                    value: `${interaction.guild.name}`,
-                    inline: true
-                },
-                {
-                    name: "Channel",
-                    value: `${interaction.channel.name}`,
-                    inline: true
-                },
-                {
-                    name: "Message ID",
-                    value: `${interaction.id}`,
-                    inline: true
-                },
-                {
-                    name: "Message URL",
-                    value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`,
-                    inline: true
-                },
-            ]
-        })
+        log.log({ interaction: "ping", description: "Slash Command PING was used", color: "Green", fields: [{ name: "User", value: `${interaction.user.tag}`, inline: true }, { name: "Ping", value: `${new Date().getTime() - interaction.createdTimestamp}ms`, inline: true }, { name: "API Ping", value: `${Math.round(client.ws.ping)}ms`, inline: true }, { name: "Guild", value: `${interaction.guild.name}`, inline: true }, { name: "Channel", value: `${interaction.channel.name}`, inline: true }, { name: "Message ID", value: `${interaction.id}`, inline: true }, { name: "Message URL", value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`, inline: true },] })
     }
 };

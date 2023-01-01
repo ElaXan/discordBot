@@ -52,29 +52,7 @@ module.exports = {
                     }
                 );
                 // Log the command
-                log({
-                    color: "Green",
-                    interaction: "Bash",
-                    description: `Command Bash was used`,
-                    fields: [
-                        {
-                            name: "Output",
-                            value: `\`\`\`\n${stdout}\n\`\`\``,
-                        },
-                        {
-                            name: "Used by",
-                            value: `${message.author.tag} (${message.author.id})`,
-                        },
-                        {
-                            name: "Used in",
-                            value: `${message.channel.name} (${message.channel.id})`,
-                        },
-                        {
-                            name: "Used in guild",
-                            value: `${message.guild.name} (${message.guild.id})`,
-                        }
-                    ]
-                })
+                log({ color: "Green", interaction: "Bash", description: `Command Bash was used`, fields: [{ name: "Output", value: `\`\`\`\n${stdout}\n\`\`\``, }, { name: "Used by", value: `${message.author.tag} (${message.author.id})`, }, { name: "Used in", value: `${message.channel.name} (${message.channel.id})`, }, { name: "Used in guild", value: `${message.guild.name} (${message.guild.id})`, }] })
             } else {
                 // Check if the output is empty
                 if (stdout === "") {
@@ -108,29 +86,7 @@ module.exports = {
                 // Send the output as a message
                 message.reply({ content: `\`\`\`${stdout}\`\`\``, ephemeral: true }).catch(console.error);
                 // Log the command
-                log({
-                    color: "Green",
-                    interaction: "Bash",
-                    description: `Command Bash was used`,
-                    fields: [
-                        {
-                            name: "Output",
-                            value: `\`\`\`\n${stdout}\n\`\`\``,
-                        },
-                        {
-                            name: "Used by",
-                            value: `${message.author.tag} (${message.author.id})`,
-                        },
-                        {
-                            name: "Used in",
-                            value: `${message.channel.name} (${message.channel.id})`,
-                        },
-                        {
-                            name: "Used in guild",
-                            value: `${message.guild.name} (${message.guild.id})`,
-                        }
-                    ]
-                })
+                log({ color: "Green", interaction: "Bash", description: `Command Bash was used`, fields: [{ name: "Output", value: `\`\`\`\n${stdout}\n\`\`\``, }, { name: "Used by", value: `${message.author.tag} (${message.author.id})`, }, { name: "Used in", value: `${message.channel.name} (${message.channel.id})`, }, { name: "Used in guild", value: `${message.guild.name} (${message.guild.id})`, }] })
             }
         });
     },

@@ -54,26 +54,7 @@ module.exports = {
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
 
-        const stringsToReplace = [
-            ' Or ',
-            ' Of ',
-            ' A ',
-            ' An ',
-            ' And ',
-            ' The ',
-            ' In ',
-            ' On ',
-            ' To ',
-            ' For ',
-            ' From ',
-            ' With ',
-            ' At ',
-            ' By ',
-            ' Into ',
-            ' Near ',
-            ' Off ',
-            ' Up '
-        ];
+        const stringsToReplace = [ ' Or ', ' Of ', ' A ', ' An ', ' And ', ' The ', ' In ', ' On ', ' To ', ' For ', ' From ', ' With ', ' At ', ' By ', ' Into ', ' Near ', ' Off ', ' Up ' ];
         let search = focusedValue.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
         stringsToReplace.forEach(str => {
             search = search.replace(str, letter => letter.toLowerCase());
@@ -121,26 +102,7 @@ module.exports = {
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
-        const stringsToReplace = [
-            ' Or ',
-            ' Of ',
-            ' A ',
-            ' An ',
-            ' And ',
-            ' The ',
-            ' In ',
-            ' On ',
-            ' To ',
-            ' For ',
-            ' From ',
-            ' With ',
-            ' At ',
-            ' By ',
-            ' Into ',
-            ' Near ',
-            ' Off ',
-            ' Up '
-        ];
+        const stringsToReplace = [ ' Or ', ' Of ', ' A ', ' An ', ' And ', ' The ', ' In ', ' On ', ' To ', ' For ', ' From ', ' With ', ' At ', ' By ', ' Into ', ' Near ', ' Off ', ' Up ' ];
         let searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
         stringsToReplace.forEach(str => {
             search = search.replace(str, letter => letter.toLowerCase());
@@ -160,37 +122,7 @@ module.exports = {
                     iconURL: interaction.user.displayAvatarURL()
                 });
             await interaction.editReply({ embeds: [embed] });
-            log.log({
-                color: "Red",
-                interaction: "GM",
-                description: "Not found ID for " + searchUpperCase,
-                fields: [
-                    {
-                        name: "User",
-                        value: interaction.user.username
-                    },
-                    {
-                        name: "User ID",
-                        value: interaction.user.id
-                    },
-                    {
-                        name: "Guild",
-                        value: interaction.guild.name
-                    },
-                    {
-                        name: "Channel",
-                        value: interaction.channel.name
-                    },
-                    {
-                        name: "Message Link",
-                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`
-                    },
-                    {
-                        name: "Message ID",
-                        value: interaction.id
-                    }
-                ]
-            })
+            log.log({ color: "Red", interaction: "GM", description: "Not found ID for " + searchUpperCase, fields: [ { name: "User", value: interaction.user.username }, { name: "User ID", value: interaction.user.id }, { name: "Guild", value: interaction.guild.name }, { name: "Channel", value: interaction.channel.name }, { name: "Message Link", value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}` }, { name: "Message ID", value: interaction.id } ] })
         } else if (searchResult.id === "Error" && searchResult.name === "Error" && searchResult.category === "Error") {
             const embed = new EmbedBuilder()
                 .setTitle('Search Result')
@@ -202,37 +134,7 @@ module.exports = {
                     iconURL: interaction.user.displayAvatarURL()
                 });
             await interaction.editReply({ embeds: [embed] });
-            log.log({
-                color: "Red",
-                interaction: "GM",
-                description: "Error for " + searchUpperCase,
-                fields: [
-                    {
-                        name: "User",
-                        value: interaction.user.username
-                    },
-                    {
-                        name: "User ID",
-                        value: interaction.user.id
-                    },
-                    {
-                        name: "Guild",
-                        value: interaction.guild.name
-                    },
-                    {
-                        name: "Channel",
-                        value: interaction.channel.name
-                    },
-                    {
-                        name: "Message Link",
-                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`
-                    },
-                    {
-                        name: "Message ID",
-                        value: interaction.id
-                    }
-                ]
-            })
+            log.log({ color: "Red", interaction: "GM", description: "Error for " + searchUpperCase, fields: [ { name: "User", value: interaction.user.username }, { name: "User ID", value: interaction.user.id }, { name: "Guild", value: interaction.guild.name }, { name: "Channel", value: interaction.channel.name }, { name: "Message Link", value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}` }, { name: "Message ID", value: interaction.id } ] })
         } else {
             const embed = new EmbedBuilder();
             embed.setTitle('Search Result')
@@ -275,37 +177,7 @@ module.exports = {
                         .setCustomId('image_bigger')
                 );
             await interaction.editReply({ embeds: [embed], components: [button] });
-            log.log({
-                color: "Green",
-                interaction: "GM",
-                description: "Found ID for " + searchUpperCase,
-                fields: [
-                    {
-                        name: "User",
-                        value: interaction.user.username
-                    },
-                    {
-                        name: "User ID",
-                        value: interaction.user.id
-                    },
-                    {
-                        name: "Guild",
-                        value: interaction.guild.name
-                    },
-                    {
-                        name: "Channel",
-                        value: interaction.channel.name
-                    },
-                    {
-                        name: "Message Link",
-                        value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}`
-                    },
-                    {
-                        name: "Message ID",
-                        value: interaction.id
-                    }
-                ]
-            })
+            log.log({ color: "Green", interaction: "GM", description: "Found ID for " + searchUpperCase, fields: [ { name: "User", value: interaction.user.username }, { name: "User ID", value: interaction.user.id }, { name: "Guild", value: interaction.guild.name }, { name: "Channel", value: interaction.channel.name }, { name: "Message Link", value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}` }, { name: "Message ID", value: interaction.id } ] })
 
             const filter = (i) => i.customId === 'show_id' || i.customId === "image_bigger" && i.user.id === interaction.user.id;
             const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
