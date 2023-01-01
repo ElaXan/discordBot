@@ -15,7 +15,6 @@
   "description": "Discord Bot",
   "repository": {
     "url": "https://github.com/Score-Inc/discordBot",
-    "directory": "discordBot",
     "type": "git"
   },
   "author": {
