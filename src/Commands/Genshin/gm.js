@@ -142,9 +142,9 @@ module.exports = {
             ' Up '
         ];
         let searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
-        for (const str of stringsToReplace) {
-            searchUpperCase = searchUpperCase.replace(str, letter => letter.toLowerCase());
-        }
+        stringsToReplace.forEach(str => {
+            search = search.replace(str, letter => letter.toLowerCase());
+        });
         await interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
         const image = await getImage(searchUpperCase);
