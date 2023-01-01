@@ -1,7 +1,6 @@
 
 const { EmbedBuilder, WebhookClient } = require("discord.js");
 const { WEBHOOK_URL } = require("../../config.json")
-const url = require("url")
 
 module.exports = {
     /**

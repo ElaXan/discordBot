@@ -251,7 +251,7 @@ client.on(Events.MessageCreate, async message => {
     }
 });
 
-client.on("threadUpdate", async (oldThread, newThread) => {
+client.on("threadUpdate", async (_oldThread, newThread) => {
     // 1048877201296207882 - Tags id Solved in Yuuki Server
     // Replace 1048877201296207882 with your tags id
     if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === true) {

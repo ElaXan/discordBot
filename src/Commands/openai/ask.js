@@ -23,7 +23,7 @@ module.exports = {
         await interaction.deferReply();
         const results = await chat(prompt);
         // Output the completion
-        if (results.answer.length > 400) {
+        if (results.answer.length > 300) {
             // send as a file
             await interaction.editReply({
                 content: "The answer is too long to be sent as a message, so I sent it as a file.",
@@ -46,7 +46,7 @@ module.exports = {
             .setTimestamp()
             .addFields({
                 name: "Answer",
-                value: results.answer.slice(0, 700)
+                value: results.answer
             })
             .addFields({
                 name: "Suggestions",
