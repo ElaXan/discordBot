@@ -105,7 +105,7 @@ module.exports = {
         const stringsToReplace = [ ' Or ', ' Of ', ' A ', ' An ', ' And ', ' The ', ' In ', ' On ', ' To ', ' For ', ' From ', ' With ', ' At ', ' By ', ' Into ', ' Near ', ' Off ', ' Up ' ];
         let searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
         stringsToReplace.forEach(str => {
-            search = search.replace(str, letter => letter.toLowerCase());
+            searchUpperCase = searchUpperCase.replace(str, letter => letter.toLowerCase());
         });
         await interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
