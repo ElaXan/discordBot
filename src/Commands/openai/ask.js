@@ -2,6 +2,8 @@ const { OPENAI } = require("../../../config.json")
 const { EmbedBuilder } = require("discord.js");
 const { log } = require('../../log/log');
 const { chat } = require("../../Utils/OpenAI/main")
+const { author } = require("../../../package.json")
+let line = "----------------------------------------"
 
 module.exports = {
     data: {
@@ -28,7 +30,7 @@ module.exports = {
                 files: [
                     {
                         name: "answer.txt",
-                        attachment: Buffer.from(results.answer)
+                        attachment: Buffer.from(`${author.name} (${author.email})\n${author.url}\n\nAnswer:\n${line}\n${results.answer}\n${line}`)
                     }
                 ]
             })
@@ -47,7 +49,7 @@ module.exports = {
                     },
                     {
                         name: "Usage",
-                        value: `Prompt: ${results.usage.prompt_tokens}\nXompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}`
+                        value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}`
                     },
                     {
                         name: "User",
