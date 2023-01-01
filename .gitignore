@@ -1,5 +1,5 @@
 node_modules
 config.json
-blacklist.txt
 package-lock.json
-logs
+# Just chatting with the bot (Github Copilot)
+chat.yml

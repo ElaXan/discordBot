@@ -39,32 +39,36 @@ module.exports = {
      *  })
      */
     log: async function (options) {
-        const parseUrl = url.parse(WEBHOOK_URL);
+        const { parse } = require('url');
+
+        const webhook = new WebhookClient({ url: WEBHOOK_URL });
+        const parseUrl = parse(WEBHOOK_URL);
+
         if (!parseUrl) {
             console.log("Invalid webhook url")
-            process.exit(1)
+            process.exit(1);
         }
-        const webhook = new WebhookClient({ url: WEBHOOK_URL });
-        if (!options.color) {
-            options.color = "Green"
-        }
+
+        const color = options.color || 'Green';
         const embed = new EmbedBuilder()
-            .setTitle("Log")
+            .setTitle('Log')
             .setDescription(options.description)
-            .setColor(options.color)
+            .setColor(color)
             .setTimestamp();
-        options.fields.forEach(field => {
+
+        options.fields.forEach(({ name, value, inline }) => {
             embed.addFields({
-                name: field.name,
-                value: field.value,
-                inline: field.inline
-            })
+                name,
+                value,
+                inline
+            });
         });
+
         await webhook.send({
-            username: "Z3RO",
+            username: 'Z3RO',
             embeds: [embed]
         }).catch(err => {
-            console.log("Error while sending log to webhook: " + err)
-        })
+            console.log(`Error while sending log to webhook: ${err}`);
+        });
     }
 }

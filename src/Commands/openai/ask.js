@@ -34,37 +34,10 @@ module.exports = {
                     }
                 ]
             })
-            return log({
-                interaction: "/ask",
-                color: "Green",
-                description: "Asked a question to OpenAI",
-                fields: [
-                    {
-                        name: "Question",
-                        value: prompt
-                    },
-                    {
-                        name: "ID of Completion",
-                        value: results.id
-                    },
-                    {
-                        name: "Usage",
-                        value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}`
-                    },
-                    {
-                        name: "User",
-                        value: `${interaction.user.tag} (${interaction.user.id})`
-                    },
-                    {
-                        name: "Channel",
-                        value: `<#${interaction.channel.id}> (${interaction.channel.id})`
-                    },
-                    {
-                        name: "Guild",
-                        value: `${interaction.guild.name} (${interaction.guild.id})`
-                    }
-                ]
-            })
+            if (prompt.lenght > 200) {
+                prompt = prompt.slice(0, 200) + "... (truncated)"
+            }
+            return log({ interaction: "/ask", color: "Green", description: "Asked a question to OpenAI", fields: [{ name: "Question", value: prompt }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` }] });
         }
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
@@ -93,36 +66,9 @@ module.exports = {
             content: null,
             embeds: [embed]
         })
-        log({
-            interaction: "/ask",
-            color: "Green",
-            description: "Asked a question to OpenAI",
-            fields: [
-                {
-                    name: "Question",
-                    value: prompt
-                },
-                {
-                    name: "ID of Completion",
-                    value: results.id
-                },
-                {
-                    name: "Usage",
-                    value: `Prompt: ${results.usage.prompt_tokens}\nXompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}`
-                },
-                {
-                    name: "User",
-                    value: `${interaction.user.tag} (${interaction.user.id})`
-                },
-                {
-                    name: "Channel",
-                    value: `<#${interaction.channel.id}> (${interaction.channel.id})`
-                },
-                {
-                    name: "Guild",
-                    value: `${interaction.guild.name} (${interaction.guild.id})`
-                }
-            ]
-        })
+        if (prompt.lenght > 200) {
+            prompt = prompt.slice(0, 200) + "... (truncated)"
+        }
+        log({ interaction: "/ask", color: "Green", description: "Asked a question to OpenAI", fields: [ { name: "Question", value: prompt }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` } ] })
     }
 }

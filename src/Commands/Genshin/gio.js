@@ -31,17 +31,17 @@ module.exports = {
         const focusedValue = interaction.options.getFocused();
 		const choices = ["Character EXP", "Adventure EXP", "Stardust", "Starglitter", "Companionship EXP", "Original Resin", "Story Key", "[CHS] - (test)å¤©ä½æ¨æ¼", "Fading Star's Might", "Fading Star's Essence", "Glimmering Essence", "Warm Essence", "Miraculous Essence", "Iron Coin", "Peace Talisman", "Festive Fever", "Veneficus Sigil", "Festive Tour Ticket", "Peculiar Collab Coupon", "Heart of the Spring", "Trust", "Fractured Fruit Data", "Windtrace Coins", "Shiny Flotsam", 'Mini "Harpastum"', "Enigma Gear", "Thunder Pellet", "Thunder Crystal", "Mechanicus Mastery EXP", "Wondrous Talisman", "Moonchase Festival Festive Fever", "Battered Shikifuda", "Damaged Replica", "Aged Token", "Snowstrider Seal", "Vanquisher's Emblem", "Affluence Talisman", "Immaculate Talisman", "Conquest Talisman", "Moonlit Cragstone", "Iridescent Flotsam", "Stratagem Shard", "Creative Note", "Whimsical Draft", "Ancient Iron Coin", "Festive Fever", "Business Earnings", "Usable Funds", "Strategic Inspiration", "Mushroom Currency", "Fungus Medal", "Shattered Phenocryst", "Primogem", "Mora", "Genesis Crystal", "Realm Currency", "Original Essence (Invalidated)", "Original Resin (Invalidated)", "Masterless Starglitter", "Masterless Stardust", "Intertwined Fate", "Acquaint Fate", "Pyro Sigil", "Hydro Sigil", "Dendro Sigil", "Electro Sigil", "Anemo Sigil", "Cryo Sigil", "Geo Sigil", "Inazuma Reputation EXP", "Mondstadt Reputation EXP", "Sumeru Reputation EXP", "Liyue Reputation EXP", "Memory of Eternal Flames", "Memory of Running Stream", "Memory of Flourishing Green", "Memory of Violet Flash", "Memory of Roving Gales", "Memory of Piercing Frost", "Memory of Immovable Crystals"];
 		
-        const limitedChoices = choices.filter(choice => choice.startsWith(focusedValue));
-        const finalChoices = limitedChoices.length === 0 ? limitedChoices.slice(0, 25) : limitedChoices.length > 25 ? limitedChoices.slice(0, 25) : limitedChoices.slice(0, 25) ? limitedChoices.slice(0,25) : "Not Found";
-        const limitedChoices2 = finalChoices.map((choice) =>
-            choice.startsWith(focusedValue) ? choice : "not found"
+        const limitedChoices = choices.filter(choice =>
+            choice.toLowerCase().startsWith(focusedValue.toLowerCase())
         );
-        interaction.respond(
-            limitedChoices2.map((choice) => ({
-                name: choice,
-                value: choice,
-            }))
-        )
+        const totalChoices = limitedChoices.length; 
+        const finalChoices = totalChoices === 0 ? [] : limitedChoices.slice(0, Math.min(totalChoices, 25));
+        const limitedChoices2 = finalChoices.map((choice) => (
+            choice.toLowerCase().startsWith(focusedValue.toLowerCase()) 
+            ? {name: choice, value: choice}
+            : "Not Found"
+        ));
+        interaction.respond(limitedChoices2);
     },
     async execute(interaction) {
         const uid = interaction.options.getString('uid');
