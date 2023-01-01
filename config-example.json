@@ -8,12 +8,7 @@
         "API_KEY": "OPENAI_API_KEY_HERE",
         "Model": "text-davinci-003",
         "temperature": 0.9,
-        "Max_Tokens_Owners": 1000,  
-        "Max_Tokens_Public": {
-            "Active": true,
-            "Max_Tokens": 100,
-            "Message": "Only owners can ask questions"
-        },
+        "Max_Tokens": 1000,
         "Process_Text": "Processing... Please wait.",
         "Title": {
             "Name": "OpenAI",

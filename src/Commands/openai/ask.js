@@ -1,4 +1,4 @@
-const { OPENAI, OWNER_ID } = require("../../../config.json")
+const { OPENAI } = require("../../../config.json")
 const { EmbedBuilder } = require("discord.js");
 const { log } = require('../../log/log');
 const { chat } = require("../../Utils/OpenAI/main")
@@ -20,12 +20,50 @@ module.exports = {
         const prompt = interaction.options.getString("question");
         await interaction.deferReply();
         const results = await chat(prompt);
-        if (interaction.user.id === OWNER_ID) {
-            maxToken = OPENAI.Max_Tokens_Owners
-        } else {
-            maxToken = OPENAI.Max_Tokens_Public.Max_Tokens
-        }
         // Output the completion
+        if (results.answer.length > 400) {
+            // send as a file
+            await interaction.editReply({
+                content: "The answer is too long to be sent as a message, so I sent it as a file.",
+                files: [
+                    {
+                        name: "answer.txt",
+                        attachment: Buffer.from(results.answer)
+                    }
+                ]
+            })
+            return log({
+                interaction: "/ask",
+                color: "Green",
+                description: "Asked a question to OpenAI",
+                fields: [
+                    {
+                        name: "Question",
+                        value: prompt
+                    },
+                    {
+                        name: "ID of Completion",
+                        value: results.id
+                    },
+                    {
+                        name: "Usage",
+                        value: `Prompt: ${results.usage.prompt_tokens}\nXompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}`
+                    },
+                    {
+                        name: "User",
+                        value: `${interaction.user.tag} (${interaction.user.id})`
+                    },
+                    {
+                        name: "Channel",
+                        value: `<#${interaction.channel.id}> (${interaction.channel.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${interaction.guild.name} (${interaction.guild.id})`
+                    }
+                ]
+            })
+        }
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
             .setDescription(OPENAI.Description)
