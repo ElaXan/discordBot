@@ -22,6 +22,23 @@ module.exports = {
         const prompt = interaction.options.getString("question");
         await interaction.deferReply();
         const results = await chat(prompt);
+        if (results.answer == "") {
+            const embed = new EmbedBuilder()
+                .setTitle(OPENAI.Title.Name)
+                .setDescription("I couldn't find an answer to your question.")
+                .setColor("Red")
+                .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
+                .setFooter({
+                    text: OPENAI.Footer
+                })
+                .setURL(OPENAI.Title.URL)
+            // edit the message
+            await interaction.editReply({
+                content: null,
+                embeds: [embed]
+            })
+            return log({ interaction: "/ask", color: "Red", description: "Asked a question to OpenAI", fields: [ { name: "Question", value: prompt.slice(0, 200) + "... (truncated)" }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` } ] })
+        }
         // Output the completion
         if (results.answer.length > 300) {
             // send as a file
