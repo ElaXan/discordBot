@@ -169,7 +169,6 @@ module.exports = {
             // split the name by "-" and get the second index
             name = name.split("-")[1].trim();
         }
-        console.log(name, category);
         // Get the image from the wiki of Genshin Impact
         const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
 
