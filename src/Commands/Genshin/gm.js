@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const log = require('../../log/log');
-const { searchGM, getImage, commandsNameGC, commandsNameGIO } = require("../../Utils/gmHandbook")
+const { searchGM, getImage, commandsName } = require("../../Utils/gmHandbook")
 const { Path_GM_Handhook } = require("../../../config.json")
 const fs = require('fs');
 const readline = require('readline');
@@ -49,6 +49,12 @@ module.exports = {
                     }
                 ],
             },
+            {
+                name: 'match',
+                description: 'Force match the search',
+                type: 5,
+                required: false,
+            }
         ],
     },
     async autocomplete(interaction) {
@@ -84,11 +90,12 @@ module.exports = {
     async execute(interaction) {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
+        const match = interaction.options.getBoolean('match');
         await interaction.deferReply({ fetchReply: true })
-        const searchResult = await searchGM(search, category);
-        const image = await getImage(search, searchResult.category);
-        const commands = commandsNameGC(searchResult.category, searchResult.id);
-        const commandsGIO = commandsNameGIO(searchResult.category, searchResult.id);
+        const searchResult = await searchGM(search, category, match);
+        const image = await getImage(searchResult.name, searchResult.category);
+        const commands = commandsName(searchResult.category, searchResult.id, "GC");
+        const commandsGIO = commandsName(searchResult.category, searchResult.id, "GIO");
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
             const embed = new EmbedBuilder()
                 .setTitle('Search Result')

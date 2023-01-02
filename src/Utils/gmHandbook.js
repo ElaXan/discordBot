@@ -13,7 +13,6 @@ const fs = require('fs');
 const readline = require('readline');
 const { Path_GM_Handhook } = require("../../config.json")
 const cheerio = require('cheerio');
-const axios = require('axios');
 
 module.exports = {
     /**
@@ -22,7 +21,7 @@ module.exports = {
      * @param {String} categoryId - Category of the search (OPTIONAL)
      * @returns 
      */
-    searchGM: async (search, categoryId) => {
+    searchGM: async (search, categoryId, forceMatch) => {
         // Check if the categoryId is null
         switch (categoryId) {
             // if Avatars
@@ -69,17 +68,20 @@ module.exports = {
                 let regex = new RegExp(`${search}`, 'i');
                 let result = line.match(regex);
                 if (result) {
-                    if (result.input.split(":")[1].trim() !== result[0]) {
-                        continue;
+                    if (forceMatch) {
+                        if (result.input.split(":")[1].trim() !== result[0]) {
+                            continue;
+                        }
                     }
+                    const id = result.input.split(":")[0].trim()
+                    const name = result.input.split(":")[1].trim()
                     return {
-                        id: result.input.split(":")[0].trim(),
-                        name: result.input.split(":")[1].trim(),
-                        category: category
+                        id,
+                        name,
+                        category
                     };
                 }
-            } 
-
+            }
 
             // If not found
             return {
@@ -102,49 +104,24 @@ module.exports = {
      * 
      * @param {String} category - Category of the ID
      * @param {String} id - ID of name items/monsters/avatars/quests
+     * @param {String} type - Type of the command (GC or GIO)
      * @returns 
      */
-    commandsNameGC: (category, id) => {
+    commandsName: (category, id, type) => {
         // Check the category
         switch (category) {
             // if Avatars
             case " Avatars":
-                return `/give ${id} lv<level> c<constellation>`;
+                return type === "GC" ? `/give ${id} lv<level> c<constellation>` : `avatar add ${id}`;
             // if Quests
             case " Quests":
-                return `/q add ${id}\n/q remove ${id}`;
+                return type === "GC" ? `/q add ${id}\n/q remove ${id}` : `quest add ${id}\nquest finish ${id}`;
             // if Items
             case " Items":
-                return `/give ${id} x<amount>`;
+                return type === "GC" ? `/give ${id} x<amount>` : `item add ${id} <amount>`;
             // if Monsters
             case " Monsters":
-                return `/spawn ${id} x<amount> lv<level> hp<health>`;
-            // Default (if not found)
-            default:
-                return `Not yet applied to category ${category}`;
-        }
-    },
-    /**
-     * 
-     * @param {String} category - Category of the ID
-     * @param {String} id - ID of name items/monsters/avatars/quests
-     * @returns 
-     */
-    commandsNameGIO: (category, id) => {
-        // Check the category
-        switch (category) {
-            // if Avatars
-            case " Avatars":
-                return `avatar add ${id}`;
-            // if Quests
-            case " Quests":
-                return `quest add ${id}\nquest finish ${id}`;
-            // if Items
-            case " Items":
-                return `item add ${id} <amount>`;
-            // if Monsters
-            case " Monsters":
-                return `monster ${id} <amount> <level>`;
+                return type === "GC" ? `/spawn ${id} x<amount> lv<level> hp<health>` : `monster ${id} <amount> <level>`;
             // Default (if not found)
             default:
                 return `Not yet applied to category ${category}`;
@@ -157,30 +134,30 @@ module.exports = {
      * @returns 
      */
     getImage: async (name, category) => {
-        if (category === " Monsters") {
-            // split the name by "-" and get the second index
-            name = name.split("-")[1].trim();
-        } else if (category === " Quests") {
-            // split the name by "-" and get the first index
-            name = name.split("-")[0].trim();
+        // Split name into parts
+        const parts = name.split("-");
+        // Get desired name part depending on the category
+        if (category === "Monsters") {
+            name = parts[1].trim();
+        } else if (category === "Quests") {
+            name = parts[0].trim();
         }
         // Get the image from the wiki of Genshin Impact
         const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
-
-        // Fetch the image
-        const response = await fetch(url);
-        // Get the body
-        const body = await response.text();
-        // Load the body
-        const $ = cheerio.load(body);
-        // Get the image of the item/monster/avatar/quest with the class pi-image-thumbnail
-        const image = $(".pi-image-thumbnail").attr("src");
-        if (image === undefined) {
-            // If the image is undefined, return the image
+        try {
+            // Fetch the image
+            const response = await fetch(url);
+            // Get the body
+            const body = await response.text();
+            // Load the body
+            const $ = cheerio.load(body);
+            // Get the image of the item/monster/avatar/quest with the class pi-image-thumbnail
+            const image = $(".pi-image-thumbnail").attr("src");
+            // Return either the requested image of the default "not found" image
+            return image || "https://static.thenounproject.com/png/1400397-200.png";
+        } catch (err) {
+            // Return the default "not found" image if an error was thrown
             return "https://static.thenounproject.com/png/1400397-200.png";
-        } else {
-            // If the image is not undefined, return the image
-            return image;
         }
     }
 }
