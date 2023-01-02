@@ -66,24 +66,19 @@ module.exports = {
                 if (line.startsWith("//")) {
                     category = line.replace("//", "");
                 }
-                // if found
-                // get the id
-                if (line.includes(search)) {
-                    // if the result is not same as the search, continue
-                    if (!line.split(":")[1].trim().startsWith(search)) {
+                let regex = new RegExp(`${search}`, 'i');
+                let result = line.match(regex);
+                if (result) {
+                    if (result.input.split(":")[1].trim() !== result[0]) {
                         continue;
                     }
-                    if (!line.endsWith(search)) {
-                        continue;
-                    }
-                    // get the id
                     return {
-                        id: line.split(":")[0].trim(),
-                        name: line.split(":")[1].trim(),
+                        id: result.input.split(":")[0].trim(),
+                        name: result.input.split(":")[1].trim(),
                         category: category
-                    }
+                    };
                 }
-            }
+            } 
 
 
             // If not found
@@ -165,6 +160,9 @@ module.exports = {
         if (category === " Monsters") {
             // split the name by "-" and get the second index
             name = name.split("-")[1].trim();
+        } else if (category === " Quests") {
+            // split the name by "-" and get the first index
+            name = name.split("-")[0].trim();
         }
         // Get the image from the wiki of Genshin Impact
         const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
