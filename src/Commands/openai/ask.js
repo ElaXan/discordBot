@@ -1,7 +1,7 @@
 const { OPENAI } = require("../../../config.json")
 const { EmbedBuilder } = require("discord.js");
 const { log } = require('../../log/log');
-const { chat } = require("../../Utils/OpenAI/main")
+const { chat } = require("../../Utils/openai")
 const { author } = require("../../../package.json")
 let line = "----------------------------------------"
 
@@ -39,18 +39,19 @@ module.exports = {
             })
             return log({ interaction: "/ask", color: "Red", description: "Asked a question to OpenAI", fields: [ { name: "Question", value: prompt.slice(0, 200) + "... (truncated)" }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` } ] })
         }
-        // Output the completion
+        // if the answer is too long
         if (results.answer.length > 300) {
             // send as a file
             await interaction.editReply({
                 content: "The answer is too long to be sent as a message, so I sent it as a file.",
                 files: [ { name: "answer.txt", attachment: Buffer.from(`${author.name} (${author.email})\n${author.url}\n\nAnswer:\n${line}\n${results.answer}\n${line}`) } ]
-            })
-            if (prompt.lenght > 200) {
-                prompt = prompt.slice(0, 200) + "... (truncated)"
+            });
+            if (prompt.length > 200) {
+                prompt = prompt.slice(0, 200) + "... (truncated)";
             }
             return log({ interaction: "/ask", color: "Green", description: "Asked a question to OpenAI", fields: [{ name: "Question", value: prompt }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` }] });
         }
+        // create the embed
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
             .setDescription(OPENAI.Description)
@@ -78,7 +79,7 @@ module.exports = {
             content: null,
             embeds: [embed]
         })
-        if (prompt.lenght > 200) {
+        if (prompt.length > 200) {
             prompt = prompt.slice(0, 200) + "... (truncated)"
         }
         log({ interaction: "/ask", color: "Green", description: "Asked a question to OpenAI", fields: [ { name: "Question", value: prompt }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` } ] })

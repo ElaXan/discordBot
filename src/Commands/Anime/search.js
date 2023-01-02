@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js")
-const { search } = require("../../Utils/Anime/searchAnime")
+const { search } = require("../../Utils/searchAnime")
 const { log } = require("../../log/log")
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
         // cari anime
         const result = await search(anime);
         // jika tidak ada anime yang ditemukan, kirim balasan "No anime found"
-        if (!result) {
+        if (result === "" || result === null || result === undefined) {
             // bikin embed
             const embed = new EmbedBuilder()
                 // set judul embed
@@ -47,31 +47,31 @@ module.exports = {
             .addFields(
                 {
                     name: "Genres",
-                    value: `${result.genres}`,
+                    value: `${result.genres || "No genres found"}`,
                 },
                 {
                     name: "Source",
-                    value: `${result.source}`,
+                    value: `${result.source || "No source found"}`,
                 },
                 {
                     name: "Status",
-                    value: `${result.status}`,
+                    value: `${result.status || "No status found"}`,
                 },
                 {
                     name: "Episodes",
-                    value: `${result.episodes}`,
+                    value: `${result.episodes || "No episodes found"}`,
                 },
                 {
                     name: "Duration",
-                    value: `${result.duration}`,
+                    value: `${result.duration || "No duration found"}`,
                 },
                 {
                     name: "Score",
-                    value: `${result.score}`,
+                    value: `${result.score || "No score found"}`,
                 },
                 {
                     name: "Licensors",
-                    value: `${result.licensors}`,
+                    value: `${result.licensors || "No licensors found"}`,
                 }
             )
             // set gambar thumbnail sebagai gambar anime

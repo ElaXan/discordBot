@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const log = require('../../log/log');
-const { searchGM, getImage, commandsNameGC, commandsNameGIO } = require("../../Utils/Genshin/gmHandbook")
+const { searchGM, getImage, commandsNameGC, commandsNameGIO } = require("../../Utils/gmHandbook")
 const { Path_GM_Handhook } = require("../../../config.json")
 const fs = require('fs');
 const readline = require('readline');

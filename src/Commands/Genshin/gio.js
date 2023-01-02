@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-const { searchGM } = require("../../Utils/Genshin/gmHandbook")
+const { searchGM } = require("../../Utils/gmHandbook")
 
 module.exports = {
     data: {

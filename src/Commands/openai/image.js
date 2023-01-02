@@ -1,4 +1,4 @@
-const { draw } = require("../../Utils/OpenAI/main")
+const { draw } = require("../../Utils/openai")
 const { EmbedBuilder } = require("discord.js")
 const { OPENAI } = require("../../../config.json")
 
@@ -16,9 +16,13 @@ module.exports = {
         ]
     },
     async execute(interaction) {
+        // get the prompt from the interaction
         const prompt = interaction.options.getString("inspiration");
+        // defer the reply
         await interaction.deferReply();
+        // get the results
         const results = await draw(prompt);
+        // create the embed
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
             .setDescription("Here is the image I drew for you!")
@@ -29,11 +33,11 @@ module.exports = {
             .setFooter({
                 text: OPENAI.Footer
             })
-            .setURL(OPENAI.Title.URL)
+            .setURL(OPENAI.Title.URL);
         // edit the message
         await interaction.editReply({
             content: null,
-            embeds: [embed]
-        })
+            embeds: [embed],
+        });
     }
 }

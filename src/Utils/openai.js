@@ -5,7 +5,7 @@
 // - config.json
 //
 const { Configuration, OpenAIApi } = require("openai")
-const { OPENAI } = require("../../../config.json")
+const { OPENAI } = require("../../config.json")
 
 // Create a configuration
 const config = new Configuration({

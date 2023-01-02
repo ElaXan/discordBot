@@ -11,7 +11,7 @@
 // Get the config
 const fs = require('fs');
 const readline = require('readline');
-const { Path_GM_Handhook } = require("../../../config.json")
+const { Path_GM_Handhook } = require("../../config.json")
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 
