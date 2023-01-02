@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const log = require('../../log/log');
-const { searchGM, getImage, commandsName } = require("../../Utils/Genshin/gmHandbook")
+const { searchGM, getImage, commandsNameGC, commandsNameGIO } = require("../../Utils/Genshin/gmHandbook")
 const { Path_GM_Handhook } = require("../../../config.json")
 const fs = require('fs');
 const readline = require('readline');
@@ -103,14 +103,18 @@ module.exports = {
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
         const stringsToReplace = [ ' Or ', ' Of ', ' A ', ' An ', ' And ', ' The ', ' In ', ' On ', ' To ', ' For ', ' From ', ' With ', ' At ', ' By ', ' Into ', ' Near ', ' Off ', ' Up ' ];
-        let searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+        let searchUpperCase = search.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+        stringsToReplace.forEach(str => {
+            searchUpperCase = searchUpperCase.replace(str, letter => letter.toLowerCase());
+        });
         stringsToReplace.forEach(str => {
             searchUpperCase = searchUpperCase.replace(str, letter => letter.toLowerCase());
         });
         await interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
         const image = await getImage(searchUpperCase);
-        const commands = await commandsName(searchResult.category, searchResult.id);
+        const commands = commandsNameGC(searchResult.category, searchResult.id);
+        const commandsGIO = commandsNameGIO(searchResult.category, searchResult.id);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
             const embed = new EmbedBuilder()
                 .setTitle('Search Result')
@@ -156,8 +160,12 @@ module.exports = {
                 value: searchResult.category,
             })
             embed.addFields({
-                name: '📝 Commands',
+                name: '📝 Commands GC',
                 value: `${commands}`
+            })
+            embed.addFields({
+                name: '📝 Commands GIO',
+                value: `${commandsGIO}`
             })
             embed.setFooter({
                 text: `Requested by ${interaction.user.username}`,

@@ -112,7 +112,7 @@ module.exports = {
      * @param {String} id - ID of name items/monsters/avatars/quests
      * @returns 
      */
-    commandsName: (category, id) => {
+    commandsNameGC: (category, id) => {
         // Check the category
         switch (category) {
             // if Avatars
@@ -127,6 +127,32 @@ module.exports = {
             // if Monsters
             case " Monsters":
                 return `/spawn ${id} x<amount> lv<level> hp<health>`;
+            // Default (if not found)
+            default:
+                return `Not yet applied to category ${category}`;
+        }
+    },
+    /**
+     * 
+     * @param {String} category - Category of the ID
+     * @param {String} id - ID of name items/monsters/avatars/quests
+     * @returns 
+     */
+    commandsNameGIO: (category, id) => {
+        // Check the category
+        switch (category) {
+            // if Avatars
+            case " Avatars":
+                return `avatar add ${id}`;
+            // if Quests
+            case " Quests":
+                return `quest add ${id}\nquest finish ${id}`;
+            // if Items
+            case " Items":
+                return `item add ${id} <amount>`;
+            // if Monsters
+            case " Monsters":
+                return `monster ${id} <amount> <level>`;
             // Default (if not found)
             default:
                 return `Not yet applied to category ${category}`;
