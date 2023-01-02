@@ -12,8 +12,8 @@
 const fs = require('fs');
 const readline = require('readline');
 const { Path_GM_Handhook } = require("../../config.json")
-const fetch = require("node-fetch");
-const cheerio = require("cheerio");
+const cheerio = require('cheerio');
+const axios = require('axios');
 
 module.exports = {
     /**
@@ -161,9 +161,15 @@ module.exports = {
     /**
      * 
      * @param {String} name - Name of the item/monster/avatar/quest to get the image
+     * @param {String} category - Category of the name
      * @returns 
      */
-    getImage: async (name) => {
+    getImage: async (name, category) => {
+        if (category === " Monsters") {
+            // split the name by "-" and get the second index
+            name = name.split("-")[1].trim();
+        }
+        console.log(name, category);
         // Get the image from the wiki of Genshin Impact
         const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
 

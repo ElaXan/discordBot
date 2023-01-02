@@ -112,7 +112,7 @@ module.exports = {
         });
         await interaction.deferReply();
         const searchResult = await searchGM(searchUpperCase, category);
-        const image = await getImage(searchUpperCase);
+        const image = await getImage(searchUpperCase, searchResult.category);
         const commands = commandsNameGC(searchResult.category, searchResult.id);
         const commandsGIO = commandsNameGIO(searchResult.category, searchResult.id);
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
