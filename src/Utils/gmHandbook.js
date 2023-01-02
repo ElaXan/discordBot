@@ -63,31 +63,28 @@ module.exports = {
 
             // Search for the name
             for await (const line of rl) {
-                // Get the category
                 if (line.startsWith("//")) {
                     category = line.replace("//", "");
                 }
-                // Get the name
+                // if found
+                // get the id
                 if (line.includes(search)) {
-                    // Check if the line is undefined
-                    if (line === undefined) {
-                        return {
-                            id: "Not Found",
-                            name: "Not Found",
-                            category: "Not Found"
-                        };
+                    // if the result is not same as the search, continue
+                    if (!line.split(":")[1].trim().startsWith(search)) {
+                        continue;
                     }
-                    // Get the id and name
-                    const id = line.split(":")[0].trim();
-                    const name = line.split(":")[1].trim();
-                    // return the id, name and category
+                    if (!line.endsWith(search)) {
+                        continue;
+                    }
+                    // get the id
                     return {
-                        id: id,
-                        name: name,
+                        id: line.split(":")[0].trim(),
+                        name: line.split(":")[1].trim(),
                         category: category
-                    };
+                    }
                 }
             }
+
 
             // If not found
             return {
