@@ -95,25 +95,41 @@ module.exports = {
         interaction.respond(choices.slice(0, 25));
     },
     async execute(interaction) {
+        // getting the given string from interaction.options 
         const search = interaction.options.getString('search');
         const category = interaction.options.getString('category');
+        // getting the given boolean value from interaction.options 
         const match = interaction.options.getBoolean('match');
+        // deferring the reply ensuring the reply fetched
         await interaction.deferReply({ fetchReply: true })
+        // getting the search result using the given search string, category and match
         const searchResult = await searchGM(search, category, match);
+        // get the image using the result of search
         const image = await getImage(searchResult.name, searchResult.category);
+        // get the commands with GC
         const commands = commandsName(searchResult.category, searchResult.id, "GC");
+        // get the commands with GIO
         const commandsGIO = commandsName(searchResult.category, searchResult.id, "GIO");
+        // check whether the search result is not found
         if (searchResult.id === "Not Found" && searchResult.name === "Not Found" && searchResult.category === "Not Found") {
+            // creating the new embed builder
             const embed = new EmbedBuilder()
+                // set title for the embed
                 .setTitle('Search Result')
-                .setDescription('Not Found for ' + search)
+                // set description for the embed
+                .setDescription('Not Found for ' + search + '\n\nDid you mean : ' + searchResult.didYouMean)
+                // set color for the embed
                 .setColor('Red')
+                // set timestamp for the embed
                 .setTimestamp(new Date())
+                // set the footer of the embed
                 .setFooter({
                     text: `Requested by ${interaction.user.username}`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
+            // edit the reply with the embed
             await interaction.editReply({ embeds: [embed] });
+            // logging the failed search result with given values
             log.log({ color: "Red", interaction: "GM", description: "Not found ID for " + search, fields: [{ name: "User", value: interaction.user.username }, { name: "User ID", value: interaction.user.id }, { name: "Guild", value: interaction.guild.name }, { name: "Channel", value: interaction.channel.name }, { name: "Message Link", value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}` }, { name: "Message ID", value: interaction.id }] })
         } else if (searchResult.id === "Error" && searchResult.name === "Error" && searchResult.category === "Error") {
             const embed = new EmbedBuilder()

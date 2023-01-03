@@ -46,5 +46,8 @@
       "name": "ElaXan",
       "email": "zero@elaxan.com"
     }
+  ],
+  "workspaces": [
+    "src/*"
   ]
 }

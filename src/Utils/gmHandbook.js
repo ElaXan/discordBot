@@ -62,17 +62,24 @@ module.exports = {
 
             // Search for the name
             for await (const line of rl) {
+                // get the category starting with "//"
                 if (line.startsWith("//")) {
                     category = line.replace("//", "");
                 }
+                // Check if the line contains the search
                 let regex = new RegExp(`${search}`, 'i');
+                // If the line contains the search
                 let result = line.match(regex);
+                // If result found
                 if (result) {
+                    // Check if the search is forced to match
                     if (forceMatch) {
+                        // Check if the search is not the same as the result
                         if (result.input.split(":")[1].trim() !== result[0]) {
                             continue;
                         }
                     }
+                    // Get the id and name
                     const id = result.input.split(":")[0].trim()
                     const name = result.input.split(":")[1].trim()
                     return {
@@ -87,7 +94,7 @@ module.exports = {
             return {
                 id: "Not Found",
                 name: "Not Found",
-                category: "Not Found"
+                category: "Not Found",
             };
         } catch (error) {
             // If error

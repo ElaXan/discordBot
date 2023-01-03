@@ -254,7 +254,7 @@ client.on(Events.MessageCreate, async message => {
 client.on("threadUpdate", async (_oldThread, newThread) => {
     // 1048877201296207882 - Tags id Solved in Yuuki Server
     // Replace 1048877201296207882 with your tags id
-    if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === true) {
+    if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === true && newThread.locked === false) {
         // Get user from id
         const user = await client.users.fetch(newThread.ownerId)
         // Create embed
@@ -270,6 +270,134 @@ client.on("threadUpdate", async (_oldThread, newThread) => {
                 value: `[Click Here](${newThread.url})`,
             })
             .setColor("Green")
+            .setTimestamp()
+        // Send message to user
+        user.send({ embeds: [embed] }).then(() => {
+            log({
+                interaction: "Thread Closed",
+                color: "Green",
+                description: "Closed thread and sent message to user",
+                fields: [
+                    {
+                        name: "User",
+                        value: `${user.tag} (${user.id})`
+                    },
+                    {
+                        name: "Thread",
+                        value: `${newThread.name} (${newThread.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${newThread.guild.name} (${newThread.guild.id})`
+                    }
+                ]
+            })
+        }).catch((error) => {
+            // If cant send message to user then log it to webhook
+            log({
+                interaction: "Thread Closed",
+                color: "Red",
+                description: "Closed thread but couldn't send message to user",
+                fields: [
+                    {
+                        name: "Error output",
+                        value: error
+                    },
+                    {
+                        name: "User",
+                        value: `${user.tag} (${user.id})`
+                    },
+                    {
+                        name: "Thread",
+                        value: `${newThread.name} (${newThread.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${newThread.guild.name} (${newThread.guild.id})`
+                    }
+                ]
+            })
+        })
+    } else if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === false && newThread.locked === true) {
+        // Get user from id
+        const user = await client.users.fetch(newThread.ownerId)
+        // Create embed
+        const embed = new EmbedBuilder()
+            .setTitle("Thread Closed")
+            .setDescription("Your thread has been closed as problem solved. and your thread is locked\n\nIf you still need help then create a new thread again.")
+            .addFields({
+                name: "Thread Name",
+                value: newThread.name,
+            })
+            .addFields({
+                name: "Link to Thread",
+                value: `[Click Here](${newThread.url})`,
+            })
+            .setColor("Red")
+            .setTimestamp()
+        // Send message to user
+        user.send({ embeds: [embed] }).then(() => {
+            log({
+                interaction: "Thread Closed",
+                color: "Green",
+                description: "Closed thread and sent message to user",
+                fields: [
+                    {
+                        name: "User",
+                        value: `${user.tag} (${user.id})`
+                    },
+                    {
+                        name: "Thread",
+                        value: `${newThread.name} (${newThread.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${newThread.guild.name} (${newThread.guild.id})`
+                    }
+                ]
+            })
+        }).catch((error) => {
+            // If cant send message to user then log it to webhook
+            log({
+                interaction: "Thread Closed",
+                color: "Red",
+                description: "Closed thread but couldn't send message to user",
+                fields: [
+                    {
+                        name: "Error output",
+                        value: error
+                    },
+                    {
+                        name: "User",
+                        value: `${user.tag} (${user.id})`
+                    },
+                    {
+                        name: "Thread",
+                        value: `${newThread.name} (${newThread.id})`
+                    },
+                    {
+                        name: "Guild",
+                        value: `${newThread.guild.name} (${newThread.guild.id})`
+                    }
+                ]
+            })
+        })
+    } else if (newThread.archived === true && !newThread.appliedTags.includes("1048877201296207882") === false && newThread.locked === true) {
+        // Get user from id
+        const user = await client.users.fetch(newThread.ownerId)
+        // Create embed
+        const embed = new EmbedBuilder()
+            .setTitle("Thread Closed")
+            .setDescription("Your thread has been closed and problem is not solved and your Thread is locked.\n\nIf you still need help then create a new thread again.")
+            .addFields({
+                name: "Thread Name",
+                value: newThread.name,
+            })
+            .addFields({
+                name: "Link to Thread",
+                value: `[Click Here](${newThread.url})`,
+            })
+            .setColor("Red")
             .setTimestamp()
         // Send message to user
         user.send({ embeds: [embed] }).then(() => {
