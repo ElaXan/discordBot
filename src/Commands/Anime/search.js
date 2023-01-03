@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require("discord.js")
 const { search } = require("../../Utils/searchAnime")
 const { log } = require("../../log/log")
+const fs = require("fs")
 
 module.exports = {
     data: {
@@ -18,6 +19,11 @@ module.exports = {
     async execute(interaction) {
         // ambil nama anime dari opsi
         const anime = interaction.options.getString('search');
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         // kirim balasan sebelum mencari anime "(nama bot) is thinking..."
         await interaction.deferReply()
         // cari anime

@@ -100,6 +100,13 @@ module.exports = {
         const category = interaction.options.getString('category');
         // getting the given boolean value from interaction.options 
         const match = interaction.options.getBoolean('match');
+        // Check if user is blocked from using the command
+        const userId = interaction.user.id;
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         // deferring the reply ensuring the reply fetched
         await interaction.deferReply({ fetchReply: true })
         // getting the search result using the given search string, category and match

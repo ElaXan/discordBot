@@ -8,9 +8,15 @@ module.exports = {
         const { version, repository, author, license } = require("../../../package.json")
         const { Prefix } = require("../../../config.json")
         const { log } = require("../../log/log")
+        const fs = require("fs")
+        const userId = interaction.user.id;
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         const lastCommit = require("child_process").execSync("git log -1 --pretty=%B").toString().trim()
         const availabeSlashCommands = interaction.client.commands.map(command => command.data.name)
-        const fs = require("fs")
         const availabePrefixCommands = fs.readdirSync("./src/messageCreate").filter(file => file.endsWith(".js")).map(file => file.slice(0, -3))
         const embed = new EmbedBuilder()
             .setTitle("About")

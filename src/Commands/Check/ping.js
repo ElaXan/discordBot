@@ -8,6 +8,13 @@ module.exports = {
     },
     async execute(interaction) {
         const log = require("../../log/log")
+        const fs = require("fs");
+        const userId = interaction.user.id;
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         const client = interaction.client;
         const uptime = {
             days: Math.floor(client.uptime / 86400000),

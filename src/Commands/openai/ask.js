@@ -3,6 +3,7 @@ const { EmbedBuilder } = require("discord.js");
 const { log } = require('../../log/log');
 const { chat } = require("../../Utils/openai")
 const { author } = require("../../../package.json")
+const fs = require("fs");
 let line = "----------------------------------------"
 
 module.exports = {
@@ -20,6 +21,12 @@ module.exports = {
     },
     async execute(interaction) {
         const prompt = interaction.options.getString("question");
+        const userId = interaction.user.id;
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         await interaction.deferReply();
         const results = await chat(prompt);
         if (results.answer == "") {

@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const { searchGM } = require("../../Utils/gmHandbook")
+const fs = require('fs');
 
 module.exports = {
     data: {
@@ -47,6 +48,12 @@ module.exports = {
         const uid = interaction.options.getString('uid');
         const items = interaction.options.getString('items');
         const amount = interaction.options.getInteger('amount');
+        const userId = interaction.user.id;
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         const log = require("../../log/log")
         const search = await searchGM(items, 'items');
         if (search.id === "Not Found" && search.name === "Not Found" && search.category === "Not Found") {

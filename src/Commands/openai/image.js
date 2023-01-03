@@ -18,6 +18,12 @@ module.exports = {
     async execute(interaction) {
         // get the prompt from the interaction
         const prompt = interaction.options.getString("inspiration");
+        const userId = interaction.user.id;
+        const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
+        const block = blockedUserJson[`<@${userId}>`];
+        if (block !== undefined && block.includes(this.data.name) === true) {
+            return interaction.reply({ content: "You are blocked from using this command" });
+        }
         // defer the reply
         await interaction.deferReply();
         // get the results

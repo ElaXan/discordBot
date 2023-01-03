@@ -17,6 +17,11 @@ process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
     process.exit()
 });
+// if file ./src/blockedUser.json not found, then create a file only
+if (!fs.existsSync('./src/blockedUser.json')) {
+    const blockedUsers = {};
+    fs.writeFileSync('./src/blockedUser.json', JSON.stringify(blockedUsers, null, 4));
+}
 
 // Uncaught exception
 const { Client, Partials, GatewayIntentBits, Collection, Events, ActivityType, PermissionsBitField, EmbedBuilder} = require('discord.js')
