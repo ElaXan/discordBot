@@ -1,7 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const log = require('../../log/log');
 const { searchGM, getImage, commandsName } = require("../../Utils/gmHandbook")
-const { Path_GM_Handhook } = require("../../../config.json")
+const { Path_GM_Handhook, OWNER_ID } = require("../../../config.json")
 const fs = require('fs');
 const readline = require('readline');
 
@@ -78,10 +78,17 @@ module.exports = {
                 let regex = new RegExp(`${focusedValue}`, 'i');
                 let result = line.match(regex);
                 if (result) {
-                    choices.push({
-                        name: result.input.split(":")[1].trim() + " | (" + category + ")",
-                        value: result.input.split(":")[1].trim()
-                    })
+                    try {
+                        choices.push({
+                            name: result.input.split(":")[1].trim() + " | (" + category + ")" || "Not Found",
+                            value: result.input.split(":")[1].trim() || "Not Found"
+                        })
+                    } catch (error) {
+                        choices.push({
+                            name: "Not Found",
+                            value: "Not Found"
+                        })
+                    }
                 }
             }
         }
@@ -123,7 +130,7 @@ module.exports = {
         } else {
             const embed = new EmbedBuilder();
             embed.setTitle('Search Result')
-            embed.setDescription(`Found for ${searchResult.name}!`)
+            embed.setDescription(`This is still on development, if you have any suggestion please contact <@${OWNER_ID}>`)
             embed.setColor('Green')
             embed.setThumbnail(image)
             embed.setTimestamp(new Date())
