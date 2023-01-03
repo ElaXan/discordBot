@@ -117,7 +117,7 @@ module.exports = {
                 // set title for the embed
                 .setTitle('Search Result')
                 // set description for the embed
-                .setDescription('Not Found for ' + search + '\n\nDid you mean : ' + searchResult.didYouMean)
+                .setDescription('Not Found for ' + search)
                 // set color for the embed
                 .setColor('Red')
                 // set timestamp for the embed
