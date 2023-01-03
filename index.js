@@ -318,7 +318,7 @@ client.on("threadUpdate", async (_oldThread, newThread) => {
                 ]
             })
         })
-    } else if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === false && newThread.locked === true) {
+    } else if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === true && newThread.locked === true) {
         // Get user from id
         const user = await client.users.fetch(newThread.ownerId)
         // Create embed
@@ -382,7 +382,7 @@ client.on("threadUpdate", async (_oldThread, newThread) => {
                 ]
             })
         })
-    } else if (newThread.archived === true && !newThread.appliedTags.includes("1048877201296207882") === false && newThread.locked === true) {
+    } else if (newThread.archived === true && newThread.appliedTags.includes("1048877201296207882") === false && newThread.locked === true) {
         // Get user from id
         const user = await client.users.fetch(newThread.ownerId)
         // Create embed
