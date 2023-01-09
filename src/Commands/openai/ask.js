@@ -54,7 +54,7 @@ module.exports = {
                 files: [ { name: "answer.txt", attachment: Buffer.from(`${author.name} (${author.email})\n${author.url}\n\nAnswer:\n${line}\n${results.answer}\n${line}`) } ]
             });
             promptCropped = prompt.slice(0, 200) + "... (truncated)";
-            log({ interaction: "/ask", color: "Green", description: "Asked a question to OpenAI", fields: [ { name: "Question", value: promptCropped }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` } ] })
+            return log({ interaction: "/ask", color: "Green", description: "Asked a question to OpenAI", fields: [ { name: "Question", value: promptCropped }, { name: "ID of Completion", value: results.id }, { name: "Usage", value: `Prompt: ${results.usage.prompt_tokens}\nCompletion: ${results.usage.completion_tokens}\nTotal: ${results.usage.total_tokens}` }, { name: "User", value: `${interaction.user.tag} (${interaction.user.id})` }, { name: "Channel", value: `<#${interaction.channel.id}> (${interaction.channel.id})` }, { name: "Guild", value: `${interaction.guild.name} (${interaction.guild.id})` } ] })
         }
         // create the embed
         const embed = new EmbedBuilder()
