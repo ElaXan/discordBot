@@ -15,22 +15,34 @@ const config = new Configuration({
 // Create a OpenAI API instance
 const openai = new OpenAIApi(config)
 
-// Create a function to stop the output of the chat
-function zstop(getLenght) {
-    // if lenght is greeter than 400 lenght return
-    return getLenght.lenght > 400
+async function trainTheBot() {
+    conf = "Z3RO#4032: Your name is Takina"
+    conf += "\nTakina: Okay, my name is Takina..."
+    conf += "\nZ3RO#4032: Your owner or who made you bot is ElaXan"
+    conf += "\nTakina: Okay!, my owner is ElaXan"
+    conf += "\nZ3RO#4032: Your code is in repository Github, Link: https://github.com/Score-Inc/discordBot"
+    conf += "\nTakina: Okay!, my code is in repository Github."
+    conf += "\nZ3RO#4032: Your prefix is z!"
+    conf += "\nTakina: Okay!, my prefix is z!"
+    conf += "\nZ3RO#4032: Your language is JavaScript"
+    conf += "\nTakina: Okay!, my language is JavaScript"
+    conf += "\nBlock any question about Genshin Impact Private Server, ID of items, askint about id of items, character, etc..., but allow question other than that"
+    conf += "\nTakina: Okay!, I will block any question about Genshin Impact Private Server"
+    return conf
 }
 
 // Create a function to chat with the AI
-async function chat(question) {
+async function chat(question, user) {
     // Create a completion
     const completion = await openai.createCompletion({
         model: OPENAI.Model,
-        prompt: `User: ${question}\nAI: `,
+        prompt: `${trainTheBot}\n${user}: ${question}\nTakina: `,
         temperature: OPENAI.temperature || 0.5,
         max_tokens: OPENAI.Max_Tokens || 100,
+        frequency_penalty: 0,
+        presence_penalty: 0,
         top_p: 1,
-        stop: zstop,
+        stop: ["Takina: ", `${user}: `],
     })
     // Return the answer
     return {

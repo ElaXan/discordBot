@@ -28,8 +28,8 @@ module.exports = {
             return interaction.reply({ content: "You are blocked from using this command" });
         }
         await interaction.deferReply();
-        const results = await chat(prompt);
-        if (results.answer == "") {
+        const results = await chat(prompt, interaction.user.tag);
+        if (results.answer.trim() == "") {
             const embed = new EmbedBuilder()
                 .setTitle(OPENAI.Title.Name)
                 .setDescription("I couldn't find an answer to your question.")
