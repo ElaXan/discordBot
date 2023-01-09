@@ -170,14 +170,6 @@ module.exports = {
                 name: '🗃️ Category',
                 value: searchResult.category,
             })
-            embed.addFields({
-                name: '📝 Commands GC',
-                value: `${commands}`
-            })
-            embed.addFields({
-                name: '📝 Commands GIO',
-                value: `${commandsGIO}`
-            })
             embed.setFooter({
                 text: `Requested by ${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL()
@@ -185,67 +177,189 @@ module.exports = {
             const button = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setLabel('Show ID Only')
+                        .setLabel('Commands GC')
                         .setStyle(ButtonStyle.Primary)
-                        .setCustomId('show_id')
+                        .setCustomId('commands_gc')
                 )
                 .addComponents(
                     new ButtonBuilder()
-                        .setLabel('Image Bigger')
+                        .setLabel('Commands GIO')
                         .setStyle(ButtonStyle.Secondary)
-                        .setCustomId('image_bigger')
-                );
+                        .setCustomId('commands_gio')
+                )
             await interaction.editReply({ embeds: [embed], components: [button] });
             log.log({ color: "Green", interaction: "GM", description: "Found ID for " + search, fields: [{ name: "User", value: interaction.user.username }, { name: "User ID", value: interaction.user.id }, { name: "Guild", value: interaction.guild.name }, { name: "Channel", value: interaction.channel.name }, { name: "Message Link", value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${interaction.id}` }, { name: "Message ID", value: interaction.id }] })
 
-            const filter = (i) => i.customId === 'show_id' || i.customId === "image_bigger" && i.user.id === interaction.user.id;
+            const filter = (i) => i.customId === "commands_gc" || i.customId === "commands_gio" && i.user.id === interaction.user.id;
             const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
             collector.on('collect', async (i) => {
-                if (i.customId === 'show_id') {
-                    await i.deferUpdate();
-                    await interaction.editReply({
-                        content: `${searchResult.id}`,
-                        ephemeral: true,
-                        embeds: [],
-                        components: []
+                if (i.customId === 'commands_gc') {
+                    const embed_gc = new EmbedBuilder();
+                    embed_gc.setTitle("Commands GC")
+                    embed_gc.setDescription(`List of commands for${searchResult.category} category`)
+                    embed_gc.setColor("Green")
+                    embed_gc.setThumbnail(image)
+                    embed_gc.setTimestamp()
+                    embed_gc.setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
                     });
-                }
-                // Show Image
-                if (i.customId === 'image_bigger') {
-                    embed.setThumbnail(null);
-                    embed.setImage(image);
-                    const buttonShowImage = new ActionRowBuilder()
-                        .addComponents(
-                            new ButtonBuilder()
-                                .setLabel('Back')
-                                .setStyle(ButtonStyle.Danger)
-                                .setCustomId('back')
-                        );
+                    if (searchResult.category === " Avatars") {
+                        embed_gc.addFields({
+                            name: "Normal",
+                            value: commands.commands_1
+                        })
+                        embed_gc.addFields({
+                            name: "With Level",
+                            value: commands.commands_2
+                        })
+                        embed_gc.addFields({
+                            name: "With Constellation",
+                            value: commands.commands_3
+                        })
+                        embed_gc.addFields({
+                            name: "With Level and Constellation",
+                            value: commands.commands_4
+                        })
+                    } else if (searchResult.category === " Quests") {
+                        embed_gc.addFields({
+                            name: "Add Quest",
+                            value: commands.commands_1
+                        })
+                        embed_gc.addFields({
+                            name: "Remove Quest",
+                            value: commands.commands_2
+                        })
+                    } else if (searchResult.category === " Items") {
+                        embed_gc.addFields({
+                            name: "Normal",
+                            value: commands.commands_1
+                        })
+                        embed_gc.addFields({
+                            name: "With Amount",
+                            value: commands.commands_2
+                        })
+                        embed_gc.addFields({
+                            name: "If Artifact",
+                            value: commands.commands_3
+                        })
+                        embed_gc.addFields({
+                            name: "If Weapon",
+                            value: commands.commands_4
+                        })
+                    } else if (searchResult.category === " Monsters") {
+                        embed_gc.addFields({
+                            name: "Normal",
+                            value: commands.commands_1
+                        })
+                        embed_gc.addFields({
+                            name: "With amount",
+                            value: commands.commands_2
+                        })
+                        embed_gc.addFields({
+                            name: "With amount and level",
+                            value: commands.commands_3
+                        })
+                        embed_gc.addFields({
+                            name: "With amount, level and hp",
+                            value: commands.commands_4
+                        })
+                    } else {
+                        embed_gc.addFields({
+                            name: "Not available",
+                            value: "No commands available for this category"
+                        })
+                    }
                     await i.deferUpdate();
                     await interaction.editReply({
                         content: null,
-                        embeds: [embed],
-                        components: [buttonShowImage]
+                        embeds: [embed_gc],
+                        components: []
                     });
-                    const filterShowImage = (i) => i.customId === 'back' && i.user.id === interaction.user.id;
-                    const collectorShowImage = interaction.channel.createMessageComponentCollector({ filterShowImage, time: 15000 });
-                    collectorShowImage.on('collect', async (i) => {
-                        if (i.customId === 'back') {
-                            embed.setImage(null);
-                            embed.setThumbnail(image);
-                            await i.deferUpdate();
-                            await interaction.editReply({
-                                content: null,
-                                embeds: [embed],
-                                components: []
-                            });
-                        }
+                }
+                if (i.customId === 'commands_gio') {
+                    const embed_gio = new EmbedBuilder();
+                    embed_gio.setTitle("Commands GIO")
+                    embed_gio.setDescription(`List of commands for${searchResult.category} category`)
+                    embed_gio.setColor("Green")
+                    embed_gio.setThumbnail(image)
+                    embed_gio.setTimestamp()
+                    embed_gio.setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
                     });
-                    collectorShowImage.on("end", async () => {
-                        embed.setImage(null);
-                        embed.setThumbnail(image);
-                        await interaction.editReply({ embeds: [embed], components: [] });
+                    if (searchResult.category === " Avatars") {
+                        embed_gio.addFields({
+                            name: "Normal",
+                            value: commandsGIO.commands_1
+                        })
+                        embed_gio.addFields({
+                            name: "With Level",
+                            value: commandsGIO.commands_2
+                        })
+                        embed_gio.addFields({
+                            name: "With Constellation",
+                            value: commandsGIO.commands_3
+                        })
+                        embed_gio.addFields({
+                            name: "With Level and Constellation",
+                            value: commandsGIO.commands_4
+                        })
+                    } else if (searchResult.category === " Quests") {
+                        embed_gio.addFields({
+                            name: "Add Quest",
+                            value: commandsGIO.commands_1
+                        })
+                        embed_gio.addFields({
+                            name: "Remove Quest",
+                            value: commandsGIO.commands_2
+                        })
+                    } else if (searchResult.category === " Items") {
+                        embed_gio.addFields({
+                            name: "Normal",
+                            value: commandsGIO.commands_1
+                        })
+                        embed_gio.addFields({
+                            name: "With Amount",
+                            value: commandsGIO.commands_2
+                        })
+                        embed_gio.addFields({
+                            name: "If Artifact",
+                            value: commandsGIO.commands_3
+                        })
+                        embed_gio.addFields({
+                            name: "If Weapon",
+                            value: commandsGIO.commands_4
+                        })
+                    } else if (searchResult.category === " Monsters") {
+                        embed_gio.addFields({
+                            name: "Normal",
+                            value: commandsGIO.commands_1
+                        })
+                        embed_gio.addFields({
+                            name: "With amount",
+                            value: commandsGIO.commands_2
+                        })
+                        embed_gio.addFields({
+                            name: "With amount and level",
+                            value: commandsGIO.commands_3
+                        })
+                        embed_gio.addFields({
+                            name: "With amount, level and hp",
+                            value: commandsGIO.commands_4
+                        })
+                    } else {
+                        embed_gio.addFields({
+                            name: "Not available",
+                            value: "No commands available for this category"
+                        })
+                    }
+                    await i.deferUpdate();
+                    await interaction.editReply({
+                        content: null,
+                        embeds: [embed_gio],
+                        components: []
                     });
                 }
             });

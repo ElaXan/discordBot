@@ -119,19 +119,44 @@ module.exports = {
         switch (category) {
             // if Avatars
             case " Avatars":
-                return type === "GC" ? `/give ${id} lv<level> c<constellation>` : `avatar add ${id}`;
+                return {
+                    commands_1: type === "GC" ? `/give ${id}` : `avatar add ${id}`, 
+                    commands_2: type === "GC" ? `/give ${id} lv<level>` : `Not available`,
+                    commands_3: type === "GC" ? `/give ${id} c<constellation>` : `Not available`,
+                    commands_4: type === "GC" ? `/give ${id} lv<level> c<constellation>` : `Not available`
+                }
             // if Quests
             case " Quests":
-                return type === "GC" ? `/q add ${id}\n/q remove ${id}` : `quest add ${id}\nquest finish ${id}`;
+                return {
+                    commands_1: type === "GC" ? `/q add ${id}` : `quest add ${id}\n`,
+                    commands_2: type === "GC" ? `/q remove ${id}` : `quest finish ${id}`,
+                    commands_3: type === "GC" ? "Not Available" : "Not Available",
+                    commands_4: type === "GC" ? "Not Available" : "Not Available"
+                }
             // if Items
             case " Items":
-                return type === "GC" ? `/give ${id} x<amount>` : `item add ${id} <amount>`;
+                return {
+                    commands_1: type === "GC" ? `/give ${id}` : `item add ${id}`,
+                    commands_2: type === "GC" ? `/give ${id} x<amount>` : `item add ${id} <amount>`,
+                    commands_3: type === "GC" ? `/give ${id} x<amount> lv<level>` : "Not Available",
+                    commands_4: type === "GC" ? `/give ${id} x<amount> lv<level> r<refinement>` : "Not Available"
+                }
             // if Monsters
             case " Monsters":
-                return type === "GC" ? `/spawn ${id} x<amount> lv<level> hp<health>` : `monster ${id} <amount> <level>`;
+                return {
+                    commands_1: type === "GC" ? `/spawn ${id}` : `monster ${id}`,
+                    commands_2: type === "GC" ? `/spawn ${id} x<amount>` : `monster ${id} <amount>`,
+                    commands_3: type === "GC" ? `/spawn ${id} x<amount> lv<level>` : `monster ${id} <amount> <level>`,
+                    commands_4: type === "GC" ? `/spawn ${id} x<amount> lv<level> hp<health>` : `monster ${id} <amount> <level> <health>`
+                }
             // Default (if not found)
             default:
-                return `Not yet applied to category ${category}`;
+                return {
+                    commands_1: null,
+                    commands_2: null,
+                    commands_3: null,
+                    commands_4: null
+                }
         }
     },
     /**
