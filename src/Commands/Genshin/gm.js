@@ -75,12 +75,12 @@ module.exports = {
                 if (line.startsWith("//")) {
                     category = line.replace("//", "").replace(" ", "");
                 }
-                let regex = new RegExp(`${focusedValue}`, 'i');
+                let regex = new RegExp(`${focusedValue.replace(/[\(\)\[\]\{\}]/g, '\\$&')}`, 'i');
                 let result = line.match(regex);
                 if (result) {
                     try {
                         choices.push({
-                            name: result.input.split(":")[1].trim() + " | (" + category + ")" || "Not Found",
+                            name: result.input.split(":")[1].trim().slice(0,80) + " | (" + category + ")" || "Not Found",
                             value: result.input.split(":")[1].trim() || "Not Found"
                         })
                     } catch (error) {
