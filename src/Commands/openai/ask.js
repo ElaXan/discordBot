@@ -36,7 +36,7 @@ module.exports = {
                 .setColor("Red")
                 .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
                 .setFooter({
-                    text: OPENAI.Footer
+                    text: results.id
                 })
                 .setURL(OPENAI.Title.URL)
             // edit the message
@@ -48,9 +48,18 @@ module.exports = {
         }
         // if the answer is too long
         if (results.answer.length > 300) {
+            const embed = new EmbedBuilder()
+                .setTitle(OPENAI.Title.Name)
+                .setDescription("The answer is too long to be sent as a message, so I sent it as a file.")
+                .setColor("Green")
+                .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
+                .setFooter({
+                    text: results.id
+                })
+                .setURL(OPENAI.Title.URL)
             // send as a file
             await interaction.editReply({
-                content: "The answer is too long to be sent as a message, so I sent it as a file.",
+                embeds: [embed],
                 files: [ { name: "answer.txt", attachment: Buffer.from(`${author.name} (${author.email})\n${author.url}\n\nAnswer:\n${line}\n${results.answer}\n${line}`) } ]
             });
             promptCropped = prompt.slice(0, 200) + "... (truncated)";
@@ -76,7 +85,7 @@ module.exports = {
             })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
-                text: OPENAI.Footer
+                text: results.id
             })
             .setURL(OPENAI.Title.URL)
         // edit the message
