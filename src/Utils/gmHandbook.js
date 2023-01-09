@@ -67,7 +67,7 @@ module.exports = {
                     category = line.replace("//", "");
                 }
                 // Check if the line contains the search
-                let regex = new RegExp(`${search}`, 'i');
+                let regex = new RegExp(`${search.replace(/[\(\)\[\]\{\}]/g, '\\$&')}`, 'i');
                 // If the line contains the search
                 let result = line.match(regex);
                 // If result found
