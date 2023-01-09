@@ -26,7 +26,7 @@ async function chat(question) {
     // Create a completion
     const completion = await openai.createCompletion({
         model: OPENAI.Model,
-        prompt: question,
+        prompt: `User: ${question}\nAI: `,
         temperature: OPENAI.temperature || 0.5,
         max_tokens: OPENAI.Max_Tokens || 100,
         top_p: 1,
