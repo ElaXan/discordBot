@@ -39,6 +39,10 @@ module.exports = {
                     text: results.id
                 })
                 .setURL(OPENAI.Title.URL)
+                .setAuthor({
+                    name: interaction.user.tag,
+                    iconURL: interaction.user.avatarURL()
+                })
             // edit the message
             await interaction.editReply({
                 content: null,
@@ -57,6 +61,10 @@ module.exports = {
                     text: results.id
                 })
                 .setURL(OPENAI.Title.URL)
+                .setAuthor({
+                    name: interaction.user.tag,
+                    iconURL: interaction.user.avatarURL()
+                })
             // send as a file
             await interaction.editReply({
                 embeds: [embed],
@@ -88,6 +96,10 @@ module.exports = {
                 text: results.id
             })
             .setURL(OPENAI.Title.URL)
+            .setAuthor({
+                name: interaction.user.tag,
+                iconURL: interaction.user.avatarURL()
+            })
         // edit the message
         await interaction.editReply({
             content: null,
