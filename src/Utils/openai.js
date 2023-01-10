@@ -6,6 +6,7 @@
 //
 const { Configuration, OpenAIApi } = require("openai")
 const { OPENAI, Prefix } = require("../../config.json")
+const fs = require("fs")
 
 // Create a configuration
 const config = new Configuration({
@@ -15,28 +16,19 @@ const config = new Configuration({
 // Create a OpenAI API instance
 const openai = new OpenAIApi(config)
 
-async function trainTheBot() {
-    const train = [
-        "Your name is Takina",
-        "Your owner or who made you bot is ElaXan and Z3RO#4032",
-        "Your code is in repository Github, Link: https://github.com/Score-Inc/discordBot",
-        "Your prefix is " + Prefix,
-        "Your language is JavaScript",
-        "Block any question about Genshin Impact Private Server, asking about id of items, character, etc..., but allow question other than that"
-    ]
 
-    for (let i = 0; i < train.length; i++) {
-        const element = train[i];
-        return element
-    }
-}
 
 // Create a function to chat with the AI
 async function chat(question, user) {
+    // read the file if exist
+    let previousResponses = "";
+    if (fs.existsSync("./src/cache/" + user)) {
+        previousResponses = fs.readFileSync("./src/cache/" + user, "utf8");
+    }
     // Create a completion
     const completion = await openai.createCompletion({
         model: OPENAI.Model,
-        prompt: `${trainTheBot}\n${user}: ${question}\nTakina: `,
+        prompt: `${previousResponses}\n${user}: ${question}\nTakina: `,
         temperature: OPENAI.temperature || 0.5,
         max_tokens: OPENAI.Max_Tokens || 100,
         frequency_penalty: 0,
@@ -44,6 +36,17 @@ async function chat(question, user) {
         top_p: 1,
         stop: ["Takina: ", `${user}: `],
     })
+
+    let resultPrompt = `\n${user}: ${question}\nTakina: ${completion.data.choices[0].text.trim()}`;
+
+    // save to file as cache
+    // if not exist, create a file
+    if (!fs.existsSync("./src/cache")) {
+        fs.mkdirSync("./src/cache");
+    }
+    // write to file not json
+    fs.writeFileSync("./src/cache/" + user, resultPrompt, { flag: "a+" });
+
     // Return the answer
     return {
         answer: completion.data.choices[0].text,

@@ -4,3 +4,4 @@ package-lock.json
 # Just chatting with the bot (Github Copilot)
 chat.yml
 src/blockedUser.json
+src/cache
