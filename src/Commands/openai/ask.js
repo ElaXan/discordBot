@@ -52,9 +52,29 @@ module.exports = {
         }
         // if the answer is too long
         if (results.answer.length > 300) {
+
+            const randomWord = [
+                "The answer is too long to be sent as a message, so I sent it as a file.",
+                "Hey there! The answer is too long to be sent as a message, so I sent it as a file.",
+                "I can't send the answer as a message, so I sent it as a file.",
+                "I send the answer as a file because it's too long to be sent as a message.",
+                "Sorry, I can't send the answer as a message, so I sent it as a file.",
+                "Apologies, I can't send the answer as a message, so I sent it as a file.",
+                "console.log('The answer is too long to be sent as a message, so I sent it as a file.') :)",
+                "console.log('Hey there! The answer is too long to be sent as a message, so I sent it as a file.') :)",
+                "console.log('I can't send the answer as a message, so I sent it as a file.') :)",
+                "console.log('I send the answer as a file because it's too long to be sent as a message.') :)",
+                "console.log('Sorry, I can't send the answer as a message, so I sent it as a file.') :)",
+                "console.log('Apologies, I can't send the answer as a message, so I sent it as a file.') :)"
+            ]
+
+            // Get random word from "randomWord" array
+            const randomWordIndex = Math.floor(Math.random() * randomWord.length);
+            const randomWordResult = randomWord[randomWordIndex];
+
             const embed = new EmbedBuilder()
                 .setTitle(OPENAI.Title.Name)
-                .setDescription("The answer is too long to be sent as a message, so I sent it as a file.")
+                .setDescription(randomWordResult)
                 .setColor("Green")
                 .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
                 .setFooter({
