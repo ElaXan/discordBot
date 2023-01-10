@@ -160,12 +160,12 @@ client.on(Events.InteractionCreate, async interaction => {
             // if error is a type error then send ephemeral message
             if (error instanceof TypeError) {
                 interaction.reply({
-                    content: 'There was an error while executing this command!',
+                    content: 'There was an error while executing this command!\n' + error,
                     ephemeral: true
                 })
             } else {
                 interaction.editReply({
-                    content: 'There was an error while executing this command!',
+                    content: 'There was an error while executing this command!\n' + error,
                     ephemeral: true
                 })
             }
@@ -225,7 +225,7 @@ client.on(Events.MessageCreate, async message => {
             console.error(error);
             // respond with error message
             await message.reply({
-                content: 'There was an error while executing this command!',
+                content: 'There was an error while executing this command!\n' + error,
                 ephemeral: true
             });
             // log error to webhook
