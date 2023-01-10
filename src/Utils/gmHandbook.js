@@ -174,8 +174,9 @@ module.exports = {
         } else if (category === "Quests") {
             name = parts[0].trim();
         }
+        const capitalized = name.replace(" ", "_").charAt(0).toUpperCase();
         // Get the image from the wiki of Genshin Impact
-        const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${name.replace(" ", "_")}.png`;
+        const url = `https://genshin-impact.fandom.com/wiki/${name}?file=Item_${capitalized}.png`;
         try {
             // Fetch the image
             const response = await fetch(url);
