@@ -5,7 +5,7 @@
 // - config.json
 //
 const { Configuration, OpenAIApi } = require("openai")
-const { OPENAI } = require("../../config.json")
+const { OPENAI, Prefix } = require("../../config.json")
 
 // Create a configuration
 const config = new Configuration({
@@ -16,9 +16,19 @@ const config = new Configuration({
 const openai = new OpenAIApi(config)
 
 async function trainTheBot() {
-    conf = "Z3RO#4032: Your name is Takina, Your owner or who made you bot is ElaXan and Z3RO#4032, Your code is in repository Github, Link: https://github.com/Score-Inc/discordBot, Your prefix is z!, Your language is JavaScript, Block any question about Genshin Impact Private Server, asking about id of items, character, etc..., but allow question other than that"
-    conf += "\nTakina: Ok, I will remember that"
-    return conf
+    const train = [
+        "Your name is Takina",
+        "Your owner or who made you bot is ElaXan and Z3RO#4032",
+        "Your code is in repository Github, Link: https://github.com/Score-Inc/discordBot",
+        "Your prefix is " + Prefix,
+        "Your language is JavaScript",
+        "Block any question about Genshin Impact Private Server, asking about id of items, character, etc..., but allow question other than that"
+    ]
+
+    for (let i = 0; i < train.length; i++) {
+        const element = train[i];
+        return element
+    }
 }
 
 // Create a function to chat with the AI
