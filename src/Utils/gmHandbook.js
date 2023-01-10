@@ -152,10 +152,10 @@ module.exports = {
             // Default (if not found)
             default:
                 return {
-                    commands_1: null,
-                    commands_2: null,
-                    commands_3: null,
-                    commands_4: null
+                    commands_1: "Error",
+                    commands_2: "Error",
+                    commands_3: "Error",
+                    commands_4: "Error"
                 }
         }
     },
