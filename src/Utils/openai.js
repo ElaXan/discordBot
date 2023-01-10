@@ -44,6 +44,16 @@ async function chat(question, user) {
     if (!fs.existsSync("./src/cache")) {
         fs.mkdirSync("./src/cache");
     }
+    // check if the conversation already 5 times with "Takina: "
+
+    let count = (previousResponses.match(/Takina: /g) || []).length;
+    if (count > 5) {
+        // delete the file
+        fs.unlinkSync("./src/cache/" + user);
+    }
+    console.log(previousResponses);
+    console.log(count)
+
     // write to file not json
     fs.writeFileSync("./src/cache/" + user, resultPrompt, { flag: "a+" });
 
