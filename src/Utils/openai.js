@@ -5,7 +5,7 @@
 // - config.json
 //
 const { Configuration, OpenAIApi } = require("openai")
-const { OPENAI, Prefix } = require("../../config.json")
+const { OPENAI } = require("../../config.json")
 const fs = require("fs")
 
 // Create a configuration
@@ -51,8 +51,6 @@ async function chat(question, user) {
         // delete the file
         fs.unlinkSync("./src/cache/" + user);
     }
-    console.log(previousResponses);
-    console.log(count)
 
     // write to file not json
     fs.writeFileSync("./src/cache/" + user, resultPrompt, { flag: "a+" });

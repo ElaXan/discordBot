@@ -100,21 +100,7 @@ module.exports = {
         // create the embed
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
-            .setDescription(OPENAI.Description)
-            .setColor(`${OPENAI.Color}`)
-            .setTimestamp()
-            .addFields({
-                name: "Answer",
-                value: results.answer
-            })
-            .addFields({
-                name: "Suggestions",
-                value: OPENAI.Suggestions
-            })
-            .addFields({
-                name: "Note",
-                value: OPENAI.Note
-            })
+            .setDescription(results.answer)
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
                 text: results.id
