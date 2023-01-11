@@ -19,8 +19,12 @@ const openai = new OpenAIApi(config)
 
 
 // Create a function to chat with the AI
-async function chat(question, user) {
+async function chat(question, user, bool) {
     // read the file if exist
+    if (bool) {
+        // delete the file
+        fs.unlinkSync("./src/cache/" + user);
+    }
     let previousResponses = "";
     if (fs.existsSync("./src/cache/" + user)) {
         previousResponses = fs.readFileSync("./src/cache/" + user, "utf8");
@@ -55,11 +59,11 @@ async function chat(question, user) {
     // write to file not json
     fs.writeFileSync("./src/cache/" + user, resultPrompt, { flag: "a+" });
 
-    // Return the answer
     return {
         answer: completion.data.choices[0].text,
         usage: completion.data.usage,
-        id: completion.data.id
+        id: completion.data.id,
+        conversation: count
     }
 }
 

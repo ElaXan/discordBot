@@ -16,23 +16,34 @@ module.exports = {
                 description: "The question you want to ask",
                 type: 3,
                 required: true
+            },
+            {
+                name: "new",
+                description: "Ask a new question or start a new conversation",
+                type: 5,
+                required: false
             }
         ]
     },
     async execute(interaction) {
         const prompt = interaction.options.getString("question");
         const userId = interaction.user.id;
+        const newConversation = interaction.options.getBoolean("new");
         const blockedUserJson = JSON.parse(fs.readFileSync("./src/blockedUser.json", "utf8"));
         const block = blockedUserJson[`<@${userId}>`];
         if (block !== undefined && block.includes(this.data.name) === true) {
             return interaction.reply({ content: "You are blocked from using this command" });
         }
         await interaction.deferReply();
-        const results = await chat(prompt, interaction.user.tag);
+        const results = await chat(prompt, interaction.user.tag, newConversation);
         if (results.answer.trim() == "") {
             const embed = new EmbedBuilder()
                 .setTitle(OPENAI.Title.Name)
                 .setDescription("I couldn't find an answer to your question.")
+                .addFields({
+                    name: "Conversation",
+                    value: `${results.conversation}`
+                })
                 .setColor("Red")
                 .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
                 .setFooter({
@@ -75,6 +86,10 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle(OPENAI.Title.Name)
                 .setDescription(randomWordResult)
+                .addFields({
+                    name: "Conversation",
+                    value: `${results.conversation}`
+                })
                 .setColor("Green")
                 .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
                 .setFooter({
@@ -101,10 +116,15 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle(OPENAI.Title.Name)
             .setDescription(results.answer)
+            .addFields({
+                name: "Conversation",
+                value: `${results.conversation}`
+            })
             .setThumbnail("https://openai.com/content/images/2022/05/openai-avatar.png")
             .setFooter({
                 text: results.id
             })
+            .setColor("Random")
             .setURL(OPENAI.Title.URL)
             .setAuthor({
                 name: interaction.user.tag,
